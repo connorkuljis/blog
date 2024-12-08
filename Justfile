@@ -1,9 +1,7 @@
 clean:
-    rm -f ./main
+    rm -f ./cli
 
 build: clean
-    go build -o ./main .
-
-run: build
-    ./main
+    go build ./cmd/***
+       
 

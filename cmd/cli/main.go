@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 
 	"github.com/connorkuljis/content/internal/database"
 	"github.com/connorkuljis/content/internal/model"
@@ -15,19 +16,19 @@ import (
 )
 
 const (
-	dbName = "content.sqlite3"
+	storeDir = "store"
+	schema   = "create_tables.sql"
+	db       = "content.sqlite3"
 )
 
-//go:embed create_tables.sql
-var schema string
-
 func main() {
-	db, err := database.Connect(dbName)
+	db, err := database.Connect(filepath.Join(storeDir, db))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_, err = database.Exec(db, schema)
+	b, _ := os.ReadFile(filepath.Join(storeDir, schema))
+	_, err = database.Exec(db, string(b))
 	if err != nil {
 		log.Fatal(err)
 	}
