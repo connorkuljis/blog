@@ -52,8 +52,8 @@ func (r *EntryRepository) ReadEntryByID(id int64) (*model.Entry, error) {
 }
 
 func (r *EntryRepository) UpdateEntry(entry *model.Entry) error {
-	q := "UPDATE entries SET title = ?, content = ?, updated_at = ?, publish = ? WHERE id = ?"
-	_, err := r.db.Exec(q, entry.Title, entry.Content, entry.UpdatedAt, entry.Publish, entry.Id)
+	q := "UPDATE entries SET category = ?, title = ?, content = ?, updated_at = ?, publish = ? WHERE id = ?"
+	_, err := r.db.Exec(q, entry.Category, entry.Title, entry.Content, entry.UpdatedAt, entry.Publish, entry.Id)
 	if err != nil {
 		return err
 	}

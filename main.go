@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	_ "embed"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -36,7 +37,17 @@ func main() {
 	// 	log.Fatal(err)
 	// }
 
-	err = NewEntryAction(db, "blog", "Great Green Forest")
+	// err = NewEntryAction(db, "foo", "Great Green Forest")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// err = OpenEntryAction(db, 23)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	err = ListEntriesAction(db)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -62,6 +73,20 @@ func NewEntryAction(db *sqlx.DB, category, title string) error {
 	err := entries.CreateEntry(entry)
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func ListEntriesAction(db *sqlx.DB) error {
+	entries := repo.NewEntryRepository(db)
+	all, err := entries.ReadAllEntries()
+	if err != nil {
+		return err
+	}
+
+	for _, e := range all {
+		fmt.Printf("%d: [%s] '%s'\n", e.Id, e.Category, e.Title)
 	}
 
 	return nil
@@ -108,8 +133,12 @@ func OpenEntryAction(db *sqlx.DB, id int64) error {
 
 	err = entries.UpdateEntry(entry)
 	if err != nil {
+		fmt.Println("Something went wrong! Your entry was not saved.")
+		fmt.Println("Backup:")
+		fmt.Println(entry.String())
 		log.Fatal(err)
 	}
+	fmt.Printf("%d: [%s] '%s' saved.\n", entry.Id, entry.Category, entry.Title)
 
 	return nil
 }

@@ -28,6 +28,7 @@ func (e Entry) String() string {
 
 	sb.WriteString("---\n")
 	sb.WriteString(fmt.Sprintf("title: %s\n", e.Title))
+	sb.WriteString(fmt.Sprintf("category: %s\n", e.Category))
 	sb.WriteString(fmt.Sprintf("created_at: %s\n", e.CreatedAt.UTC().Format(time.RFC3339)))
 	sb.WriteString(fmt.Sprintf("updated_at: %s\n", e.UpdatedAt.UTC().Format(time.RFC3339)))
 	sb.WriteString(fmt.Sprintf("publish: %d\n", e.Publish))
