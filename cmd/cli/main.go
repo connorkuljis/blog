@@ -11,14 +11,13 @@ import (
 
 	"github.com/connorkuljis/content/internal/database"
 	"github.com/connorkuljis/content/internal/model"
-	"github.com/connorkuljis/content/internal/repo"
 	"github.com/jmoiron/sqlx"
 )
 
 const (
 	storeDir = "store"
 	schema   = "create_tables.sql"
-	db       = "content.sqlite3"
+	db       = "content.db"
 )
 
 func main() {
@@ -43,7 +42,7 @@ func main() {
 func NewCategoryAction(db *sqlx.DB, title, description string) error {
 	category := model.NewCategory(title, description)
 
-	categories := repo.NewCategoryRepository(db)
+	categories := model.NewCategoryRepository(db)
 
 	err := categories.CreateCategory(category)
 	if err != nil {
@@ -57,7 +56,7 @@ func NewCategoryAction(db *sqlx.DB, title, description string) error {
 func NewEntryAction(db *sqlx.DB, category, title string) error {
 	entry := model.NewEntry(category, title)
 
-	entries := repo.NewEntryRepository(db)
+	entries := model.NewEntryRepository(db)
 	err := entries.CreateEntry(entry)
 	if err != nil {
 		return err
@@ -67,7 +66,7 @@ func NewEntryAction(db *sqlx.DB, category, title string) error {
 }
 
 func ListEntriesAction(db *sqlx.DB) error {
-	entries := repo.NewEntryRepository(db)
+	entries := model.NewEntryRepository(db)
 	all, err := entries.ReadAllEntries()
 	if err != nil {
 		return err
@@ -82,7 +81,7 @@ func ListEntriesAction(db *sqlx.DB) error {
 
 // eg: OpenEntryAction(db, 23)
 func OpenEntryAction(db *sqlx.DB, id int64) error {
-	entries := repo.NewEntryRepository(db)
+	entries := model.NewEntryRepository(db)
 	entry, err := entries.ReadEntryByID(id)
 	if err != nil {
 		return err
