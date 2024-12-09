@@ -33,27 +33,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// err = NewCategoryAction(db, "blog", "all blog posts")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// err = NewEntryAction(db, "foo", "Great Green Forest")
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// err = OpenEntryAction(db, 23)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
 	err = ListEntriesAction(db)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
+// eg: NewCategoryAction(db, "blog", "all blog posts")
 func NewCategoryAction(db *sqlx.DB, title, description string) error {
 	category := model.NewCategory(title, description)
 
@@ -67,6 +53,7 @@ func NewCategoryAction(db *sqlx.DB, title, description string) error {
 	return nil
 }
 
+// eg: NewEntryAction(db, "foo", "Great Green Forest")
 func NewEntryAction(db *sqlx.DB, category, title string) error {
 	entry := model.NewEntry(category, title)
 
@@ -93,6 +80,7 @@ func ListEntriesAction(db *sqlx.DB) error {
 	return nil
 }
 
+// eg: OpenEntryAction(db, 23)
 func OpenEntryAction(db *sqlx.DB, id int64) error {
 	entries := repo.NewEntryRepository(db)
 	entry, err := entries.ReadEntryByID(id)
@@ -106,7 +94,8 @@ func OpenEntryAction(db *sqlx.DB, id int64) error {
 	}
 	tempFile := f.Name()
 
-	_, err = f.WriteString(entry.String())
+	body := entry.String()
+	_, err = f.WriteString(body)
 	if err != nil {
 		log.Fatal(err)
 	}
