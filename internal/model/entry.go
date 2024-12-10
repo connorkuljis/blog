@@ -39,13 +39,13 @@ func (e Entry) String() string {
 	return sb.String()
 }
 
-func ParseEntryFromFrontMatter(r io.Reader, entry *Entry) error {
-	b, err := frontmatter.Parse(r, entry)
+func (e *Entry) LoadFromContentString(r io.Reader) error {
+	b, err := frontmatter.Parse(r, e)
 	if err != nil {
 		return err
 	}
 
-	entry.Content = string(b)
+	e.Content = string(b)
 
 	return nil
 }
@@ -88,7 +88,7 @@ func (r *EntryRepository) ReadEntryByID(id int64) (*Entry, error) {
 	var entry Entry
 	err := r.db.Get(&entry, "SELECT * FROM entries WHERE id = $1", id)
 	if err != nil {
-		return nil, fmt.Errorf("Error getting entry by id `%s`: %w", id, err)
+		return nil, fmt.Errorf("Error getting entry by id `%d`: %w", id, err)
 	}
 
 	return &entry, nil
@@ -99,6 +99,15 @@ func (r *EntryRepository) UpdateEntry(entry *Entry) error {
 	_, err := r.db.Exec(q, entry.Category, entry.Title, entry.Content, entry.UpdatedAt, entry.Publish, entry.Id)
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (r *EntryRepository) DeleteEntryByID(id int64) error {
+	_, err := r.db.Exec("DELETE FROM entries WHERE id = $1", id)
+	if err != nil {
+		return fmt.Errorf("Error deleting entry by id `%d`: %w", id, err)
 	}
 
 	return nil

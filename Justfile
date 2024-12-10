@@ -1,8 +1,8 @@
 build: clean
-    go build ./cmd/***
+    go build .
 
 clean:
-    rm -f ./cli
+    rm -f ./main
 
        
 
