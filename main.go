@@ -41,7 +41,7 @@ func main() {
 					}
 
 					for _, entry := range all {
-						fmt.Printf("%d: [%s] '%s'\n", entry.Id, entry.Category, entry.Title)
+						fmt.Printf("id: %d, title: %s\n", entry.ID, entry.Title)
 					}
 
 					return nil
@@ -51,8 +51,8 @@ func main() {
 						Name:  "new",
 						Usage: "Create a new entry.",
 						Flags: []cli.Flag{
-							&cli.StringFlag{
-								Name:     "category",
+							&cli.IntFlag{
+								Name:     "category-id",
 								Aliases:  []string{"c"},
 								Required: true,
 							},
@@ -63,7 +63,7 @@ func main() {
 							},
 						},
 						Action: func(ctx context.Context, c *cli.Command) error {
-							category := c.String("category")
+							category := c.Int("category-id")
 							title := c.String("title")
 
 							entry := model.NewEntry(category, title)
@@ -74,7 +74,7 @@ func main() {
 							}
 
 							fmt.Println("Created entry:")
-							fmt.Printf("%d: [%s] '%s'\n", entry.Id, entry.Category, entry.Title)
+							fmt.Printf("id: %d, title: %s\n", entry.ID, entry.Title)
 
 							return nil
 						},
@@ -141,7 +141,7 @@ func main() {
 							}
 
 							fmt.Println("Saved entry:")
-							fmt.Printf("%d: [%s] '%s'\n", currentEntry.Id, currentEntry.Category, currentEntry.Title)
+							fmt.Printf("id: %d, title: %s\n", currentEntry.ID, currentEntry.Title)
 
 							return nil
 						},
@@ -171,7 +171,7 @@ func main() {
 							}
 
 							fmt.Println("Deleted entry:")
-							fmt.Printf("%d: [%s] '%s'\n", entry.Id, entry.Category, entry.Title)
+							fmt.Printf("id: %d, title: %s\n", entry.ID, entry.Title)
 
 							return nil
 						},
