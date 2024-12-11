@@ -31,6 +31,16 @@ func (r *CategoryRepo) CreateCategory(category *Category) error {
 	return nil
 }
 
+func (r *CategoryRepo) ReadCategoryByTitle(title string) (Category, error) {
+	var category Category
+	err := r.db.Get(&category, "SELECT * FROM categories WHERE title = ?", title)
+	if err != nil {
+		return category, err
+	}
+
+	return category, nil
+}
+
 func (r *CategoryRepo) ReadAllCategories() ([]Category, error) {
 	var categories []Category
 	err := r.db.Select(&categories, "SELECT * FROM categories")
@@ -57,4 +67,13 @@ func (r *CategoryRepo) ReadAllCategoriesWithEntries() ([]Category, error) {
 	}
 
 	return categories, nil
+}
+
+func (r *CategoryRepo) DeleteCategoryByTitle(title string) error {
+	_, err := r.db.Exec("DELETE FROM categories WHERE title = ?", title)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

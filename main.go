@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	_ "embed"
@@ -8,6 +9,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/connorkuljis/content/internal/database"
 	"github.com/connorkuljis/content/internal/model"
@@ -23,10 +25,27 @@ func main() {
 	cmd := &cli.Command{
 		Name:  "content",
 		Usage: "My content management system to store markdown entries in sqlite. Portable, Simple, Isolated",
+		Before: func(ctx context.Context, c *cli.Command) (context.Context, error) {
+			fmt.Println("Reminder: The substance of the writing is more important that the code.")
+			return context.Background(), nil
+		},
 		Commands: []*cli.Command{
 			&cli.Command{
 				Name:  "entries",
 				Usage: "Operations for creating, editing, deleting and listing entries.",
+				Action: func(ctx context.Context, c *cli.Command) error {
+					entries := model.NewEntryRepository(db)
+					all, err := entries.ReadAllEntries()
+					if err != nil {
+						return err
+					}
+
+					for _, entry := range all {
+						fmt.Printf("%d: [%s] '%s'\n", entry.Id, entry.Category, entry.Title)
+					}
+
+					return nil
+				},
 				Commands: []*cli.Command{
 					&cli.Command{
 						Name:  "new",
@@ -117,8 +136,7 @@ func main() {
 							err = repo.UpdateEntry(currentEntry)
 							if err != nil {
 								fmt.Println("Something went wrong! Your entry was not saved.")
-								fmt.Println("Backup:")
-								fmt.Println(currentEntry.String())
+								fmt.Println("Backup at:", f.Name())
 								log.Fatal(err)
 							}
 
@@ -158,19 +176,97 @@ func main() {
 							return nil
 						},
 					},
+				},
+			},
+			&cli.Command{
+				Name:  "categories",
+				Usage: "operations on categories",
+				Action: func(ctx context.Context, c *cli.Command) error {
+					repo := model.NewCategoryRepository(db)
+					categories, err := repo.ReadAllCategoriesWithEntries()
+					if err != nil {
+						return err
+					}
+					for _, category := range categories {
+						fmt.Printf("'%s': %s. (%d)\n", category.Title, category.Description, len(category.Entries))
+					}
+					return nil
+				},
+				Commands: []*cli.Command{
 					&cli.Command{
-						Name:  "list",
-						Usage: "List all entries.",
+						Name:  "new",
+						Usage: "Create a new category.",
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:  "title",
+								Usage: "Category title. It must be unique to other categories.",
+							},
+							&cli.StringFlag{
+								Name:    "description",
+								Aliases: []string{"d", "desc"},
+								Usage:   "Category description.",
+							},
+						},
 						Action: func(ctx context.Context, c *cli.Command) error {
-							entries := model.NewEntryRepository(db)
-							all, err := entries.ReadAllEntries()
+							var title string
+							var description string
+
+							if !c.IsSet("title") && !c.IsSet("description") {
+								var err error
+								title, err = GetInputWithPrompt("Title: ")
+								if err != nil {
+									return err
+								}
+								description, err = GetInputWithPrompt("Description: ")
+								if err != nil {
+									return err
+								}
+							} else {
+								title = c.String("title")
+								description = c.String("description")
+							}
+
+							category := model.NewCategory(title, description)
+
+							err = model.NewCategoryRepository(db).CreateCategory(category)
 							if err != nil {
 								return err
 							}
 
-							for _, entry := range all {
-								fmt.Printf("%d: [%s] '%s'\n", entry.Id, entry.Category, entry.Title)
+							fmt.Println("Created category:", category.Title)
+
+							return nil
+						},
+					},
+					&cli.Command{
+						Name:  "delete",
+						Usage: "Delete a category.",
+						Flags: []cli.Flag{
+							&cli.StringFlag{
+								Name:     "title",
+								Required: true,
+							},
+						},
+						Action: func(ctx context.Context, c *cli.Command) error {
+							title := c.String("title")
+
+							repo := model.NewCategoryRepository(db)
+							if err != nil {
+								return err
 							}
+
+							category, err := repo.ReadCategoryByTitle(title)
+							if err != nil {
+								return err
+							}
+
+							err = repo.DeleteCategoryByTitle(title)
+							if err != nil {
+								return err
+							}
+
+							fmt.Println("Deleted category.")
+							fmt.Printf("'%s': %s\n", category.Title, category.Description)
 
 							return nil
 						},
@@ -183,4 +279,24 @@ func main() {
 	if err := cmd.Run(context.Background(), os.Args); err != nil {
 		log.Fatal(err)
 	}
+}
+
+// GetInputWithPrompt prints a prompt to the user and returns the input string from the keyboard
+func GetInputWithPrompt(prompt string) (string, error) {
+	// Print the prompt
+	fmt.Print(prompt)
+
+	// Create a new reader from standard input (keyboard)
+	reader := bufio.NewReader(os.Stdin)
+
+	// Read the input line (until newline)
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		return "", fmt.Errorf("error reading input: %w", err) // Wrap for context
+	}
+
+	// Trim the newline character and any leading/trailing spaces
+	input = strings.TrimSpace(input)
+
+	return input, nil // Return the string without the newline character
 }

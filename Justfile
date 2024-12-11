@@ -2,7 +2,7 @@ build: clean
     go build .
 
 clean:
-    rm -f ./main
+    rm -f ./content
 
        
 
