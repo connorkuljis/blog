@@ -1,8 +1,11 @@
 build: clean
-    go build .
+    go build -o ./bin/content .
 
 clean:
-    rm -f ./content
+    rm -f ./bin/content
 
+run: build
+    ./bin/content entries
+    
        
 
