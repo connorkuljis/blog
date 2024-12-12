@@ -19,6 +19,4 @@ CREATE TABLE IF NOT EXISTS entries (
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE categories;
-DROP TABLE entries;
 -- +goose StatementEnd
