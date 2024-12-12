@@ -47,9 +47,8 @@ func main() {
 			},
 
 			{
-				Name:   "entries",
-				Usage:  "Operations for creating, editing, deleting and listing entries.",
-				Action: listEntries,
+				Name:  "entries",
+				Usage: "Operations for creating, editing, deleting and listing entries.",
 				Commands: []*cli.Command{
 					{
 						Name:   "list",
@@ -98,9 +97,8 @@ func main() {
 				},
 			},
 			{
-				Name:   "categories",
-				Usage:  "operations on categories",
-				Action: listCategories,
+				Name:  "categories",
+				Usage: "operations on categories",
 				Commands: []*cli.Command{
 					{
 						Name:   "list",
@@ -117,7 +115,7 @@ func main() {
 						Usage: "Delete a category.",
 						Flags: []cli.Flag{
 							&cli.IntFlag{
-								Name:     "title",
+								Name:     "id",
 								Required: true,
 							},
 						},
@@ -137,16 +135,16 @@ func main() {
 func listEntries(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 
-	entries := model.NewEntryRepository(db)
-	all, err := entries.ReadAllEntries()
+	categories, err := model.NewCategoryRepository(db).ReadAllCategoriesWithEntries()
 	if err != nil {
 		return err
 	}
 
-	for _, entry := range all {
-		fmt.Printf("id: %d, title: %s\n", entry.ID, entry.Title)
+	for _, c := range categories {
+		for _, e := range c.Entries {
+			fmt.Printf("[%d] [%s] %s(%d)\n", e.ID, c.Title, e.Title, len(e.Content))
+		}
 	}
-
 	return nil
 }
 
@@ -258,7 +256,7 @@ func listCategories(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 	for _, category := range categories {
-		fmt.Printf("'%s': %s. (%d)\n", category.Title, category.Description, len(category.Entries))
+		fmt.Printf("[%d] %s(%d)\n", category.ID, category.Title, len(category.Entries))
 	}
 	return nil
 }
