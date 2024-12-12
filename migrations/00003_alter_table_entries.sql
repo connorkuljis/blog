@@ -1,7 +1,5 @@
 -- +goose Up
 -- +goose StatementBegin
-PRAGMA foreign_keys = ON;
-
 CREATE TABLE IF NOT EXISTS entries_copy (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     category_id INTEGER NOT NULL,
