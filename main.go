@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"context"
 	_ "embed"
 	"fmt"
@@ -13,6 +12,7 @@ import (
 
 	"github.com/connorkuljis/content/internal/database"
 	"github.com/connorkuljis/content/internal/model"
+	"github.com/connorkuljis/content/internal/site"
 	"github.com/jmoiron/sqlx"
 	"github.com/urfave/cli/v3"
 )
@@ -39,6 +39,13 @@ func main() {
 			return ctx, nil
 		},
 		Commands: []*cli.Command{
+			{
+				Name: "render",
+				Action: func(ctx context.Context, c *cli.Command) error {
+					return site.Render()
+				},
+			},
+
 			{
 				Name:   "entries",
 				Usage:  "Operations for creating, editing, deleting and listing entries.",
@@ -176,10 +183,10 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 
 	f, err := os.CreateTemp("", "*.md")
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
-	_, err = f.WriteString(currentEntry.String())
+	_, err = f.WriteString(currentEntry.Content)
 	if err != nil {
 		return err
 	}
@@ -204,16 +211,13 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
-	err = currentEntry.LoadFromContentString(bytes.NewReader(b))
-	if err != nil {
-		return err
-	}
+	currentEntry.Content = string(b)
 
 	err = repo.UpdateEntry(currentEntry)
 	if err != nil {
 		fmt.Println("Something went wrong! Your entry was not saved.")
 		fmt.Println("Backup at:", f.Name())
-		log.Fatal(err)
+		return err
 	}
 
 	fmt.Println("Saved entry:")

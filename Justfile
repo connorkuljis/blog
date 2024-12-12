@@ -7,5 +7,6 @@ clean:
 run: build
     ./bin/content entries
     
-       
+serve:
+    python3 -m http.server -d public 8080
 
