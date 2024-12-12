@@ -5,6 +5,7 @@ import (
 )
 
 type Category struct {
+	ID          int64  `db:"id"`
 	Title       string `db:"title"`
 	Description string `db:"description"`
 	Entries     []Entry
@@ -31,9 +32,9 @@ func (r *CategoryRepo) CreateCategory(category *Category) error {
 	return nil
 }
 
-func (r *CategoryRepo) ReadCategoryByTitle(title string) (Category, error) {
+func (r *CategoryRepo) ReadCategoryByID(id int64) (Category, error) {
 	var category Category
-	err := r.db.Get(&category, "SELECT * FROM categories WHERE title = ?", title)
+	err := r.db.Get(&category, "SELECT * FROM categories WHERE id = ?", id)
 	if err != nil {
 		return category, err
 	}
@@ -69,8 +70,8 @@ func (r *CategoryRepo) ReadAllCategoriesWithEntries() ([]Category, error) {
 	return categories, nil
 }
 
-func (r *CategoryRepo) DeleteCategoryByTitle(title string) error {
-	_, err := r.db.Exec("DELETE FROM categories WHERE title = ?", title)
+func (r *CategoryRepo) DeleteCategoryByTitle(id int64) error {
+	_, err := r.db.Exec("DELETE FROM categories WHERE id = ?", id)
 	if err != nil {
 		return err
 	}
