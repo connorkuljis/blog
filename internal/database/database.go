@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	conn = "file:content.db?_foreign_keys=true"
+	conn = "file:database/content.db?_foreign_keys=true"
 )
 
 func Connect() (*sqlx.DB, error) {
