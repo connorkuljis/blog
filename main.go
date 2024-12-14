@@ -141,9 +141,11 @@ func listEntries(ctx context.Context, c *cli.Command) error {
 	}
 
 	for _, c := range categories {
-		for _, e := range c.Entries {
-			fmt.Printf("[%d] [%s] %s(%d)\n", e.ID, c.Title, e.Title, len(e.Content))
+		fmt.Printf("[%s]\n", c.Title)
+		for i, e := range c.Entries {
+			fmt.Println(i, e.Title)
 		}
+		fmt.Println()
 	}
 	return nil
 }
