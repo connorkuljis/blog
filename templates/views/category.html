@@ -1,0 +1,14 @@
+{{ define "view" }}
+<h1>{{ .Category.Title }}</h1>
+<h2>{{ .Category.Description }}</h2>
+<ul>
+  {{ range .Category.Entries }}
+  <li>{{ template "entry" . }}</li>
+  {{ end }}
+</ul>
+{{ end }}
+
+<!-- nowrap -->
+{{ define "entry" }}
+<a href="/posts/{{ .ID }}.html">{{ .Title }}</a>
+{{ end }}
