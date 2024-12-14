@@ -7,7 +7,7 @@ clean:
 run *args: build
     ./content {{ args }}
 
-ssg:
+ssg: build
     ./content render
     
 serve:

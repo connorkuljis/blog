@@ -60,6 +60,11 @@ func Render() error {
 		}
 	}
 
+	err = site.RenderIndex("public", categories)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -156,6 +161,45 @@ func (s *Site) RenderCategory(dir string, category model.Category) error {
 	data := map[string]any{
 		"Site":     s,
 		"Category": category,
+	}
+
+	err = t.ExecuteTemplate(f, "base", data)
+	if err != nil {
+		return err
+	}
+
+	log.Println(filename)
+
+	return nil
+}
+
+func (s *Site) RenderIndex(dir string, categories []model.Category) error {
+	templateStrings := []string{
+		s.base["base.html"],
+		s.base["head.html"],
+		s.base["layout.html"],
+
+		s.components["header.html"],
+
+		s.views["index.html"],
+	}
+
+	t, err := template.New("").Parse(strings.Join(templateStrings, " "))
+	if err != nil {
+		return err
+	}
+
+	os.MkdirAll(dir, os.ModePerm)
+
+	filename := filepath.Join(dir, "index.html")
+	f, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+
+	data := map[string]any{
+		"Site":       s,
+		"Categories": categories,
 	}
 
 	err = t.ExecuteTemplate(f, "base", data)
