@@ -176,17 +176,17 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 
 	repo := model.NewEntryRepository(db)
 
-	currentEntry, err := repo.ReadEntryByID(id)
+	entry, err := repo.ReadEntryByID(id)
 	if err != nil {
 		return err
 	}
 
-	f, err := os.CreateTemp("", "*.md")
+	f, err := os.CreateTemp("/tmp", entry.Title+"*.md")
 	if err != nil {
 		return err
 	}
 
-	_, err = f.WriteString(currentEntry.Content)
+	_, err = f.WriteString(entry.Content)
 	if err != nil {
 		return err
 	}
@@ -211,9 +211,9 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
-	currentEntry.Content = string(b)
+	entry.Content = string(b)
 
-	err = repo.UpdateEntry(currentEntry)
+	err = repo.UpdateEntry(entry)
 	if err != nil {
 		fmt.Println("Something went wrong! Your entry was not saved.")
 		fmt.Println("Backup at:", f.Name())
@@ -221,7 +221,7 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 	}
 
 	fmt.Println("Saved entry:")
-	fmt.Printf("id: %d, title: %s\n", currentEntry.ID, currentEntry.Title)
+	fmt.Printf("id: %d, title: %s\n", entry.ID, entry.Title)
 
 	return nil
 }
