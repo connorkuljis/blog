@@ -106,6 +106,8 @@ INNER JOIN
 	categories as c
 ON
 	c.id = e.category_id
+ORDER BY 
+	c.id
 `
 
 	err := r.db.Select(&entries, q)
