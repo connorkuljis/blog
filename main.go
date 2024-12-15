@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/cheynewallace/tabby"
 	"github.com/connorkuljis/content/internal/database"
 	"github.com/connorkuljis/content/internal/model"
 	"github.com/connorkuljis/content/internal/site"
@@ -135,18 +136,18 @@ func main() {
 func listEntries(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 
-	categories, err := model.NewCategoryRepository(db).ReadAllCategoriesWithEntries()
+	entries, err := model.NewEntryRepository(db).ReadAllJoinCategories()
 	if err != nil {
 		return err
 	}
 
-	for _, c := range categories {
-		fmt.Printf("[%s]\n", c.Title)
-		for i, e := range c.Entries {
-			fmt.Println(i, e.Title)
-		}
-		fmt.Println()
+	t := tabby.New()
+	t.AddHeader("INDEX", "CATEGORY", "TITLE", "CREATED", "CHAR")
+	for i, entry := range entries {
+		t.AddLine(i, entry.CategoryTitle, entry.Title, entry.CreatedAt.Format("2006-01-02"), len(entry.Content))
 	}
+
+	t.Print()
 	return nil
 }
 

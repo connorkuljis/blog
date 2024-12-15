@@ -10,6 +10,7 @@ require (
 
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
+	github.com/cheynewallace/tabby v1.1.1 // indirect
 	github.com/urfave/cli/v3 v3.0.0-beta1 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )
