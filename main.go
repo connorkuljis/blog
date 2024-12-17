@@ -21,7 +21,6 @@ import (
 const sqlxKey = "db"
 
 func main() {
-
 	cmd := &cli.Command{
 		Name:  "content",
 		Usage: "My content management system to store markdown entries in sqlite. Portable, Simple, Isolated",

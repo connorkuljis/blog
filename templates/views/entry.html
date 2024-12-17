@@ -1,4 +1,6 @@
 {{ define "view" }}
-<h1>{{ .Entry.Title }}</h1>
-<p style="white-space: pre-wrap">{{ .Entry.Content }}</p>
+<section>
+  <h1 id="title">{{ .Entry.Title }}</h1>
+  <div id="content">{{ .Content }}</div>
+</section>
 {{ end }}

@@ -2,8 +2,14 @@
 <h1>{{ .Category.Title }}</h1>
 <h2>{{ .Category.Description }}</h2>
 <ul>
-  {{ range .Category.Entries }}
-  <li><a href="/entries/{{ .ID }}.html">{{ .Title }}</a></li>
+  {{ $t := slugify .Category.Title }} {{ range .Category.Entries }}
+  <li>
+    <a href="/{{ $t }}/{{ slugify .Title }}"
+      ><span
+        ><date>{{ .CreatedAt.Format "2006-01-02" }}</date> - {{ .Title }}</span
+      ></a
+    >
+  </li>
   {{ end }}
 </ul>
 {{ end }}
