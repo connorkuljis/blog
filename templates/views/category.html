@@ -3,12 +3,7 @@
 <h2>{{ .Category.Description }}</h2>
 <ul>
   {{ range .Category.Entries }}
-  <li>{{ template "entry" . }}</li>
+  <li><a href="/entries/{{ .ID }}.html">{{ .Title }}</a></li>
   {{ end }}
 </ul>
-{{ end }}
-
-<!-- nowrap -->
-{{ define "entry" }}
-<a href="/posts/{{ .ID }}.html">{{ .Title }}</a>
 {{ end }}

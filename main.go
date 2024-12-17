@@ -43,7 +43,14 @@ func main() {
 			{
 				Name: "render",
 				Action: func(ctx context.Context, c *cli.Command) error {
-					return site.Render()
+					s := site.Site{
+						Title: "Connor's Blog",
+					}
+					err := s.Render()
+					if err != nil {
+						return err
+					}
+					return nil
 				},
 			},
 
