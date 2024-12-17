@@ -175,11 +175,11 @@ func (s *Site) RenderIndex(dir string) error {
 
 	page := Page{
 		Title:              "index.html",
-		Filepath:           filepath.Join(dir, "index.html"),
+		Filepath:           filepath.Join(dir, "_index.html"),
 		BaseTemplate:       s.Base["base.html"],
 		LayoutTemplate:     s.Base["layout.html"],
 		HeadTemplate:       s.Base["head.html"],
-		ViewTemplate:       s.Views["entry.html"],
+		ViewTemplate:       s.Views["index.html"],
 		ComponentTemplates: s.AllComponents(),
 		Data: map[string]any{
 			"Site":       s,
