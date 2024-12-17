@@ -2,11 +2,16 @@ package site
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strings"
 	"text/template"
 )
+
+var funcMap = template.FuncMap{
+	"slugify": slugify,
+}
 
 type Page struct {
 	Title        string
@@ -20,9 +25,6 @@ type Page struct {
 	ComponentTemplates []string
 
 	Data map[string]any
-
-	Template *template.Template
-	Writer   io.Writer
 }
 
 func (p *Page) ParseTemplate() (*template.Template, error) {
@@ -38,7 +40,7 @@ func (p *Page) ParseTemplate() (*template.Template, error) {
 		templateString += str
 	}
 
-	tpl, err := template.New(p.Title).Option("missingkey=error").Parse(templateString)
+	tpl, err := template.New(p.Title).Funcs(funcMap).Option("missingkey=error").Parse(templateString)
 	if err != nil {
 		return nil, err
 	}
@@ -66,4 +68,17 @@ func (p *Page) Render() error {
 	}
 
 	return nil
+}
+
+func slugify(s string) string {
+	// Convert to lowercase
+	s = strings.ToLower(s)
+
+	// Replace non-alphanumeric characters with a hyphen
+	s = regexp.MustCompile(`[^a-z0-9]+`).ReplaceAllString(s, "-")
+
+	// Remove leading and trailing hyphens
+	s = strings.Trim(s, "-")
+
+	return s
 }

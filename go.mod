@@ -12,5 +12,6 @@ require (
 
 require (
 	github.com/BurntSushi/toml v0.3.1 // indirect
+	github.com/yuin/goldmark v1.7.8 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
 )

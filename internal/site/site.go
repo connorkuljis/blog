@@ -1,13 +1,18 @@
 package site
 
 import (
-	"fmt"
+	"bytes"
+	"html/template"
 	"os"
 	"path/filepath"
 
 	"github.com/connorkuljis/content/internal/database"
 	"github.com/connorkuljis/content/internal/model"
 	"github.com/jmoiron/sqlx"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 type Site struct {
@@ -93,12 +98,12 @@ func (s *Site) Render() error {
 		return err
 	}
 
-	err = s.RenderEntry("public/entries")
+	err = s.RenderEntry("public")
 	if err != nil {
 		return err
 	}
 
-	err = s.RenderCategory("public/categories")
+	err = s.RenderCategory("public")
 	if err != nil {
 		return err
 	}
@@ -114,18 +119,38 @@ func (s *Site) RenderEntry(dir string) error {
 		return err
 	}
 
+	md := goldmark.New(
+		goldmark.WithExtensions(
+			extension.GFM,
+		),
+		goldmark.WithParserOptions(
+			parser.WithAutoHeadingID(),
+		),
+		goldmark.WithRendererOptions(
+			html.WithHardWraps(),
+			html.WithXHTML(),
+		),
+	)
+
 	for _, entry := range entries {
+		// convert markdown to html
+		var buf bytes.Buffer
+		if err := md.Convert([]byte(entry.Content), &buf); err != nil {
+			panic(err)
+		}
+
 		page := Page{
 			Title:              entry.Title,
-			Filepath:           filepath.Join(dir, fmt.Sprintf("%d.html", entry.ID)),
+			Filepath:           filepath.Join(dir, slugify(entry.CategoryTitle), slugify(entry.Title), "index.html"),
 			BaseTemplate:       s.Base["base.html"],
 			LayoutTemplate:     s.Base["layout.html"],
 			HeadTemplate:       s.Base["head.html"],
 			ViewTemplate:       s.Views["entry.html"],
 			ComponentTemplates: s.AllComponents(),
 			Data: map[string]any{
-				"Site":  s,
-				"Entry": entry,
+				"Site":    s,
+				"Entry":   entry,
+				"Content": template.HTML(buf.String()),
 			},
 		}
 
@@ -146,7 +171,7 @@ func (s *Site) RenderCategory(dir string) error {
 	for _, category := range categories {
 		page := Page{
 			Title:              category.Title,
-			Filepath:           filepath.Join(dir, fmt.Sprintf("%d.html", category.ID)),
+			Filepath:           filepath.Join(dir, slugify(category.Title), "index.html"),
 			BaseTemplate:       s.Base["base.html"],
 			LayoutTemplate:     s.Base["layout.html"],
 			HeadTemplate:       s.Base["head.html"],
@@ -175,7 +200,7 @@ func (s *Site) RenderIndex(dir string) error {
 
 	page := Page{
 		Title:              "index.html",
-		Filepath:           filepath.Join(dir, "_index.html"),
+		Filepath:           filepath.Join(dir, "index.html"),
 		BaseTemplate:       s.Base["base.html"],
 		LayoutTemplate:     s.Base["layout.html"],
 		HeadTemplate:       s.Base["head.html"],
