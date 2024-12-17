@@ -109,6 +109,9 @@ func (s *Site) Render() error {
 	}
 
 	err = s.RenderIndex("public")
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
