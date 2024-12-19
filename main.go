@@ -16,6 +16,10 @@ import (
 	"github.com/connorkuljis/content/internal/site"
 	"github.com/jmoiron/sqlx"
 	"github.com/urfave/cli/v3"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 const sqlxKey = "db"
@@ -45,7 +49,33 @@ func main() {
 					s := site.Site{
 						Title: "Connor's Blog",
 					}
-					err := s.Render()
+
+					db, err := database.Connect()
+					if err != nil {
+						return err
+					}
+
+					// html template library
+					lib, err := site.NewTemplateLibrary()
+					if err != nil {
+						return err
+					}
+
+					md := goldmark.New(
+						goldmark.WithExtensions(
+							extension.GFM,
+						),
+						goldmark.WithParserOptions(
+							parser.WithAutoHeadingID(),
+						),
+						goldmark.WithRendererOptions(
+							html.WithHardWraps(),
+							html.WithXHTML(),
+						),
+					)
+
+					// db connection
+					err = s.Render(db, lib, md)
 					if err != nil {
 						return err
 					}
