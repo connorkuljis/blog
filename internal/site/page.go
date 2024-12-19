@@ -1,12 +1,11 @@
 package site
 
 import (
-	"fmt"
+	"html/template"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
-	"text/template"
 )
 
 var funcMap = template.FuncMap{
@@ -18,29 +17,33 @@ type Page struct {
 	Filepath     string
 	ResourcePath string
 
+	T    *template.Template
+	Data map[string]any
+}
+
+type PageView struct {
+	Name string
+
 	BaseTemplate       string
 	LayoutTemplate     string
 	HeadTemplate       string
 	ViewTemplate       string
 	ComponentTemplates []string
-
-	Data map[string]any
 }
 
-func (p *Page) ParseTemplate() (*template.Template, error) {
-	var templateStrings []string
-	templateStrings = append(templateStrings, p.BaseTemplate)
-	templateStrings = append(templateStrings, p.HeadTemplate)
-	templateStrings = append(templateStrings, p.LayoutTemplate)
-	templateStrings = append(templateStrings, p.ViewTemplate)
-	templateStrings = append(templateStrings, p.ComponentTemplates...)
+func (p *PageView) Template() (*template.Template, error) {
+	var sb strings.Builder
 
-	templateString := ""
-	for _, str := range templateStrings {
-		templateString += str
+	sb.WriteString(p.BaseTemplate)
+	sb.WriteString(p.HeadTemplate)
+	sb.WriteString(p.LayoutTemplate)
+	sb.WriteString(p.ViewTemplate)
+
+	for _, component := range p.ComponentTemplates {
+		sb.WriteString(component)
 	}
 
-	tpl, err := template.New(p.Title).Funcs(funcMap).Option("missingkey=error").Parse(templateString)
+	tpl, err := template.New(p.Name).Funcs(funcMap).Option("missingkey=error").Parse(sb.String())
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +51,7 @@ func (p *Page) ParseTemplate() (*template.Template, error) {
 	return tpl, nil
 }
 
-func (p *Page) Render() error {
+func (p *Page) Render(data any) error {
 	dir, _ := filepath.Split(p.Filepath)
 	os.MkdirAll(dir, os.ModePerm)
 
@@ -57,12 +60,7 @@ func (p *Page) Render() error {
 		return err
 	}
 
-	tpl, err := p.ParseTemplate()
-	if err != nil {
-		fmt.Errorf("template error")
-	}
-
-	err = tpl.ExecuteTemplate(f, "base", p.Data)
+	err = p.T.ExecuteTemplate(f, "base", data)
 	if err != nil {
 		return err
 	}
