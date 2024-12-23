@@ -11,9 +11,9 @@ import (
 	"strings"
 
 	"github.com/cheynewallace/tabby"
-	"github.com/connorkuljis/content/internal/database"
 	"github.com/connorkuljis/content/internal/model"
 	"github.com/connorkuljis/content/internal/site"
+	"github.com/connorkuljis/content/internal/store"
 	"github.com/jmoiron/sqlx"
 	"github.com/urfave/cli/v3"
 	"github.com/yuin/goldmark"
@@ -33,7 +33,7 @@ func main() {
 			fmt.Println("Reminder: The substance of the writing is more important that the code.")
 			fmt.Println()
 
-			db, err := database.Connect()
+			db, err := store.Connect()
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -50,7 +50,7 @@ func main() {
 						Title: "Connor's Blog",
 					}
 
-					db, err := database.Connect()
+					db, err := store.Connect()
 					if err != nil {
 						return err
 					}
@@ -172,7 +172,7 @@ func main() {
 func listEntries(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 
-	entries, err := model.NewEntryRepository(db).ReadAllJoinCategories()
+	entries, err := store.NewEntryRepository(db).ReadAllJoinCategories()
 	if err != nil {
 		return err
 	}
@@ -195,7 +195,7 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 
 	entry := model.NewEntry(category, title)
 
-	err := model.NewEntryRepository(db).CreateEntry(entry)
+	err := store.NewEntryRepository(db).CreateEntry(entry)
 	if err != nil {
 		return fmt.Errorf("error creating entry: %w", err)
 	}
@@ -211,7 +211,7 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 	id := c.Int("id")
 
-	repo := model.NewEntryRepository(db)
+	repo := store.NewEntryRepository(db)
 
 	entry, err := repo.ReadEntryByID(id)
 	if err != nil {
@@ -268,7 +268,7 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 	id := c.Int("id")
 
-	repo := model.NewEntryRepository(db)
+	repo := store.NewEntryRepository(db)
 
 	entry, err := repo.ReadEntryByID(id)
 	if err != nil {
@@ -289,7 +289,7 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 // listCategories lists all categories.
 func listCategories(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	repo := model.NewCategoryRepository(db)
+	repo := store.NewCategoryRepository(db)
 	categories, err := repo.ReadAllCategoriesWithEntries()
 	if err != nil {
 		return err
@@ -323,7 +323,7 @@ func createCategory(ctx context.Context, c *cli.Command) error {
 
 	category := model.NewCategory(title, description)
 
-	err := model.NewCategoryRepository(db).CreateCategory(category)
+	err := store.NewCategoryRepository(db).CreateCategory(category)
 	if err != nil {
 		return err
 	}
@@ -338,7 +338,7 @@ func deleteCategory(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 	id := c.Int("id")
 
-	repo := model.NewCategoryRepository(db)
+	repo := store.NewCategoryRepository(db)
 
 	category, err := repo.ReadCategoryByID(id)
 	if err != nil {
