@@ -91,15 +91,15 @@ func (r *EntryRepository) ReadAllJoinCategories() ([]Entry, error) {
 	var entries []Entry
 	q := `
 SELECT 
-e.id,
-e.title,
-e.category_id,
-e.content,
-e.created_at,
-e.updated_at,
-e.publish,
-c.title AS category_title,
-c.description AS category_description
+	e.id,
+	e.title,
+	e.category_id,
+	e.content,
+	e.created_at,
+	e.updated_at,
+	e.publish,
+	c.title AS category_title,
+	c.description AS category_description
 FROM 
 	entries AS e
 INNER JOIN
