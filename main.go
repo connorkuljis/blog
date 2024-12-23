@@ -30,10 +30,6 @@ func main() {
 		Name:  "content",
 		Usage: "My content management system to store markdown entries in sqlite. Portable, Simple, Isolated",
 		Before: func(ctx context.Context, c *cli.Command) (context.Context, error) {
-			fmt.Println()
-			fmt.Println("Reminder: The substance of the writing is more important that the code.")
-			fmt.Println()
-
 			db, err := store.Connect()
 			if err != nil {
 				log.Fatal(err)
@@ -94,40 +90,23 @@ func main() {
 						Action: listEntries,
 					},
 					{
-						Name:  "new",
-						Usage: "Create a new entry.",
-						Flags: []cli.Flag{
-							&cli.IntFlag{
-								Name:    "category-id",
-								Aliases: []string{"c"},
-							},
-							&cli.StringFlag{
-								Name:    "title",
-								Aliases: []string{"t"},
-							},
-						},
+						Name:   "print",
+						Usage:  "Print entry content",
+						Action: printEntry,
+					},
+					{
+						Name:   "new",
+						Usage:  "Create a new entry.",
 						Action: createEntry,
 					},
 					{
-						Name:  "edit",
-						Usage: "Edit an entry by id.",
-						Flags: []cli.Flag{
-							&cli.IntFlag{
-								Name:     "id",
-								Required: true,
-							},
-						},
+						Name:   "edit",
+						Usage:  "Edit an entry by id.",
 						Action: editEntry,
 					},
 					{
-						Name:  "delete",
-						Usage: "Delete an entry by id.",
-						Flags: []cli.Flag{
-							&cli.IntFlag{
-								Name:     "id",
-								Required: true,
-							},
-						},
+						Name:   "delete",
+						Usage:  "Delete an entry by id.",
 						Action: deleteEntry,
 					},
 				},
@@ -151,8 +130,7 @@ func main() {
 						Usage: "Delete a category.",
 						Flags: []cli.Flag{
 							&cli.IntFlag{
-								Name:     "id",
-								Required: true,
+								Name: "id",
 							},
 						},
 						Action: deleteCategory,
@@ -171,17 +149,14 @@ func main() {
 func listEntries(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 
-	entries, err := store.NewEntryRepository(db).ReadAllJoinCategories()
+	entryRepo := store.NewEntryRepository(db)
+
+	entries, err := entryRepo.ReadAllJoinCategories()
 	if err != nil {
 		return err
 	}
 
-	t := tabby.New()
-	t.AddHeader("INDEX", "CATEGORY", "TITLE", "CREATED", "CHAR")
-	for i, entry := range entries {
-		t.AddLine(i, entry.CategoryTitle, entry.Title, entry.CreatedAt.Format("2006-01-02"), len(entry.Content))
-	}
-	t.Print()
+	printEntries(entries)
 
 	return nil
 }
@@ -189,11 +164,6 @@ func listEntries(ctx context.Context, c *cli.Command) error {
 // createEntry creates a new entry.
 func createEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	// category := c.Int("category-id")
-	// title := c.String("title")
-
-	// entry := model.NewEntry(category, title)
-	// entriesRepo := store.NewEntryRepository(db)
 
 	categoryRepo := store.NewCategoryRepository(db)
 
@@ -203,14 +173,7 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 	}
 
 	fmt.Println("-- Select a category")
-
-	fmt.Println()
-	t := tabby.New()
-	t.AddHeader("INDEX", "CATEGORY", "DESC")
-	for i, category := range categories {
-		t.AddLine(i, category.Title, category.Description)
-	}
-	t.Print()
+	printCategories(categories)
 	fmt.Println()
 
 	fmt.Printf("category index: ")
@@ -251,23 +214,54 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 	return nil
 }
 
-// editEntry edits an entry by id.
-func editEntry(ctx context.Context, c *cli.Command) error {
+func printEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	id := c.Int("id")
-
-	repo := store.NewEntryRepository(db)
-
-	entries, err := repo.ReadAllEntries()
+	entryRepo := store.NewEntryRepository(db)
+	entries, err := entryRepo.ReadAllEntries()
 	if err != nil {
 		return err
 	}
+	printEntries(entries)
 
-	if int(id) > len(entries)-1 || id < 0 {
+	var index int
+	fmt.Printf("entry index: ")
+	fmt.Scanf("%d", &index)
+
+	if index < 0 || index > len(entries)-1 {
+		fmt.Errorf("invalid input")
+	}
+
+	entry := entries[index]
+
+	fmt.Println(entry.Title)
+	fmt.Println("---")
+	fmt.Println(entry.Content)
+
+	return nil
+}
+
+func editEntry(ctx context.Context, c *cli.Command) error {
+	db := ctx.Value(sqlxKey).(*sqlx.DB)
+	// id := c.Int("id")
+
+	entryRepo := store.NewEntryRepository(db)
+	entries, err := entryRepo.ReadAllEntries()
+	if err != nil {
+		return err
+	}
+	printEntries(entries)
+
+	fmt.Println()
+
+	var index int
+	fmt.Printf("index: ")
+	fmt.Scanf("%d", &index)
+
+	if index < 0 || index > len(entries)-1 {
 		return fmt.Errorf("Invalid index")
 	}
 
-	entry := &entries[id]
+	entry := &entries[index]
 
 	f, err := os.CreateTemp("/tmp", entry.Title+"*.md")
 	if err != nil {
@@ -290,7 +284,7 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
-	// open the file again.
+	// returned from editing, open the file again.
 	b, err := os.ReadFile(f.Name())
 	if err != nil {
 		return err
@@ -298,15 +292,16 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 
 	entry.Content = string(b)
 
-	err = repo.UpdateEntry(entry)
+	err = entryRepo.UpdateEntry(entry)
 	if err != nil {
 		fmt.Println("Something went wrong! Your entry was not saved.")
-		fmt.Println("Backup at:", f.Name())
+		fmt.Println("Backup file at:", f.Name())
 		return err
 	}
 
-	fmt.Println("Saved entry:")
-	fmt.Printf("id: %d, title: %s\n", entry.ID, entry.Title)
+	fmt.Println()
+	fmt.Println("Updated entry:", entry.Title)
+	fmt.Println()
 
 	return nil
 }
@@ -314,22 +309,45 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 // deleteEntry deletes an entry by id.
 func deleteEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	id := c.Int("id")
 
-	repo := store.NewEntryRepository(db)
-
-	entry, err := repo.ReadEntryByID(id)
+	entryRepo := store.NewEntryRepository(db)
+	entries, err := entryRepo.ReadAllJoinCategories()
 	if err != nil {
 		return err
 	}
+	printEntries(entries)
 
-	err = repo.DeleteEntryByID(id)
-	if err != nil {
-		return err
+	// handle user input
+	var index int
+	fmt.Printf("index: ")
+	fmt.Scanf("%d", &index)
+
+	if index < 0 || index > len(entries)-1 {
+		return fmt.Errorf("Invalid index")
 	}
 
-	fmt.Println("Deleted entry:")
-	fmt.Printf("id: %d, title: %s\n", entry.ID, entry.Title)
+	entry := &entries[index]
+
+	reader := bufio.NewReader(os.Stdin)
+
+	var choice string
+	fmt.Printf("Are you sure you want to delete '%s' [y/N]", entry.Title)
+	choice, _ = reader.ReadString('\n')
+	choice = strings.TrimSpace(choice)
+	choice = strings.ToLower(choice)
+
+	switch choice {
+	case "y":
+		err := entryRepo.DeleteEntryByID(entry.ID)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("deleted: '%s'\n", entry.Title)
+	case "n":
+		fmt.Println("exiting...")
+	default:
+		fmt.Errorf("bad input")
+	}
 
 	return nil
 }
@@ -337,46 +355,56 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 // listCategories lists all categories.
 func listCategories(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
+
 	repo := store.NewCategoryRepository(db)
+
 	categories, err := repo.ReadAllCategoriesWithEntries()
 	if err != nil {
 		return err
 	}
-	for _, category := range categories {
-		fmt.Printf("[%d] %s(%d)\n", category.ID, category.Title, len(category.Entries))
-	}
+
+	printCategories(categories)
+
 	return nil
 }
 
 // createCategory creates a new category.
 func createCategory(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	var title string
-	var description string
 
-	if !c.IsSet("title") && !c.IsSet("description") {
-		var err error
-		title, err = GetInputWithPrompt("Title: ")
-		if err != nil {
-			return err
-		}
-		description, err = GetInputWithPrompt("Description: ")
-		if err != nil {
-			return err
-		}
-	} else {
-		title = c.String("title")
-		description = c.String("description")
-	}
+	fmt.Printf("\n\n[%s]: %s\n\n", c.Name, c.Usage)
+
+	reader := bufio.NewReader(os.Stdin)
+
+	var title string
+	fmt.Printf("title: ")
+	title, _ = reader.ReadString('\n')
+	title = strings.TrimSpace(title)
+
+	var description string
+	fmt.Printf("description: ")
+	description, _ = reader.ReadString('\n')
+	description = strings.TrimSpace(description)
 
 	category := model.NewCategory(title, description)
 
-	err := store.NewCategoryRepository(db).CreateCategory(category)
+	categoryRepo := store.NewCategoryRepository(db)
+
+	err := categoryRepo.CreateCategory(category)
+	if err != nil {
+		return err
+	}
+	fmt.Println()
+	fmt.Println("[OK] -- created category:")
+	fmt.Println()
+	fmt.Println(category)
+
+	categories, err := categoryRepo.ReadAllCategories()
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("Created category:", category.Title)
+	printCategories(categories)
 
 	return nil
 }
@@ -422,4 +450,22 @@ func GetInputWithPrompt(prompt string) (string, error) {
 	input = strings.TrimSpace(input)
 
 	return input, nil // Return the string without the newline character
+}
+
+func printEntries(entries []model.Entry) {
+	t := tabby.New()
+	t.AddHeader("INDEX", "CATEGORY", "TITLE", "CREATED", "CHAR")
+	for i, entry := range entries {
+		t.AddLine(i, entry.CategoryTitle, entry.Title, entry.CreatedAt.Format("2006-01-02"), len(entry.Content))
+	}
+	t.Print()
+}
+
+func printCategories(categories []model.Category) {
+	t := tabby.New()
+	t.AddHeader("INDEX", "TITLE", "DESCRIPTION")
+	for i, category := range categories {
+		t.AddLine(i, category.Title, category.Description)
+	}
+	t.Print()
 }

@@ -1,6 +1,9 @@
 package model
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Category struct {
 	ID          int64  `db:"id"`
@@ -14,5 +17,14 @@ func NewCategory(title, description string) *Category {
 }
 
 func (c Category) String() string {
-	return fmt.Sprintf("Category %q (ID: %d)", c.Title, c.ID)
+	var sb strings.Builder
+
+	sb.WriteString("Category: ")
+	sb.WriteString(c.Title)
+	sb.WriteString("\nID: ")
+	sb.WriteString(fmt.Sprint(c.ID))
+	sb.WriteString("\nDescription: ")
+	sb.WriteString(c.Description)
+
+	return sb.String()
 }

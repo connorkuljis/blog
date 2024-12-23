@@ -1,15 +1,17 @@
 {{ define "view" }}
-<section class="flow">
+<section class="content">
   <a href="/{{ slugify .Entry.CategoryTitle}}"
     >back to {{ .Entry.CategoryTitle }}</a
   >
-  <article class="flow">
-    <h1 id="entry-title">{{ .Entry.Title }}</h1>
-    <div id="entry-date">
+  <article class="content">
+    <header>
+      <h1 class="heading">{{ .Entry.Title }}</h1>
       {{ $timestamp := .Entry.CreatedAt.Format "2006-01-02"}}
-      <time datetime="{{ $timestamp }}">{{ $timestamp }}</time>
-    </div>
-    <div id="entry-content">{{ .Content }}</div>
+      <div class="subtitle">
+        <time datetime="{{ $timestamp }}">{{ $timestamp }}</time>
+      </div>
+    </header>
+    <div class="markdown">{{ .Content }}</div>
   </article>
 </section>
 {{ end }}
