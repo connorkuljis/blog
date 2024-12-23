@@ -1,6 +1,9 @@
 {{ define "view" }}
 <section>
-  <h1 id="title">{{ .Entry.Title }}</h1>
-  <div id="content">{{ .Content }}</div>
+  <div class="tape">
+    <h1 id="title" class="handwritten">{{ .Entry.Title }}</h1>
+    <div>{{ .Entry.CreatedAt }}</div>
+  </div>
+  <div id="content" class="note-block">{{ .Content }}</div>
 </section>
 {{ end }}

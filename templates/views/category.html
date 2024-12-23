@@ -2,13 +2,25 @@
 <h1>{{ .Category.Title }}</h1>
 <h2>{{ .Category.Description }}</h2>
 <ul>
-  {{ $t := slugify .Category.Title }} {{ range .Category.Entries }}
+  {{ $category := slugify .Category.Title }}
+  <!-- nowrap -->
+  {{ range .Category.Entries }}
   <li>
-    <a href="/{{ $t }}/{{ slugify .Title }}"
-      ><span
-        ><date>{{ .CreatedAt.Format "2006-01-02" }}</date> - {{ .Title }}</span
-      ></a
-    >
+    <article>
+      <header>
+        <h1>
+          <a
+            aria-label="{{ .Title }}"
+            href="/{{ $category }}/{{ slugify .Title }}"
+            >{{ .Title }}</a
+          >
+        </h1>
+      </header>
+      <div>
+        {{ $timestamp := .CreatedAt.Format "2006-01-02"}}
+        <time datetime="{{ $timestamp }}">{{ $timestamp }}</time>
+      </div>
+    </article>
   </li>
   {{ end }}
 </ul>

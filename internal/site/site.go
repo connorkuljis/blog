@@ -23,6 +23,11 @@ func (s *Site) Init() error {
 	}
 	os.MkdirAll("public", os.ModePerm)
 
+	err = os.CopyFS("public", os.DirFS("static"))
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
