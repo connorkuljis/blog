@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/connorkuljis/content/internal/model"
+	"github.com/connorkuljis/content/internal/store"
 	"github.com/jmoiron/sqlx"
 	"github.com/yuin/goldmark"
 )
@@ -95,7 +95,7 @@ func (s *Site) Render(db *sqlx.DB, lib *HTMLTemplateLibrary, md goldmark.Markdow
 }
 
 func (s *Site) RenderEntry(dir string, db *sqlx.DB, md goldmark.Markdown, t *template.Template) error {
-	entries, err := model.NewEntryRepository(db).ReadAllJoinCategories()
+	entries, err := store.NewEntryRepository(db).ReadAllJoinCategories()
 	if err != nil {
 		return err
 	}
@@ -131,7 +131,7 @@ func (s *Site) RenderEntry(dir string, db *sqlx.DB, md goldmark.Markdown, t *tem
 }
 
 func (s *Site) RenderCategory(dir string, db *sqlx.DB, t *template.Template) error {
-	categories, err := model.NewCategoryRepository(db).ReadAllCategoriesWithEntries()
+	categories, err := store.NewCategoryRepository(db).ReadAllCategoriesWithEntries()
 	if err != nil {
 		return err
 	}
@@ -160,7 +160,7 @@ func (s *Site) RenderCategory(dir string, db *sqlx.DB, t *template.Template) err
 }
 
 func (s *Site) RenderIndex(dir string, db *sqlx.DB, t *template.Template) error {
-	categories, err := model.NewCategoryRepository(db).ReadAllCategoriesWithEntries()
+	categories, err := store.NewCategoryRepository(db).ReadAllCategoriesWithEntries()
 	if err != nil {
 		return err
 	}
