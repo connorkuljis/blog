@@ -177,27 +177,28 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 	fmt.Println()
 
 	fmt.Printf("category index: ")
-	var selection int
-	fmt.Scanf("%d", &selection)
+	var index int
+	fmt.Scanf("%d", &index)
 
-	if selection < 0 || selection > len(categories)-1 {
+	if index < 0 || index > len(categories)-1 {
 		fmt.Errorf("invalid input")
 	}
 
 	fmt.Println()
-	category := categories[selection]
+	category := categories[index]
 	fmt.Println("-- You selected", category)
 	fmt.Println()
 
+	reader := bufio.NewReader(os.Stdin)
+
 	var title string
 	fmt.Printf("title (leave blank for current timestamp): ")
-	reader := bufio.NewReader(os.Stdin)
 	title, _ = reader.ReadString('\n')
 	title = strings.TrimSpace(title)
+
 	if title == "" {
 		title = time.Now().Format(time.RFC3339)
 	}
-	fmt.Println("title:", title)
 
 	entry := model.NewEntry(category.ID, title)
 
@@ -206,10 +207,7 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 		return fmt.Errorf("error creating entry: %w", err)
 	}
 
-	fmt.Println()
-	fmt.Println("Created entry:")
-	fmt.Println(entry)
-	fmt.Println()
+	fmt.Println("Created entry:", entry.Title)
 
 	return nil
 }
