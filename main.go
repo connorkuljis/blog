@@ -181,10 +181,7 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 		fmt.Errorf("invalid input")
 	}
 
-	fmt.Println()
 	category := categories[index]
-
-	fmt.Printf("selected '%s'\n", category.Title)
 
 	reader := bufio.NewReader(os.Stdin)
 
@@ -197,14 +194,12 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 	if title == "" {
 		title = time.Now().Format(time.RFC3339)
 	}
-	fmt.Println("title:", title)
 
 	entry := model.NewEntry(category.ID, title)
 	err = entryRepo.CreateEntry(entry)
 	if err != nil {
 		return fmt.Errorf("error creating entry: %w", err)
 	}
-	fmt.Println("Created entry:", entry.Title)
 
 	var choice string
 	fmt.Printf("Open '%s' in editor? [y/N]", entry.Title)
@@ -234,6 +229,7 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 func printEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 	entryRepo := store.NewEntryRepository(db)
+
 	entries, err := entryRepo.ReadAllEntries()
 	if err != nil {
 		return err
@@ -250,8 +246,6 @@ func printEntry(ctx context.Context, c *cli.Command) error {
 
 	entry := entries[index]
 
-	fmt.Println(entry.Title)
-	fmt.Println("---")
 	fmt.Println(entry.Content)
 
 	return nil
@@ -259,7 +253,6 @@ func printEntry(ctx context.Context, c *cli.Command) error {
 
 func editEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	// id := c.Int("id")
 
 	entryRepo := store.NewEntryRepository(db)
 	entries, err := entryRepo.ReadAllJoinCategories()
@@ -267,8 +260,6 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 	printEntries(entries)
-
-	fmt.Println()
 
 	var index int
 	fmt.Printf("index: ")
@@ -290,9 +281,7 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
-	fmt.Println()
 	fmt.Println("Updated entry:", entry.Title)
-	fmt.Println()
 
 	return nil
 }
@@ -336,8 +325,9 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 		fmt.Printf("deleted: '%s'\n", entry.Title)
 	case "n", "":
 		fmt.Println("exiting...")
+		return nil
 	default:
-		fmt.Errorf("bad input")
+		return fmt.Errorf("bad input")
 	}
 
 	return nil
@@ -346,9 +336,9 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 // listCategories lists all categories.
 func listCategories(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	repo := store.NewCategoryRepository(db)
+	categoryRepo := store.NewCategoryRepository(db)
 
-	categories, err := repo.ReadAllCategoriesWithEntries()
+	categories, err := categoryRepo.ReadAllCategoriesWithEntries()
 	if err != nil {
 		return err
 	}
@@ -381,7 +371,6 @@ func createCategory(ctx context.Context, c *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("created category: '%s'\n", category.Title)
 
 	categories, err := categoryRepo.ReadAllCategories()
 	if err != nil {
@@ -393,27 +382,27 @@ func createCategory(ctx context.Context, c *cli.Command) error {
 }
 
 // deleteCategory deletes a category.
-func deleteCategory(ctx context.Context, c *cli.Command) error {
-	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	id := c.Int("id")
+// TODO: check flags or first argument.
+// func deleteCategory(ctx context.Context, c *cli.Command) error {
+// 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 
-	repo := store.NewCategoryRepository(db)
+// 	repo := store.NewCategoryRepository(db)
 
-	category, err := repo.ReadCategoryByID(id)
-	if err != nil {
-		return err
-	}
+// 	category, err := repo.ReadCategoryByID(id)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	err = repo.DeleteCategoryByTitle(id)
-	if err != nil {
-		return err
-	}
+// 	err = repo.DeleteCategoryByTitle(id)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	fmt.Println("Deleted category.")
-	fmt.Printf("'%s': %s\n", category.Title, category.Description)
+// 	fmt.Println("Deleted category.")
+// 	fmt.Printf("'%s': %s\n", category.Title, category.Description)
 
-	return nil
-}
+// 	return nil
+// }
 
 // GetInputWithPrompt prints a prompt to the user and returns the input string from the keyboard
 func GetInputWithPrompt(prompt string) (string, error) {
@@ -486,3 +475,6 @@ func editEntryContent(entry *model.Entry) error {
 
 	return nil
 }
+
+// - common functions:
+// - select a valid entry from list
