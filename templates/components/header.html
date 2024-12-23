@@ -1,12 +1,7 @@
 {{ define "header" }}
 <header>
-  <h1 id="site-title">{{ .Site.Title }}</h1>
-  <nav>
-    <ul role="list">
-      <li><a href="/">Home</a></li>
-      <li><a href="/blog">Blog</a></li>
-      <li><a href="/journal">Journal</a></li>
-    </ul>
-  </nav>
+  <div class="wrapper">
+    <h1 id="site-title"><a href="/">{{ .Site.Title }}</a></h1>
+  </div>
 </header>
 {{ end }}

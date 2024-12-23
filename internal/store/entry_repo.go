@@ -2,6 +2,7 @@ package store
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/connorkuljis/content/internal/model"
 	"github.com/jmoiron/sqlx"
@@ -16,7 +17,7 @@ func NewEntryRepository(db *sqlx.DB) *EntryRepository {
 }
 
 func (r *EntryRepository) CreateEntry(entry *model.Entry) error {
-	res, err := r.db.Exec("INSERT INTO entries (category_id, title) VALUES (?, ?)", entry.CategoryID, entry.Title)
+	res, err := r.db.Exec("INSERT INTO entries (category_id, title, created_at, updated_at) VALUES (?, ?, ?, ?)", entry.CategoryID, entry.Title, entry.CreatedAt.Format(time.RFC3339), entry.UpdatedAt.Format(time.RFC3339))
 	if err != nil {
 		return err
 	}
