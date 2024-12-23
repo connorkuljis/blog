@@ -164,20 +164,17 @@ func listEntries(ctx context.Context, c *cli.Command) error {
 // createEntry creates a new entry.
 func createEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-
 	categoryRepo := store.NewCategoryRepository(db)
+	entryRepo := store.NewEntryRepository(db)
 
 	categories, err := categoryRepo.ReadAllCategories()
 	if err != nil {
 		return err
 	}
-
-	fmt.Println("-- Select a category")
 	printCategories(categories)
-	fmt.Println()
 
-	fmt.Printf("category index: ")
 	var index int
+	fmt.Printf("category index: ")
 	fmt.Scanf("%d", &index)
 
 	if index < 0 || index > len(categories)-1 {
@@ -186,28 +183,50 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 
 	fmt.Println()
 	category := categories[index]
-	fmt.Println("-- You selected", category)
-	fmt.Println()
+
+	fmt.Printf("selected '%s'\n", category.Title)
 
 	reader := bufio.NewReader(os.Stdin)
 
 	var title string
-	fmt.Printf("title (leave blank for current timestamp): ")
+	fmt.Println("Please enter entry title, or leave blank for current timestamp")
+	fmt.Printf("title: ")
 	title, _ = reader.ReadString('\n')
 	title = strings.TrimSpace(title)
 
 	if title == "" {
 		title = time.Now().Format(time.RFC3339)
 	}
+	fmt.Println("title:", title)
 
 	entry := model.NewEntry(category.ID, title)
-
-	err = store.NewEntryRepository(db).CreateEntry(entry)
+	err = entryRepo.CreateEntry(entry)
 	if err != nil {
 		return fmt.Errorf("error creating entry: %w", err)
 	}
-
 	fmt.Println("Created entry:", entry.Title)
+
+	var choice string
+	fmt.Printf("Open '%s' in editor? [y/N]", entry.Title)
+	choice, _ = reader.ReadString('\n')
+	choice = strings.TrimSpace(choice)
+	choice = strings.ToLower(choice)
+
+	switch choice {
+	case "y":
+		err := editEntryContent(entry)
+		if err != nil {
+			return err
+		}
+		err = entryRepo.UpdateEntry(entry)
+		if err != nil {
+			return err
+		}
+	case "n", "":
+		fmt.Println("Done.")
+	default:
+		return fmt.Errorf("bad input")
+	}
 
 	return nil
 }
@@ -243,7 +262,7 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 	// id := c.Int("id")
 
 	entryRepo := store.NewEntryRepository(db)
-	entries, err := entryRepo.ReadAllEntries()
+	entries, err := entryRepo.ReadAllJoinCategories()
 	if err != nil {
 		return err
 	}
@@ -261,39 +280,13 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 
 	entry := &entries[index]
 
-	f, err := os.CreateTemp("/tmp", entry.Title+"*.md")
+	err = editEntryContent(entry)
 	if err != nil {
 		return err
 	}
-
-	_, err = f.WriteString(entry.Content)
-	if err != nil {
-		return err
-	}
-	f.Close() // close the file
-
-	cmd := exec.Command(os.Getenv("EDITOR"), f.Name())
-	cmd.Stdout = os.Stdout
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-
-	err = cmd.Run()
-	if err != nil {
-		return err
-	}
-
-	// returned from editing, open the file again.
-	b, err := os.ReadFile(f.Name())
-	if err != nil {
-		return err
-	}
-
-	entry.Content = string(b)
 
 	err = entryRepo.UpdateEntry(entry)
 	if err != nil {
-		fmt.Println("Something went wrong! Your entry was not saved.")
-		fmt.Println("Backup file at:", f.Name())
 		return err
 	}
 
@@ -307,8 +300,8 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 // deleteEntry deletes an entry by id.
 func deleteEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-
 	entryRepo := store.NewEntryRepository(db)
+
 	entries, err := entryRepo.ReadAllJoinCategories()
 	if err != nil {
 		return err
@@ -341,7 +334,7 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 			return err
 		}
 		fmt.Printf("deleted: '%s'\n", entry.Title)
-	case "n":
+	case "n", "":
 		fmt.Println("exiting...")
 	default:
 		fmt.Errorf("bad input")
@@ -353,14 +346,12 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 // listCategories lists all categories.
 func listCategories(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-
 	repo := store.NewCategoryRepository(db)
 
 	categories, err := repo.ReadAllCategoriesWithEntries()
 	if err != nil {
 		return err
 	}
-
 	printCategories(categories)
 
 	return nil
@@ -369,39 +360,33 @@ func listCategories(ctx context.Context, c *cli.Command) error {
 // createCategory creates a new category.
 func createCategory(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-
-	fmt.Printf("\n\n[%s]: %s\n\n", c.Name, c.Usage)
+	categoryRepo := store.NewCategoryRepository(db)
 
 	reader := bufio.NewReader(os.Stdin)
 
 	var title string
+	fmt.Println("Please enter a category title: (Must be unique)")
 	fmt.Printf("title: ")
 	title, _ = reader.ReadString('\n')
 	title = strings.TrimSpace(title)
 
 	var description string
+	fmt.Printf("Please enter a short description for '%s'\n", title)
 	fmt.Printf("description: ")
 	description, _ = reader.ReadString('\n')
 	description = strings.TrimSpace(description)
 
 	category := model.NewCategory(title, description)
-
-	categoryRepo := store.NewCategoryRepository(db)
-
 	err := categoryRepo.CreateCategory(category)
 	if err != nil {
 		return err
 	}
-	fmt.Println()
-	fmt.Println("[OK] -- created category:")
-	fmt.Println()
-	fmt.Println(category)
+	fmt.Printf("created category: '%s'\n", category.Title)
 
 	categories, err := categoryRepo.ReadAllCategories()
 	if err != nil {
 		return err
 	}
-
 	printCategories(categories)
 
 	return nil
@@ -466,4 +451,38 @@ func printCategories(categories []model.Category) {
 		t.AddLine(i, category.Title, category.Description)
 	}
 	t.Print()
+}
+
+func editEntryContent(entry *model.Entry) error {
+	f, err := os.CreateTemp("/tmp", entry.Title+"*.md")
+	if err != nil {
+		return err
+	}
+	fmt.Println("Created temporary file:", f.Name())
+
+	_, err = f.WriteString(entry.Content)
+	if err != nil {
+		return err
+	}
+	f.Close() // close the file
+
+	cmd := exec.Command(os.Getenv("EDITOR"), f.Name())
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+
+	err = cmd.Run()
+	if err != nil {
+		return fmt.Errorf("Error: unable to execute command '%s': %w", cmd.String(), err)
+	}
+
+	// returned from editing, open the file again.
+	b, err := os.ReadFile(f.Name())
+	if err != nil {
+		return fmt.Errorf("Error: unable to read from '%s': %w", f.Name(), err)
+	}
+
+	entry.Content = string(b)
+
+	return nil
 }
