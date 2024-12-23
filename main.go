@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/cheynewallace/tabby"
 	"github.com/connorkuljis/content/internal/model"
@@ -97,14 +98,12 @@ func main() {
 						Usage: "Create a new entry.",
 						Flags: []cli.Flag{
 							&cli.IntFlag{
-								Name:     "category-id",
-								Aliases:  []string{"c"},
-								Required: true,
+								Name:    "category-id",
+								Aliases: []string{"c"},
 							},
 							&cli.StringFlag{
-								Name:     "title",
-								Aliases:  []string{"t"},
-								Required: true,
+								Name:    "title",
+								Aliases: []string{"t"},
 							},
 						},
 						Action: createEntry,
@@ -182,26 +181,72 @@ func listEntries(ctx context.Context, c *cli.Command) error {
 	for i, entry := range entries {
 		t.AddLine(i, entry.CategoryTitle, entry.Title, entry.CreatedAt.Format("2006-01-02"), len(entry.Content))
 	}
-
 	t.Print()
+
 	return nil
 }
 
 // createEntry creates a new entry.
 func createEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	category := c.Int("category-id")
-	title := c.String("title")
+	// category := c.Int("category-id")
+	// title := c.String("title")
 
-	entry := model.NewEntry(category, title)
+	// entry := model.NewEntry(category, title)
+	// entriesRepo := store.NewEntryRepository(db)
 
-	err := store.NewEntryRepository(db).CreateEntry(entry)
+	categoryRepo := store.NewCategoryRepository(db)
+
+	categories, err := categoryRepo.ReadAllCategories()
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("-- Select a category")
+
+	fmt.Println()
+	t := tabby.New()
+	t.AddHeader("INDEX", "CATEGORY", "DESC")
+	for i, category := range categories {
+		t.AddLine(i, category.Title, category.Description)
+	}
+	t.Print()
+	fmt.Println()
+
+	fmt.Printf("category index: ")
+	var selection int
+	fmt.Scanf("%d", &selection)
+
+	if selection < 0 || selection > len(categories)-1 {
+		fmt.Errorf("invalid input")
+	}
+
+	fmt.Println()
+	category := categories[selection]
+	fmt.Println("-- You selected", category)
+	fmt.Println()
+
+	var title string
+	fmt.Printf("title (leave blank for current timestamp): ")
+	reader := bufio.NewReader(os.Stdin)
+	title, _ = reader.ReadString('\n')
+	title = strings.TrimSpace(title)
+	if title == "" {
+		title = time.Now().Format(time.RFC3339)
+	}
+	fmt.Println("title:", title)
+
+	entry := model.NewEntry(category.ID, title)
+
+	err = store.NewEntryRepository(db).CreateEntry(entry)
 	if err != nil {
 		return fmt.Errorf("error creating entry: %w", err)
 	}
 
+	fmt.Println()
 	fmt.Println("Created entry:")
-	fmt.Printf("id: %d, title: %s\n", entry.ID, entry.Title)
+	fmt.Println(entry)
+	fmt.Println()
 
 	return nil
 }
@@ -213,10 +258,16 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 
 	repo := store.NewEntryRepository(db)
 
-	entry, err := repo.ReadEntryByID(id)
+	entries, err := repo.ReadAllEntries()
 	if err != nil {
 		return err
 	}
+
+	if int(id) > len(entries)-1 || id < 0 {
+		return fmt.Errorf("Invalid index")
+	}
+
+	entry := &entries[id]
 
 	f, err := os.CreateTemp("/tmp", entry.Title+"*.md")
 	if err != nil {
@@ -227,12 +278,9 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 	if err != nil {
 		return err
 	}
-
-	// close the file
-	f.Close()
+	f.Close() // close the file
 
 	cmd := exec.Command(os.Getenv("EDITOR"), f.Name())
-
 	cmd.Stdout = os.Stdout
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout

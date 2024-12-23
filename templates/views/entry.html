@@ -1,9 +1,15 @@
 {{ define "view" }}
-<section>
-  <div class="tape">
-    <h1 id="title" class="handwritten">{{ .Entry.Title }}</h1>
-    <div>{{ .Entry.CreatedAt }}</div>
-  </div>
-  <div id="content" class="note-block">{{ .Content }}</div>
+<section class="flow">
+  <a href="/{{ slugify .Entry.CategoryTitle}}"
+    >back to {{ .Entry.CategoryTitle }}</a
+  >
+  <article class="flow">
+    <h1 id="entry-title">{{ .Entry.Title }}</h1>
+    <div id="entry-date">
+      {{ $timestamp := .Entry.CreatedAt.Format "2006-01-02"}}
+      <time datetime="{{ $timestamp }}">{{ $timestamp }}</time>
+    </div>
+    <div id="entry-content">{{ .Content }}</div>
+  </article>
 </section>
 {{ end }}

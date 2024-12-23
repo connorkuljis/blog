@@ -23,7 +23,13 @@ type Entry struct {
 }
 
 func NewEntry(categoryID int64, title string) *Entry {
-	return &Entry{CategoryID: categoryID, Title: title}
+	now := time.Now()
+	return &Entry{
+		CategoryID: categoryID,
+		Title:      title,
+		CreatedAt:  now,
+		UpdatedAt:  now,
+	}
 }
 
 func (e Entry) String() string {

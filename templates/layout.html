@@ -1,5 +1,7 @@
 {{ define "layout" }}
 <!-- nowrap -->
 {{ template "header" . }}
-<main>{{ template "view" .}}</main>
+<main>
+  <div class="wrapper">{{ template "view" .}}</div>
+</main>
 {{ end }}

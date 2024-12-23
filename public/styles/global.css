@@ -1,0 +1,42 @@
+/* styles/global.css */
+
+body {
+  margin: 0;
+  font-family: var(--ff-base);
+  color: var(--clr-body);
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--ff-heading);
+  color: var(--clr-heading);
+
+  font-weight: var(--fw-normal);
+  font-size: var(--fs-400);
+  text-wrap: balance;
+}
+
+p,
+li {
+  text-wrap: pretty;
+  max-width: 80ch;
+}
+
+a {
+  color: var(--clr-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--clr-blue-200);
+  text-decoration: underline;
+}
+
+b {
+  font-weight: var(--fw-semi-bold);
+}

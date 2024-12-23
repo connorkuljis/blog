@@ -1,210 +1,31 @@
-/* General Body Styling */
-body {
-  font-family: 'Courier New', monospace;
-  /* Mimics typewriter/handwritten feel */
-  background-color: #f2efeb;
-  /* Light, aged paper color */
-  color: #333;
-  /* Dark grey for readability */
-  line-height: 1.6;
-  margin: 20px;
-  /* Some margin */
-  padding: 20px;
-  box-sizing: border-box;
-  /* Avoids margin/padding issues */
-}
+@import url("/styles/reset.css");
+@import url("/styles/variables.css");
+@import url("/styles/global.css");
 
-
-/* Headings - Mimic "Write Something You Care About" */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'Helvetica', sans-serif;
-  /* Use a clean, simple font for headings */
-  color: #222;
-  font-weight: bold;
-  margin-bottom: 0.5em;
+.wrapper {
+  margin: 0 auto;
+  padding: 1.5rem;
+  max-width: 42rem;
 
 }
 
-
-/* Paragraphs -  More handwritten feel */
-p {
-  font-family: 'Arial', sans-serif;
-  /* A slightly less formal sans-serif*/
-  margin-bottom: 1.2em;
-  line-height: 1.5;
-
+.flow {
+  &>*+* {
+    margin-top: 3.5rem;
+  }
 }
 
-
-
-/* List Items - Circle bullets like the note paper */
-ul,
-ol {
-  list-style-type: circle;
-  margin-left: 25px;
-
+#site-title {
+  font-size: var(--fs-800);
+  font-weight: var(--fw-bold);
 }
 
-/* List Items - Remove default number*/
-ol {
-  list-style-type: none;
+.cta {
+  display: inline-flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 
-}
-
-li {
-  margin-bottom: 0.6em;
-}
-
-/* Links - Slightly muted like the pen ink */
-a {
-  color: #555;
-  text-decoration: none;
-  /* No underlines by default */
-}
-
-a:hover {
-  text-decoration: underline;
-  /* Show underline on hover */
-}
-
-
-/* Quotes/Blockquotes -  Emphasize handwritten */
-
-blockquote {
-  font-style: italic;
-  border-left: 3px solid #bbb;
-  padding-left: 10px;
-  margin-bottom: 1.5em;
-
-}
-
-/* Images -  A touch of sepia? */
-img {
-  max-width: 100%;
-  /* Ensure responsiveness */
-  height: auto;
-  filter: sepia(10%);
-}
-
-/* Text areas mimicking written note */
-textarea,
-input[type="text"],
-input[type="email"],
-select {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin-bottom: 15px;
-  width: 100%;
-  box-sizing: border-box;
-  background-color: #fbfafa;
-  font-family: inherit;
-  /* Maintain font consistency */
-
-
-}
-
-
-button,
-input[type="submit"] {
-  background-color: #f0e0c2;
-  /* Light beige button background */
-  color: #333;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 3px;
-  font-family: inherit;
-  transition: background-color 0.3s;
-  /* Smooth hover effect */
-
-}
-
-button:hover,
-input[type="submit"]:hover {
-  background-color: #e0c9a7;
-}
-
-
-/* Subtle shadow for depth */
-.card {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  /* Subtle shadow */
-}
-
-/* Specific Elements for Handwritting Effect */
-/* The little yellow notes */
-.note-block {
-  background-color: #fff8d1;
-  /* Light yellow like the post-it */
-  padding: 10px 15px;
-  margin: 10px 0;
-  border: 1px dashed #aaa;
-  /* Dotted line border */
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
-  /* Soft shadow */
-  position: relative;
-  font-size: 0.9em;
-}
-
-/* The little washi taped papers */
-.tape {
-  position: relative;
-  /*Needed for the tape overlay*/
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin: 10px 0;
-  box-sizing: border-box;
-  background-color: #fff;
-}
-
-
-.tape::before {
-  content: '';
-  position: absolute;
-  top: -5px;
-  left: 10%;
-  width: 80%;
-  height: 10px;
-  background-image: repeating-linear-gradient(-45deg,
-      #c3a786,
-      #c3a786 1px,
-      transparent 1px,
-      transparent 2px);
-  z-index: 1;
-}
-
-
-
-/* Some tape */
-.tape-strip {
-  background-color: #f0e0c2;
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 3px;
-  font-size: 0.8em;
-  margin: 2px 0;
-
-}
-
-/* Typography based on handwritten  */
-.handwritten-text {
-  font-family: 'Courier New', monospace;
-  font-style: italic;
-}
-
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  body {
-    margin: 10px;
-    padding: 10px;
+  & img {
+    width: 32px;
   }
 }
