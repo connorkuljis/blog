@@ -1,10 +1,12 @@
 {{ define "view" }}
-<section class="flow">
+<section>
   <a href="/">back to home</a>
 
-  <article class="flow">
-    <h1>{{ .Category.Title }}</h1>
-    <h2>{{ .Category.Description }}</h2>
+  <article>
+    <header>
+      <h1>{{ .Category.Title }}</h1>
+      <p>{{ .Category.Description }}</p>
+    </header>
     <div>
       <ul>
         {{ $category := slugify .Category.Title }}
@@ -13,7 +15,7 @@
         <li>
           <article>
             <header>
-              <h1>
+              <h1 class="heading">
                 <a
                   aria-label="{{ .Title }}"
                   href="/{{ $category }}/{{ slugify .Title }}"
@@ -21,7 +23,7 @@
                 >
               </h1>
             </header>
-            <div>
+            <div class="subtitle">
               {{ $timestamp := .CreatedAt.Format "2006-01-02"}}
               <time datetime="{{ $timestamp }}">{{ $timestamp }}</time>
             </div>

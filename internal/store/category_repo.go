@@ -50,7 +50,7 @@ func (r *CategoryRepo) ReadAllCategoriesWithEntries() ([]model.Category, error) 
 
 	for i, c := range categories {
 		var entries []model.Entry
-		err := r.db.Select(&entries, "SELECT * FROM entries WHERE category_id = ?", c.ID)
+		err := r.db.Select(&entries, "SELECT * FROM entries WHERE category_id = ? ORDER by created_at DESC", c.ID)
 		if err != nil {
 			return []model.Category{}, err
 		}
