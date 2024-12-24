@@ -1,34 +1,36 @@
 <!doctype html>
 <html lang="en">
-  {{ template "head" }}
+  {{ template "head" . }}
+  <body class="wrapper">
+    {{ template "header" . }}
 
-  <body>
-    <section>
-      <a href="/">back to home</a>
+    <main>
+      <section>
+        <a href="/">back to home</a>
+      </section>
 
       <article>
         <header>
           <h1>{{ .Category.Title }}</h1>
           <p>{{ .Category.Description }}</p>
         </header>
-
         <div>
           <ul>
-            {{ $category := .Category.Title }}
+            {{ $category := slugify .Category.Title }}
             <!-- nowrap -->
             {{ range .Category.Entries }}
             <li>
               <article>
                 <header>
-                  <h1 class="heading">
+                  <h1>
                     <a
                       aria-label="{{ .Title }}"
-                      href="/{{ $category }}/{{  .Title }}"
+                      href="/{{ $category }}/{{ slugify .Title }}"
                       >{{ .Title }}</a
                     >
                   </h1>
                 </header>
-                <div class="subtitle">
+                <div>
                   {{ $timestamp := .CreatedAt.Format "2006-01-02"}}
                   <time datetime="{{ $timestamp }}"
                     >{{ .CreatedAt.Format "Jan 02, 2006" }}</time
@@ -40,6 +42,6 @@
           </ul>
         </div>
       </article>
-    </section>
+    </main>
   </body>
 </html>
