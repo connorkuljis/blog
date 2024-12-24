@@ -1,9 +1,0 @@
-{{ define "view" }}
-<section class="flow">
-  <nav>
-    {{ range .Categories }}
-    <a href="/{{ slugify .Title }}">/{{ slugify .Title }}</a>
-    {{ end }}
-  </nav>
-</section>
-{{ end }}
