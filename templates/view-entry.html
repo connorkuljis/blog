@@ -1,0 +1,53 @@
+<!-- view-entry.html -->
+<!doctype html>
+<html lang="en">
+  {{ template "head" }}
+
+  <body>
+    <section>
+      <a href="/{{ .Entry.CategoryTitle}}"
+        >back to {{ .Entry.CategoryTitle }}</a
+      >
+
+      {{ $timestamp := .Entry.CreatedAt.Format "2006-01-02"}}
+      <article id="entry">
+        <header id="entry-header">
+          <h1 id="entry-title">{{ .Entry.Title }}</h1>
+          <h2 id="entry-subtitle">
+            <time id="entry-created-at" datetime="{{ $timestamp }}"
+              >{{ .Entry.CreatedAt.Format "Jan 02, 2006" }}</time
+            >
+          </h2>
+        </header>
+
+        <div id="entry-content">{{ .Content }}</div>
+      </article>
+
+      <style>
+        #entry {
+          padding-top: 1.5rem;
+        }
+
+        #entry-title {
+          font-weight: var(--fw-bold);
+          font-size: var(--fs-700);
+        }
+
+        #entry-subtitle {
+          font-weight: var(--fw-normal);
+          font-size: var(--fs-400);
+
+          color: var(--clr-neutral-600);
+        }
+
+        #entry-content {
+          margin-top: 3rem;
+        }
+
+        #entry-content > * + * {
+          margin-top: 1.5rem;
+        }
+      </style>
+    </section>
+  </body>
+</html>

@@ -133,7 +133,7 @@ func main() {
 								Name: "id",
 							},
 						},
-						Action: deleteCategory,
+						// Action: deleteCategory,
 					},
 				},
 			},
