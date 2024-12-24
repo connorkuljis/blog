@@ -1,8 +1,12 @@
 <!doctype html>
 <html lang="en">
-  {{ template "head" }}
-
-  <body>
-    <section class="">hello</section>
+  {{ template "head" . }}
+  <body class="wrapper">
+    {{ template "header" . }}
+    <ul>
+      {{ range .Categories }}
+      <li><a href="/{{ slugify .Title }}">{{ .Title }}</a></li>
+      {{ end }}
+    </ul>
   </body>
 </html>
