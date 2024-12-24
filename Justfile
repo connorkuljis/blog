@@ -1,14 +1,16 @@
-build: clean
-    go build -o ./content .
+bin := "./content"
 
 clean:
-    rm -f ./content
+    rm -f {{ bin }}
+
+build: clean
+    go build -o {{ bin }} .
 
 run *args: build
-    ./content {{ args }}
+    {{ bin }} {{ args }}
 
-ssg: build
-    ./content render
+render:
+    {{ bin }} render
     
 serve:
     python3 -m http.server -d public 8080
