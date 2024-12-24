@@ -14,47 +14,35 @@
     
 
 
-<header>
+<header id="site-header">
   <div class="wrapper">
     <h1 id="site-title"><a href="/">Connor&#39;s Blog</a></h1>
   </div>
+  <style>
+    #site-title {
+      font-size: var(--fs-700);
+    }
+    #site-title > a {
+      color: inherit;
+    }
+  </style>
 </header>
 
 <main>
   <div class="wrapper">
 <section class="flow">
-  <table>
-    <thead>
-      <th>Category</th>
-      <th>Description</th>
-    </thead>
-    <tbody>
-      
-      <tr>
-        <td><a href="/blog">/blog</a></td>
-        <td>all blog posts</td>
-      </tr>
-      
-      <tr>
-        <td><a href="/journal">/journal</a></td>
-        <td></td>
-      </tr>
-      
-      <tr>
-        <td><a href="/til">/til</a></td>
-        <td>Things i&#39;ve learned / collected</td>
-      </tr>
-      
-      <tr>
-        <td><a href="/projects">/projects</a></td>
-        <td>Things I&#39;ve built / created</td>
-      </tr>
-      
-    </tbody>
-  </table>
+  <nav>
+    
+    <a href="/blog">/blog</a>
+    
+    <a href="/journal">/journal</a>
+    
+    <a href="/til">/til</a>
+    
+    <a href="/projects">/projects</a>
+    
+  </nav>
 </section>
-
-<img src="images/cat.jpg" />
 </div>
 </main>
 

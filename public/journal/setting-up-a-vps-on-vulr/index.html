@@ -14,27 +14,39 @@
     
 
 
-<header>
+<header id="site-header">
   <div class="wrapper">
     <h1 id="site-title"><a href="/">Connor&#39;s Blog</a></h1>
   </div>
+  <style>
+    #site-title {
+      font-size: var(--fs-700);
+    }
+    #site-title > a {
+      color: inherit;
+    }
+  </style>
 </header>
 
 <main>
   <div class="wrapper">
-<section class="content">
+<section>
   <a href="/journal"
     >back to journal</a
   >
-  <article class="content">
-    <header>
-      <h1 class="heading">Setting up a VPS on Vulr</h1>
-      
-      <div class="subtitle">
-        <time datetime="2024-12-17">2024-12-17</time>
-      </div>
+
+  
+  <article id="entry">
+    <header id="entry-header">
+      <h1 id="entry-title">Setting up a VPS on Vulr</h1>
+      <h2 id="entry-subtitle">
+        <time id="entry-created-at" datetime="2024-12-17"
+          >Dec 17, 2024</time
+        >
+      </h2>
     </header>
-    <div class="markdown"><h2 id="setup-vultr-account">Setup Vultr Account</h2>
+
+    <div id="entry-content"><h2 id="setup-vultr-account">Setup Vultr Account</h2>
 <ul>
 <li>
 <p>Create Account on Vultr</p>
@@ -138,6 +150,32 @@ To                         Action      From
 </code></pre>
 </div>
   </article>
+
+  <style>
+    #entry {
+      padding-top: 1.5rem;
+    }
+
+    #entry-title {
+      font-weight: var(--fw-bold);
+      font-size: var(--fs-700);
+    }
+
+    #entry-subtitle {
+      font-weight: var(--fw-normal);
+      font-size: var(--fs-400);
+
+      color: var(--clr-neutral-600);
+    }
+
+    #entry-content {
+      margin-top: 3rem;
+    }
+
+    #entry-content > * + * {
+      margin-top: 1.5rem;
+    }
+  </style>
 </section>
 </div>
 </main>

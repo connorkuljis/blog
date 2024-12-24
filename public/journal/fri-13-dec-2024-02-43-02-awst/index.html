@@ -14,27 +14,39 @@
     
 
 
-<header>
+<header id="site-header">
   <div class="wrapper">
     <h1 id="site-title"><a href="/">Connor&#39;s Blog</a></h1>
   </div>
+  <style>
+    #site-title {
+      font-size: var(--fs-700);
+    }
+    #site-title > a {
+      color: inherit;
+    }
+  </style>
 </header>
 
 <main>
   <div class="wrapper">
-<section class="content">
+<section>
   <a href="/journal"
     >back to journal</a
   >
-  <article class="content">
-    <header>
-      <h1 class="heading">Fri 13 Dec 2024 02:43:02 AWST</h1>
-      
-      <div class="subtitle">
-        <time datetime="2024-12-12">2024-12-12</time>
-      </div>
+
+  
+  <article id="entry">
+    <header id="entry-header">
+      <h1 id="entry-title">Fri 13 Dec 2024 02:43:02 AWST</h1>
+      <h2 id="entry-subtitle">
+        <time id="entry-created-at" datetime="2024-12-12"
+          >Dec 12, 2024</time
+        >
+      </h2>
     </header>
-    <div class="markdown"><p>Finding a job is taking longer than expected.</p>
+
+    <div id="entry-content"><p>Finding a job is taking longer than expected.</p>
 <p>I am starting to rationalise it.</p>
 <ul>
 <li>Graduate jobs are for ass kissers and hoop jumpers.</li>
@@ -44,6 +56,32 @@
 <p>All I know though is that day by day am i getting closer to a product that customers love.</p>
 </div>
   </article>
+
+  <style>
+    #entry {
+      padding-top: 1.5rem;
+    }
+
+    #entry-title {
+      font-weight: var(--fw-bold);
+      font-size: var(--fs-700);
+    }
+
+    #entry-subtitle {
+      font-weight: var(--fw-normal);
+      font-size: var(--fs-400);
+
+      color: var(--clr-neutral-600);
+    }
+
+    #entry-content {
+      margin-top: 3rem;
+    }
+
+    #entry-content > * + * {
+      margin-top: 1.5rem;
+    }
+  </style>
 </section>
 </div>
 </main>
