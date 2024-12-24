@@ -8,30 +8,10 @@
   max-width: 42rem;
 }
 
-.markdown {
-  &>*+* {
-    margin-top: 1.5rem;
-  }
-}
-
 .content {
   &>*+* {
     margin-top: 3.5rem;
   }
-}
-
-.heading {
-  font-weight: var(--fw-bold);
-}
-
-.subtitle {
-  font-weight: var(--fw-normal);
-  color: var(--clr-neutral-600);
-}
-
-#site-title {
-  font-size: var(--fs-800);
-  font-weight: var(--fw-bold);
 }
 
 .cta {

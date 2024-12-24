@@ -14,27 +14,39 @@
     
 
 
-<header>
+<header id="site-header">
   <div class="wrapper">
     <h1 id="site-title"><a href="/">Connor&#39;s Blog</a></h1>
   </div>
+  <style>
+    #site-title {
+      font-size: var(--fs-700);
+    }
+    #site-title > a {
+      color: inherit;
+    }
+  </style>
 </header>
 
 <main>
   <div class="wrapper">
-<section class="content">
+<section>
   <a href="/blog"
     >back to blog</a
   >
-  <article class="content">
-    <header>
-      <h1 class="heading">Useful Shorcuts For Programmers</h1>
-      
-      <div class="subtitle">
-        <time datetime="2024-12-11">2024-12-11</time>
-      </div>
+
+  
+  <article id="entry">
+    <header id="entry-header">
+      <h1 id="entry-title">Useful Shorcuts For Programmers</h1>
+      <h2 id="entry-subtitle">
+        <time id="entry-created-at" datetime="2024-12-11"
+          >Dec 11, 2024</time
+        >
+      </h2>
     </header>
-    <div class="markdown"><h2 id="bash">Bash</h2>
+
+    <div id="entry-content"><h2 id="bash">Bash</h2>
 <table>
 <thead>
 <tr>
@@ -85,6 +97,32 @@
 </table>
 </div>
   </article>
+
+  <style>
+    #entry {
+      padding-top: 1.5rem;
+    }
+
+    #entry-title {
+      font-weight: var(--fw-bold);
+      font-size: var(--fs-700);
+    }
+
+    #entry-subtitle {
+      font-weight: var(--fw-normal);
+      font-size: var(--fs-400);
+
+      color: var(--clr-neutral-600);
+    }
+
+    #entry-content {
+      margin-top: 3rem;
+    }
+
+    #entry-content > * + * {
+      margin-top: 1.5rem;
+    }
+  </style>
 </section>
 </div>
 </main>

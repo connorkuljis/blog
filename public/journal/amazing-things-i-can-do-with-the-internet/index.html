@@ -14,27 +14,39 @@
     
 
 
-<header>
+<header id="site-header">
   <div class="wrapper">
     <h1 id="site-title"><a href="/">Connor&#39;s Blog</a></h1>
   </div>
+  <style>
+    #site-title {
+      font-size: var(--fs-700);
+    }
+    #site-title > a {
+      color: inherit;
+    }
+  </style>
 </header>
 
 <main>
   <div class="wrapper">
-<section class="content">
+<section>
   <a href="/journal"
     >back to journal</a
   >
-  <article class="content">
-    <header>
-      <h1 class="heading">Amazing things I can do with the internet</h1>
-      
-      <div class="subtitle">
-        <time datetime="2024-12-15">2024-12-15</time>
-      </div>
+
+  
+  <article id="entry">
+    <header id="entry-header">
+      <h1 id="entry-title">Amazing things I can do with the internet</h1>
+      <h2 id="entry-subtitle">
+        <time id="entry-created-at" datetime="2024-12-15"
+          >Dec 15, 2024</time
+        >
+      </h2>
     </header>
-    <div class="markdown"><ul>
+
+    <div id="entry-content"><ul>
 <li>Check the cricket score.</li>
 <li>Buy computer parts for cheap.</li>
 <li>Purchase pharmecuticals from Mexico.</li>
@@ -42,6 +54,32 @@
 </ul>
 </div>
   </article>
+
+  <style>
+    #entry {
+      padding-top: 1.5rem;
+    }
+
+    #entry-title {
+      font-weight: var(--fw-bold);
+      font-size: var(--fs-700);
+    }
+
+    #entry-subtitle {
+      font-weight: var(--fw-normal);
+      font-size: var(--fs-400);
+
+      color: var(--clr-neutral-600);
+    }
+
+    #entry-content {
+      margin-top: 3rem;
+    }
+
+    #entry-content > * + * {
+      margin-top: 1.5rem;
+    }
+  </style>
 </section>
 </div>
 </main>

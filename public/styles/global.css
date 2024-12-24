@@ -4,7 +4,8 @@ body {
   margin: 0;
   font-family: var(--ff-base);
   color: var(--clr-body);
-  line-height: 1.5;
+  background-color: var(--clr-bg);
+  line-height: 1.6;
 }
 
 h1,
@@ -13,28 +14,29 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--ff-heading);
-  color: var(--clr-heading);
-
-  font-weight: var(--fw-normal);
   font-size: var(--fs-400);
+  font-weight: var(--fw-normal);
+
   text-wrap: balance;
+  color: var(--clr-heading);
 }
 
 p,
 li {
   text-wrap: pretty;
-  max-width: 80ch;
+  max-width: 60ch;
 }
 
 a {
-  color: var(--clr-accent);
   text-decoration: none;
+
+  color: var(--clr-accent);
 }
 
 a:hover {
-  color: var(--clr-blue-200);
   text-decoration: underline;
+
+  color: var(--clr-blue-200);
 }
 
 b {
