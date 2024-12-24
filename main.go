@@ -43,20 +43,7 @@ func main() {
 			{
 				Name: "render",
 				Action: func(ctx context.Context, c *cli.Command) error {
-					s := site.Site{
-						Title: "Connor's Blog",
-					}
-
-					db, err := store.Connect()
-					if err != nil {
-						return err
-					}
-
-					// html template library
-					lib, err := site.NewTemplateLibrary()
-					if err != nil {
-						return err
-					}
+					db := ctx.Value(sqlxKey).(*sqlx.DB)
 
 					md := goldmark.New(
 						goldmark.WithExtensions(
@@ -71,11 +58,22 @@ func main() {
 						),
 					)
 
-					// db connection
-					err = s.Render(db, lib, md)
+					s := site.Site{
+						Title:          "Connor's Blog",
+						DB:             db,
+						MarkdownParser: md,
+					}
+
+					err := s.Init()
 					if err != nil {
 						return err
 					}
+
+					err = s.Render()
+					if err != nil {
+						return err
+					}
+
 					return nil
 				},
 			},
