@@ -1,20 +1,9 @@
 {{ define "view" }}
 <section class="flow">
-  <table>
-    <thead>
-      <th>Category</th>
-      <th>Description</th>
-    </thead>
-    <tbody>
-      {{ range .Categories }}
-      <tr>
-        <td><a href="/{{ slugify .Title }}">/{{ slugify .Title }}</a></td>
-        <td>{{ .Description}}</td>
-      </tr>
-      {{ end }}
-    </tbody>
-  </table>
+  <nav>
+    {{ range .Categories }}
+    <a href="/{{ slugify .Title }}">/{{ slugify .Title }}</a>
+    {{ end }}
+  </nav>
 </section>
-
-<img src="images/cat.jpg" />
 {{ end }}

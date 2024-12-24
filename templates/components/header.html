@@ -1,7 +1,15 @@
 {{ define "header" }}
-<header>
+<header id="site-header">
   <div class="wrapper">
     <h1 id="site-title"><a href="/">{{ .Site.Title }}</a></h1>
   </div>
+  <style>
+    #site-title {
+      font-size: var(--fs-700);
+    }
+    #site-title > a {
+      color: inherit;
+    }
+  </style>
 </header>
 {{ end }}
