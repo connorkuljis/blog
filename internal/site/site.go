@@ -1,6 +1,7 @@
 package site
 
 import (
+	"bytes"
 	"html/template"
 	"os"
 	"path/filepath"
@@ -44,29 +45,56 @@ func (s *Site) Init() error {
 }
 
 func (s *Site) Render() error {
-	tpls, err := template.ParseGlob("templates/*.html")
-	if err != nil {
-		return err
-	}
-
 	categories, err := store.NewCategoryRepository(s.DB).ReadAllCategoriesWithEntries()
 	if err != nil {
 		return err
 	}
 
 	pages := []Page{
-		HomePage{Categories: categories},
+		HomePage{
+			Site:       s,
+			Categories: categories,
+		},
 	}
 
 	for _, category := range categories {
-		pages = append(pages, CategoryPage{Category: category})
-		for _, entry := range category.Entries {
-			pages = append(pages, EntryPage{Category: category, Entry: entry})
+		pages = append(pages, CategoryPage{
+			Site:     s,
+			Category: category,
+		})
+
+	}
+
+	entries, err := store.NewEntryRepository(s.DB).ReadAllJoinCategories()
+	if err != nil {
+		return err
+	}
+
+	for _, entry := range entries {
+		var buf bytes.Buffer
+		err := s.MarkdownParser.Convert([]byte(entry.Content), &buf)
+		if err != nil {
+			return err
 		}
+
+		pages = append(pages, EntryPage{
+			Site:    s,
+			Entry:   entry,
+			Content: template.HTML(buf.String()),
+		})
+	}
+
+	funcMap := template.FuncMap{
+		"slugify": slugify,
+	}
+
+	tpls, err := template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html")
+	if err != nil {
+		return err
 	}
 
 	for _, page := range pages {
-		err := Render(tpls, page)
+		err := renderPage(tpls, page)
 		if err != nil {
 			return err
 		}
@@ -75,8 +103,8 @@ func (s *Site) Render() error {
 	return nil
 }
 
-func Render(tpls *template.Template, page Page) error {
-	dir, _ := filepath.Split(page.Filepath())
+func renderPage(tpls *template.Template, page Page) error {
+	dir := filepath.Dir(page.Filepath())
 	os.MkdirAll(dir, os.ModePerm)
 
 	f, err := os.Create(page.Filepath())
@@ -93,6 +121,7 @@ func Render(tpls *template.Template, page Page) error {
 }
 
 type HomePage struct {
+	Site       *Site
 	Categories []model.Category
 }
 
@@ -106,16 +135,18 @@ func (p HomePage) TemplateName() string {
 
 func (p HomePage) Data() map[string]any {
 	return map[string]any{
+		"Site":       p.Site,
 		"Categories": p.Categories,
 	}
 }
 
 type CategoryPage struct {
+	Site     *Site
 	Category model.Category
 }
 
 func (p CategoryPage) Filepath() string {
-	return filepath.Join("public", p.Category.Title, "index.html")
+	return filepath.Join("public", slugify(p.Category.Title), "index.html")
 }
 
 func (p CategoryPage) TemplateName() string {
@@ -124,17 +155,19 @@ func (p CategoryPage) TemplateName() string {
 
 func (p CategoryPage) Data() map[string]any {
 	return map[string]any{
+		"Site":     p.Site,
 		"Category": p.Category,
 	}
 }
 
 type EntryPage struct {
-	Category model.Category
-	Entry    model.Entry
+	Site    *Site
+	Entry   model.Entry
+	Content template.HTML
 }
 
 func (p EntryPage) Filepath() string {
-	return filepath.Join("public", p.Category.Title, p.Entry.Title, "index.html")
+	return filepath.Join("public", slugify(p.Entry.CategoryTitle), slugify(p.Entry.Title), "index.html")
 }
 
 func (p EntryPage) TemplateName() string {
@@ -143,12 +176,10 @@ func (p EntryPage) TemplateName() string {
 
 func (p EntryPage) Data() map[string]any {
 	return map[string]any{
-		"Entry": p.Entry,
+		"Site":    p.Site,
+		"Entry":   p.Entry,
+		"Content": p.Content,
 	}
-}
-
-var funcMap = template.FuncMap{
-	"slugify": slugify,
 }
 
 func slugify(s string) string {
