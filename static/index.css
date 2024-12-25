@@ -8,18 +8,14 @@
   max-width: 42rem;
 }
 
-.content {
-  &>*+* {
-    margin-top: 3.5rem;
-  }
+.title {
+  font-size: var(--fs-600);
 }
 
-.cta {
-  display: inline-flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
+.subtitle {
+  color: var(--clr-neutral-600);
+}
 
-  & img {
-    width: 32px;
-  }
+.content>*+* {
+  margin-top: 3.5rem;
 }
