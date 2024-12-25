@@ -1,31 +1,20 @@
+<!-- category.html -->
 <!doctype html>
 <html lang="en">
   {{ template "head" . }}
   <body class="wrapper">
-    <header>
-      <nav><a href="/">back to home</a></nav>
-      <h1 class="title">{{ .Category.Title }}</h1>
-      <h2 class="subtitle">{{ .Category.Description }}</h2>
-    </header>
     <!-- main -->
-    <main>
-      <!-- article content -->
-      <ul>
-        {{ $category := slugify .Category.Title }}
+    <main class="main">
+      <h1 class="title">{{ .Category.Title }}</h1>
+      <span class="subtitle">{{ .Category.Description }}</span>
+      <ul role="list">
+        {{ $categorySlug := slugify .Category.Title }}
         <!-- nowrap -->
-        {{ range .Category.Entries }}
+        {{ range .Entries }}
+        <!-- -->
+        {{ $entrySlug := slugify .Title }}
         <li>
-          <h1>
-            <a
-              aria-label="{{ .Title }}"
-              href="/{{ $category }}/{{ slugify .Title }}"
-              >{{ .Title }}</a
-            >
-          </h1>
-          {{ $timestamp := .CreatedAt.Format "2006-01-02"}}
-          <time datetime="{{ $timestamp }}"
-            >{{ .CreatedAt.Format "Jan 02, 2006" }}</time
-          >
+          <a href="/{{ $categorySlug }}/{{ $entrySlug }}">{{ .Title }}</a>
         </li>
         {{ end }}
       </ul>

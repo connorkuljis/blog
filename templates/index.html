@@ -2,11 +2,30 @@
 <html lang="en">
   {{ template "head" . }}
   <body class="wrapper">
+    <!-- header -->
     {{ template "header" . }}
-    <ul>
-      {{ range .Categories }}
-      <li><a href="/{{ slugify .Title }}">{{ .Title }}</a></li>
-      {{ end }}
-    </ul>
+
+    <!-- main -->
+    <main class="main">
+      <!-- categories -->
+      <h2>Categories</h2>
+      <ul role="list">
+        {{ range .Categories }}
+        <li><a href="/{{ slugify .Title }}">{{ .Title }}</a></li>
+        {{ end }}
+      </ul>
+
+      <!-- entries -->
+      <h2>Entries</h2>
+      <ul role="list">
+        {{ range .Entries}}
+        <li>
+          <a href="/{{ slugify .CategoryTitle }}/{{ slugify .Title }}"
+            >{{ .Title }}</a
+          >
+        </li>
+        {{ end }}
+      </ul>
+    </main>
   </body>
 </html>

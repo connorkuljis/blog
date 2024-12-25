@@ -8,14 +8,34 @@
   max-width: 42rem;
 }
 
+.header>*+* {
+  margin-top: 1.5rem;
+}
+
+.main {
+  padding-top: 1.5rem;
+}
+
+.content>*+* {
+  margin-top: 1.5rem;
+}
+
+.content h1,
+.content h2,
+.content h3,
+.content h4,
+.content h5 {
+  font-weight: var(--fw-semi-bold);
+}
+
 .title {
   font-size: var(--fs-600);
 }
 
-.subtitle {
-  color: var(--clr-neutral-600);
+.title a {
+  color: inherit;
 }
 
-.content>*+* {
-  margin-top: 3.5rem;
+.subtitle {
+  color: var(--clr-neutral-600);
 }
