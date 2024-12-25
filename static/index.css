@@ -2,17 +2,34 @@
 @import url("/styles/variables.css");
 @import url("/styles/global.css");
 
-.wrapper {
+body {
   margin: 0 auto;
   padding: 1.5rem;
   max-width: 42rem;
 }
 
-.main {
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
   padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
-.content {
+#site-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+#site-nav>ul {
+  display: inline-flex;
+  gap: 1rem;
+}
+
+.markdown {
   &>*+* {
     margin-top: 1.5rem;
   }
@@ -36,16 +53,4 @@
 
 .subtitle {
   color: var(--clr-neutral-600);
-}
-
-#site-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-#site-nav>ul {
-  display: inline-flex;
-  gap: 1rem;
 }

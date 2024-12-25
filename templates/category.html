@@ -1,9 +1,10 @@
 <!-- category.html -->
 <!doctype html>
 <html lang="en">
+  <!-- head -->
   {{ template "head" . }}
 
-  <body class="wrapper">
+  <body>
     <!-- header -->
     {{ template "site-header" . }}
 
@@ -11,6 +12,7 @@
     <main>
       <h1>{{ .Category.Title }}</h1>
       <span class="subtitle">{{ .Category.Description }}</span>
+
       <ul role="list">
         {{ $categorySlug := slugify .Category.Title }}
         <!-- nowrap -->

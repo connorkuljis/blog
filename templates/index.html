@@ -1,45 +1,50 @@
+<!-- index.html -->
 <!doctype html>
 <html lang="en">
+  <!-- head -->
   {{ template "head" . }}
-  <body class="wrapper">
+
+  <body>
     <!-- header -->
     {{ template "site-header" . }}
 
     <!-- main -->
     <main>
       <!-- categories -->
-      <div class="categories-wrapper">
-        <h2>Categories</h2>
-        <ul role="list">
-          {{ range .Categories }}
-          <li><a href="/{{ slugify .Title }}">{{ .Title }}</a></li>
-          {{ end }}
-        </ul>
-      </div>
+      {{ template "categories" . }}
 
       <!-- entries -->
-      <div class="entries-wrapper">
-        <h2>Entries</h2>
-        <ul role="list">
-          {{ range .Entries}}
-          <li>
-            <a href="/{{ slugify .CategoryTitle }}/{{ slugify .Title }}"
-              >{{ .Title }}</a
-            >
-          </li>
-          {{ end }}
-        </ul>
-      </div>
+      {{ template "entries" . }}
     </main>
-    <style>
-      .categories-wrapper,
-      .entries-wrapper {
-        padding-top: 1.5rem;
-
-        & > ul {
-          padding-top: 1.5rem;
-        }
-      }
-    </style>
   </body>
 </html>
+
+<!-- categories -->
+{{ define "categories" }}
+<section id="categories">
+  <h2>Categories</h2>
+
+  <ul role="list">
+    {{ range .Categories }}
+    <li><a href="/{{ slugify .Title }}">{{ .Title }}</a></li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}
+
+<!-- entries -->
+{{ define "entries" }}
+<section id="entries">
+  <h2>Entries</h2>
+
+  <ul role="list">
+    {{ range .Entries}}
+    <li>
+      <a href="/{{ slugify .CategoryTitle }}/{{ slugify .Title }}"
+        >{{ .Title }}</a
+      >
+    </li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}
