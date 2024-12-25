@@ -38,45 +38,50 @@ func (s *Site) Init() error {
 }
 
 func (s *Site) Render() error {
-	var pages []Page
-
 	categories, err := store.NewCategoryRepository(s.DB).ReadAllCategoriesWithEntries()
 	if err != nil {
 		return err
 	}
 
-	homePage := HomePage{
-		Site:       s,
-		Categories: categories,
-	}
-	pages = append(pages, homePage)
-
-	for _, category := range categories {
-		categoryPage := CategoryPage{
-			Site:     s,
-			Category: category,
-		}
-		pages = append(pages, categoryPage)
-	}
-
-	entries, err := store.NewEntryRepository(s.DB).ReadAllJoinCategories()
+	allEntries, err := store.NewEntryRepository(s.DB).ReadAllJoinCategories()
 	if err != nil {
 		return err
 	}
 
-	for _, entry := range entries {
-		var buf bytes.Buffer
-		err := s.MarkdownParser.Convert([]byte(entry.Content), &buf)
+	pages := []Page{
+		HomePage{
+			Site:       s,
+			Categories: categories,
+			Entries:    allEntries,
+		},
+	}
+
+	for _, category := range categories {
+		matchedEntries, err := store.NewEntryRepository(s.DB).ReadAllEntriesByCategoryID(category.ID)
 		if err != nil {
 			return err
 		}
 
-		entryPage := EntryPage{
-			Site:    s,
-			Entry:   entry,
-			Content: template.HTML(buf.String()),
+		pages = append(pages, CategoryPage{
+			Site:     s,
+			Category: category,
+			Entries:  matchedEntries,
+		})
+
+		for _, entry := range matchedEntries {
+			var buf bytes.Buffer
+			err := s.MarkdownParser.Convert([]byte(entry.Content), &buf)
+			if err != nil {
+				return err
+			}
+
+			pages = append(pages, EntryPage{
+				Site:     s,
+				Category: category,
+				Entry:    entry,
+				Content:  template.HTML(buf.String()),
+			})
 		}
-		pages = append(pages, entryPage)
 	}
 
 	funcMap := template.FuncMap{
