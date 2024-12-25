@@ -23,7 +23,7 @@ func (p HomePage) Filepath() string {
 }
 
 func (p HomePage) TemplateName() string {
-	return "view-index.html"
+	return "index.html"
 }
 
 func (p HomePage) Data() map[string]any {
@@ -43,7 +43,7 @@ func (p CategoryPage) Filepath() string {
 }
 
 func (p CategoryPage) TemplateName() string {
-	return "view-category.html"
+	return "category.html"
 }
 
 func (p CategoryPage) Data() map[string]any {
@@ -64,7 +64,7 @@ func (p EntryPage) Filepath() string {
 }
 
 func (p EntryPage) TemplateName() string {
-	return "view-entry.html"
+	return "entry.html"
 }
 
 func (p EntryPage) Data() map[string]any {
