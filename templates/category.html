@@ -2,19 +2,21 @@
 <!doctype html>
 <html lang="en">
   {{ template "head" . }}
+
   <body class="wrapper">
+    <!-- header -->
+    {{ template "site-header" . }}
+
     <!-- main -->
-    <main class="main">
-      <h1 class="title">{{ .Category.Title }}</h1>
+    <main>
+      <h1>{{ .Category.Title }}</h1>
       <span class="subtitle">{{ .Category.Description }}</span>
       <ul role="list">
         {{ $categorySlug := slugify .Category.Title }}
         <!-- nowrap -->
         {{ range .Entries }}
-        <!-- -->
-        {{ $entrySlug := slugify .Title }}
         <li>
-          <a href="/{{ $categorySlug }}/{{ $entrySlug }}">{{ .Title }}</a>
+          <a href="/{{ $categorySlug }}/{{ slugify .Title }}">{{ .Title }}</a>
         </li>
         {{ end }}
       </ul>

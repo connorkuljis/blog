@@ -3,10 +3,15 @@
 <html lang="en">
   {{ template "head" . }}
   <body class="wrapper">
+    <!-- header -->
+    {{ template "site-header" . }}
+
     <!-- main -->
-    <main class="main">
-      <h1 class="title">{{ .Entry.Title }}</h1>
-      <div class="content">{{ .Content }}</div>
+    <main>
+      <article class="content" id="{{ slugify .Entry.Title }}">
+        <h1 class="title">{{ .Entry.Title }}</h1>
+        {{ .Content }}
+      </article>
     </main>
   </body>
 </html>
