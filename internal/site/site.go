@@ -43,7 +43,7 @@ func (s *Site) Render() error {
 		return err
 	}
 
-	allEntries, err := store.NewEntryRepository(s.DB).ReadAllJoinCategories()
+	allEntries, err := store.NewEntryRepository(s.DB).ReadAllEntriesWithCategoryData()
 	if err != nil {
 		return err
 	}
