@@ -3,29 +3,43 @@
   {{ template "head" . }}
   <body class="wrapper">
     <!-- header -->
-    {{ template "header" . }}
+    {{ template "site-header" . }}
 
     <!-- main -->
-    <main class="main">
+    <main>
       <!-- categories -->
-      <h2>Categories</h2>
-      <ul role="list">
-        {{ range .Categories }}
-        <li><a href="/{{ slugify .Title }}">{{ .Title }}</a></li>
-        {{ end }}
-      </ul>
+      <div class="categories-wrapper">
+        <h2>Categories</h2>
+        <ul role="list">
+          {{ range .Categories }}
+          <li><a href="/{{ slugify .Title }}">{{ .Title }}</a></li>
+          {{ end }}
+        </ul>
+      </div>
 
       <!-- entries -->
-      <h2>Entries</h2>
-      <ul role="list">
-        {{ range .Entries}}
-        <li>
-          <a href="/{{ slugify .CategoryTitle }}/{{ slugify .Title }}"
-            >{{ .Title }}</a
-          >
-        </li>
-        {{ end }}
-      </ul>
+      <div class="entries-wrapper">
+        <h2>Entries</h2>
+        <ul role="list">
+          {{ range .Entries}}
+          <li>
+            <a href="/{{ slugify .CategoryTitle }}/{{ slugify .Title }}"
+              >{{ .Title }}</a
+            >
+          </li>
+          {{ end }}
+        </ul>
+      </div>
     </main>
+    <style>
+      .categories-wrapper,
+      .entries-wrapper {
+        padding-top: 1.5rem;
+
+        & > ul {
+          padding-top: 1.5rem;
+        }
+      }
+    </style>
   </body>
 </html>

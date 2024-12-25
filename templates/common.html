@@ -9,8 +9,20 @@
 {{ end }}
 
 <!-- header -->
-{{ define "header" }}
+{{ define "site-header" }}
 <header class="header" id="site-header">
-  <h1 class="title" id="site-title"><a href="/">{{ .Site.Title }}</a></h1>
+  <h1 id="site-title"><a href="/">{{ .Site.Title }}</a></h1>
+  {{ template "site-nav" . }}
 </header>
+{{ end }}
+
+<!-- nav -->
+{{ define "site-nav" }}
+<nav id="site-nav">
+  <ul role="list">
+    <li><a href="/">home</a></li>
+    <li><a href="/blog">blog</a></li>
+    <li><a href="/journal">journal</a></li>
+  </ul>
+</nav>
 {{ end }}
