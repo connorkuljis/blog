@@ -1,16 +1,18 @@
-<!-- view-entry.html -->
+<!-- entry.html -->
 <!doctype html>
 <html lang="en">
+  <!-- head -->
   {{ template "head" . }}
-  <body class="wrapper">
+
+  <body>
     <!-- header -->
     {{ template "site-header" . }}
 
     <!-- main -->
     <main>
-      <article class="content" id="{{ slugify .Entry.Title }}">
-        <h1 class="title">{{ .Entry.Title }}</h1>
-        {{ .Content }}
+      <article id="{{ slugify .Entry.Title }}">
+        <h1>{{ .Entry.Title }}</h1>
+        <div class="markdown">{{ .Content }}</div>
       </article>
     </main>
   </body>
