@@ -34,7 +34,7 @@ func (r *EntryRepository) CreateEntry(entry *model.Entry) error {
 
 func (r *EntryRepository) ReadAllEntries() ([]model.Entry, error) {
 	var entries []model.Entry
-	err := r.db.Select(&entries, "SELECT * FROM entries")
+	err := r.db.Select(&entries, "SELECT * FROM entries ORDER BY created_at DESC")
 	if err != nil {
 		return nil, fmt.Errorf("Error getting all entries: %w", err)
 	}
@@ -44,7 +44,7 @@ func (r *EntryRepository) ReadAllEntries() ([]model.Entry, error) {
 
 func (r *EntryRepository) ReadAllEntriesByCategoryID(categoryID int64) ([]model.Entry, error) {
 	var entries []model.Entry
-	err := r.db.Select(&entries, "SELECT * FROM entries WHERE category_id = ?", categoryID)
+	err := r.db.Select(&entries, "SELECT * FROM entries WHERE category_id = ? ORDER BY created_at DESC", categoryID)
 	if err != nil {
 		return nil, fmt.Errorf("Error getting all entries: %w", err)
 	}
@@ -52,7 +52,7 @@ func (r *EntryRepository) ReadAllEntriesByCategoryID(categoryID int64) ([]model.
 	return entries, nil
 }
 
-func (r *EntryRepository) ReadAllJoinCategories() ([]model.Entry, error) {
+func (r *EntryRepository) ReadAllEntriesWithCategoryData() ([]model.Entry, error) {
 	var entries []model.Entry
 	q := `
 SELECT 
@@ -72,7 +72,7 @@ INNER JOIN
 ON
 	c.id = e.category_id
 ORDER BY 
-	c.id
+	e.created_at DESC
 `
 
 	err := r.db.Select(&entries, q)
