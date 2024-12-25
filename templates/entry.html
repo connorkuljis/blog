@@ -1,0 +1,37 @@
+<!-- view-entry.html -->
+<!doctype html>
+<html lang="en">
+  {{ template "head" . }}
+  <body class="wrapper">
+    <header>
+      <nav>
+        <a href="/{{ slugify .Entry.CategoryTitle}}"
+          >back to {{ .Entry.CategoryTitle }}</a
+        >
+      </nav>
+
+      <h1 class="title">{{ .Entry.Title }}</h1>
+      <h2 class="subtitle">
+        {{ $timestamp := .Entry.CreatedAt.Format "2006-01-02"}}
+        <time id="entry-created-at" datetime="{{ $timestamp }}"
+          >{{ .Entry.CreatedAt.Format "Jan 02, 2006" }}</time
+        >
+      </h2>
+    </header>
+
+    <article id="{{ slugify .Entry.Title }}">
+      <div id="entry-content">{{ .Content }}</div>
+    </article>
+
+    <style>
+      #entry-header {
+        margin-top: 1.5rem;
+        margin-bottom: 1.75rem;
+      }
+
+      #entry-content > * + * {
+        margin-top: 1.5rem;
+      }
+    </style>
+  </body>
+</html>

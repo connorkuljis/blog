@@ -1,0 +1,24 @@
+<!-- head -->
+{{ define "head" }}
+<head>
+  <title>{{ .Site.Title }}</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/index.css" />
+</head>
+{{ end }}
+
+<!-- header -->
+{{ define "header" }}
+<header id="site-header">
+  <h1 id="site-title"><a href="/">{{ .Site.Title }}</a></h1>
+</header>
+<style>
+  #site-title {
+    font-size: var(--fs-700);
+  }
+  #site-title > a {
+    color: inherit;
+  }
+</style>
+{{ end }}
