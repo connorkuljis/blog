@@ -42,6 +42,16 @@ func (r *EntryRepository) ReadAllEntries() ([]model.Entry, error) {
 	return entries, nil
 }
 
+func (r *EntryRepository) ReadAllEntriesByCategoryID(categoryID int64) ([]model.Entry, error) {
+	var entries []model.Entry
+	err := r.db.Select(&entries, "SELECT * FROM entries WHERE category_id = ?", categoryID)
+	if err != nil {
+		return nil, fmt.Errorf("Error getting all entries: %w", err)
+	}
+
+	return entries, nil
+}
+
 func (r *EntryRepository) ReadAllJoinCategories() ([]model.Entry, error) {
 	var entries []model.Entry
 	q := `
