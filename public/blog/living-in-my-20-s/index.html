@@ -10,24 +10,27 @@
 </head>
 
   <body class="wrapper">
-    <section>
-      <a href="/blog"
-        >back to blog</a
-      >
-    </section>
+    
+    
+<header class="header" id="site-header">
+  <h1 id="site-title"><a href="/">Connor&#39;s Blog</a></h1>
+  
+<nav id="site-nav">
+  <ul role="list">
+    <li><a href="/">home</a></li>
+    <li><a href="/blog">blog</a></li>
+    <li><a href="/journal">journal</a></li>
+  </ul>
+</nav>
+
+</header>
+
 
     
-    <article id="entry">
-      <header id="entry-header">
-        <h1 id="entry-title">Living In My 20&#39;s</h1>
-        <h2 id="entry-subtitle">
-          <time id="entry-created-at" datetime="2024-12-10"
-            >Dec 10, 2024</time
-          >
-        </h2>
-      </header>
-
-      <div id="entry-content"><p>I turned 20 at the end of March, 2020.</p>
+    <main>
+      <article class="content" id="living-in-my-20-s">
+        <h1 class="title">Living In My 20&#39;s</h1>
+        <p>I turned 20 at the end of March, 2020.</p>
 <p>I wasn't planning a celebration for my birthday, but due to COVID lockdowns I didn't really have much of a choice anyway.</p>
 <p>Months prior I was at a crossroads:</p>
 <ol>
@@ -48,33 +51,8 @@
 <p>In America</p>
 <p>At the time I was constantly editing my vim configuration</p>
 <p>Just 3-4 weeks in to the semester, classes moved online.</p>
-</div>
-    </article>
 
-    <style>
-      #entry {
-        padding-top: 1.5rem;
-      }
-
-      #entry-title {
-        font-weight: var(--fw-bold);
-        font-size: var(--fs-700);
-      }
-
-      #entry-subtitle {
-        font-weight: var(--fw-normal);
-        font-size: var(--fs-400);
-
-        color: var(--clr-neutral-600);
-      }
-
-      #entry-content {
-        margin-top: 3rem;
-      }
-
-      #entry-content > * + * {
-        margin-top: 1.5rem;
-      }
-    </style>
+      </article>
+    </main>
   </body>
 </html>

@@ -10,28 +10,116 @@
 
   <body class="wrapper">
     
-<header id="site-header">
+    
+<header class="header" id="site-header">
   <h1 id="site-title"><a href="/">Connor&#39;s Blog</a></h1>
-</header>
-<style>
-  #site-title {
-    font-size: var(--fs-700);
-  }
-  #site-title > a {
-    color: inherit;
-  }
-</style>
+  
+<nav id="site-nav">
+  <ul role="list">
+    <li><a href="/">home</a></li>
+    <li><a href="/blog">blog</a></li>
+    <li><a href="/journal">journal</a></li>
+  </ul>
+</nav>
 
-    <ul>
+</header>
+
+
+    
+    <main>
       
-      <li><a href="/blog">blog</a></li>
+      <div class="categories-wrapper">
+        <h2>Categories</h2>
+        <ul role="list">
+          
+          <li><a href="/blog">blog</a></li>
+          
+          <li><a href="/journal">journal</a></li>
+          
+          <li><a href="/til">TIL</a></li>
+          
+          <li><a href="/projects">Projects</a></li>
+          
+        </ul>
+      </div>
+
       
-      <li><a href="/journal">journal</a></li>
-      
-      <li><a href="/til">TIL</a></li>
-      
-      <li><a href="/projects">Projects</a></li>
-      
-    </ul>
+      <div class="entries-wrapper">
+        <h2>Entries</h2>
+        <ul role="list">
+          
+          <li>
+            <a href="/blog/living-in-my-20-s"
+              >Living In My 20&#39;s</a
+            >
+          </li>
+          
+          <li>
+            <a href="/blog/useful-shorcuts-for-programmers"
+              >Useful Shorcuts For Programmers</a
+            >
+          </li>
+          
+          <li>
+            <a href="/blog/3-ways-to-avoid-harm-from-technosphere"
+              >3 Ways to Avoid Harm from Technosphere</a
+            >
+          </li>
+          
+          <li>
+            <a href="/blog/plain-text-memo-reborn"
+              >Plain Text Memo: Reborn</a
+            >
+          </li>
+          
+          <li>
+            <a href="/journal/fri-13-dec-2024-02-43-02-awst"
+              >Fri 13 Dec 2024 02:43:02 AWST</a
+            >
+          </li>
+          
+          <li>
+            <a href="/journal/fri-13-dec-2024-09-13-20-awst"
+              >Fri 13 Dec 2024 09:13:20 AWST</a
+            >
+          </li>
+          
+          <li>
+            <a href="/journal/physical-media-list"
+              >Physical Media List</a
+            >
+          </li>
+          
+          <li>
+            <a href="/journal/amazing-things-i-can-do-with-the-internet"
+              >Amazing things I can do with the internet</a
+            >
+          </li>
+          
+          <li>
+            <a href="/journal/setting-up-a-vps-on-vulr"
+              >Setting up a VPS on Vulr</a
+            >
+          </li>
+          
+          <li>
+            <a href="/journal/wants"
+              >Wants</a
+            >
+          </li>
+          
+        </ul>
+      </div>
+    </main>
+    <style>
+      .categories-wrapper,
+      .entries-wrapper {
+        padding-top: 1.5rem;
+
+        & > ul {
+          padding-top: 1.5rem;
+        }
+      }
+    </style>
   </body>
 </html>
