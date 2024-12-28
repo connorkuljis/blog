@@ -10,18 +10,20 @@
 
     <!-- main -->
     <main>
-      <h1>{{ .Category.Title }}</h1>
-      <span class="subtitle">{{ .Category.Description }}</span>
+      <h1 class="title">{{ .Category.Title }}</h1>
+      <div class="subtitle">{{ .Category.Description }}</div>
 
-      <ul role="list">
-        {{ $categorySlug := slugify .Category.Title }}
-        <!-- nowrap -->
-        {{ range .Entries }}
-        <li>
-          <a href="/{{ $categorySlug }}/{{ slugify .Title }}">{{ .Title }}</a>
-        </li>
-        {{ end }}
-      </ul>
+      <div>
+        <ul role="list">
+          {{ $categorySlug := slugify .Category.Title }}
+          <!-- nowrap -->
+          {{ range .Entries }}
+          <li>
+            <a href="/{{ $categorySlug }}/{{ slugify .Title }}">{{ .Title }}</a>
+          </li>
+          {{ end }}
+        </ul>
+      </div>
     </main>
   </body>
 </html>

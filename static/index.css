@@ -8,15 +8,6 @@ body {
   max-width: 42rem;
 }
 
-main {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
-}
-
 #site-header {
   display: flex;
   justify-content: space-between;
@@ -30,6 +21,8 @@ main {
 }
 
 .markdown {
+  padding-top: 1.5rem;
+
   &>*+* {
     margin-top: 1.5rem;
   }
@@ -39,12 +32,13 @@ main {
   & h3,
   & h4,
   & h5 {
-    font-weight: var(--fw-semi-bold);
+    font-size: var(--fs-500);
   }
 }
 
 .title {
   font-size: var(--fs-600);
+  padding-bottom: 0.25rem;
 
   & a {
     color: inherit;
@@ -53,4 +47,5 @@ main {
 
 .subtitle {
   color: var(--clr-neutral-600);
+  padding-bottom: 0.25rem;
 }

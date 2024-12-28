@@ -24,7 +24,7 @@ h6 {
 p,
 li {
   text-wrap: pretty;
-  max-width: 60ch;
+  max-width: 80ch;
 }
 
 a {

@@ -21,12 +21,13 @@
 
 <!-- categories -->
 {{ define "categories" }}
-<section id="categories">
-  <h2>Categories</h2>
-
+<section id="categories" aria-label="Categories" role="region">
+  <h1>Categories</h1>
   <ul role="list">
     {{ range .Categories }}
-    <li><a href="/{{ slugify .Title }}">{{ .Title }}</a></li>
+    <li>
+      <a href="/{{ slugify .Title }}">{{ .Title }}</a> - {{ .Description }}
+    </li>
     {{ end }}
   </ul>
 </section>
@@ -34,15 +35,15 @@
 
 <!-- entries -->
 {{ define "entries" }}
-<section id="entries">
-  <h2>Entries</h2>
-
+<section id="entries" aria-label="Entries" role="region">
+  <h1>Entries</h1>
   <ul role="list">
     {{ range .Entries}}
     <li>
       <a href="/{{ slugify .CategoryTitle }}/{{ slugify .Title }}"
         >{{ .Title }}</a
       >
+      - {{ .CreatedAt.Format "Jan 02, 2006"}}
     </li>
     {{ end }}
   </ul>
