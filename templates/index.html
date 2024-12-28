@@ -4,48 +4,65 @@
   <!-- head -->
   {{ template "head" . }}
 
-  <body>
+  <body class="body">
     <!-- header -->
     {{ template "site-header" . }}
 
     <!-- main -->
-    <main>
-      <!-- categories -->
-      {{ template "categories" . }}
-
+    <main class="main">
       <!-- entries -->
-      {{ template "entries" . }}
+      <section class="section" id="entries" aria-label="Entries" role="region">
+        <h1 class="title">Entries</h1>
+        <div>{{ template "entries" . }}</div>
+      </section>
     </main>
   </body>
 </html>
 
 <!-- categories -->
 {{ define "categories" }}
-<section id="categories" aria-label="Categories" role="region">
-  <h1>Categories</h1>
-  <ul role="list">
-    {{ range .Categories }}
-    <li>
-      <a href="/{{ slugify .Title }}">{{ .Title }}</a> - {{ .Description }}
-    </li>
-    {{ end }}
-  </ul>
-</section>
+<ul role="list">
+  {{ range .Categories }}
+  <li>
+    <h3>
+      <a href="/{{ slugify .Title }}">{{ .Title }}</a>
+      <p>{{ .Description }}</p>
+    </h3>
+  </li>
+  {{ end }}
+</ul>
 {{ end }}
 
 <!-- entries -->
 {{ define "entries" }}
-<section id="entries" aria-label="Entries" role="region">
-  <h1>Entries</h1>
-  <ul role="list">
-    {{ range .Entries}}
-    <li>
-      <a href="/{{ slugify .CategoryTitle }}/{{ slugify .Title }}"
-        >{{ .Title }}</a
-      >
-      - {{ .CreatedAt.Format "Jan 02, 2006"}}
-    </li>
-    {{ end }}
-  </ul>
-</section>
+<ul class="entries" role="list">
+  {{ range .Entries}}
+  <!-- nowrap -->
+  {{ $datetime := .CreatedAt.Format "2006-01-02"}}
+  <!-- nowrap -->
+  {{ $timestamp := .CreatedAt.Format "Jan 02, 2006"}}
+  <li>
+    <article class="card">
+      <header>
+        <time datetime="{{ $datetime }}">{{ $timestamp }}</time>
+        <div>{{ .CategoryTitle }}</div>
+        <h3>
+          <a href="/{{ slugify .CategoryTitle }}/{{ slugify .Title }}"
+            >{{ .Title }}</a
+          >
+        </h3>
+      </header>
+      <p><em>{{ truncate .Content }}</em></p>
+    </article>
+  </li>
+  {{ end }}
+</ul>
+<style>
+  .card {
+    margin-top: 1.5rem;
+  }
+  .card h3 {
+    font-size: var(--fs-600);
+  }
+</style>
 {{ end }}

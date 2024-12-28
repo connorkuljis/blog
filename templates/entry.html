@@ -4,12 +4,12 @@
   <!-- head -->
   {{ template "head" . }}
 
-  <body>
+  <body class="body">
     <!-- header -->
     {{ template "site-header" . }}
 
     <!-- main -->
-    <main>
+    <main class="main">
       <article class="entry" id="{{ slugify .Entry.Title }}">
         <h1 class="title">{{ .Entry.Title }}</h1>
         <div class="subtitle">{{ .Entry.CreatedAt.Format "Jan 02, 2006"}}</div>
