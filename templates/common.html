@@ -10,20 +10,37 @@
 
 <!-- header -->
 {{ define "site-header" }}
-<header id="site-header">
-  <h1 id="site-title"><a href="/">{{ .Site.Title }}</a></h1>
+<header class="site-header">
+  <h1><a href="/">{{ .Site.Title }}</a></h1>
   <!-- site-nav -->
   {{ template "site-nav" . }}
 </header>
+
+<style>
+  .site-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+</style>
 {{ end }}
 
 <!-- nav -->
 {{ define "site-nav" }}
-<nav id="site-nav">
-  <ul role="list">
+<nav>
+  <ul class="nav-items" role="list">
     <li><a href="/">home</a></li>
     <li><a href="/blog">blog</a></li>
     <li><a href="/journal">journal</a></li>
   </ul>
 </nav>
+
+<style>
+  .nav-items {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+  }
+</style>
 {{ end }}

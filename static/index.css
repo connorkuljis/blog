@@ -2,22 +2,14 @@
 @import url("/styles/variables.css");
 @import url("/styles/global.css");
 
-body {
+.body {
   margin: 0 auto;
   padding: 1.5rem;
   max-width: 42rem;
 }
 
-#site-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-#site-nav>ul {
-  display: inline-flex;
-  gap: 1rem;
+.main {
+  padding-top: 3.5rem;
 }
 
 .markdown {
@@ -38,14 +30,21 @@ body {
 
 .title {
   font-size: var(--fs-600);
-  padding-bottom: 0.25rem;
+}
 
-  & a {
-    color: inherit;
-  }
+.title a {
+  color: inherit;
 }
 
 .subtitle {
   color: var(--clr-neutral-600);
   padding-bottom: 0.25rem;
+}
+
+.section {
+  padding-bottom: 2.25rem;
+}
+
+.section>*+* {
+  margin-top: 1.5rem;
 }
