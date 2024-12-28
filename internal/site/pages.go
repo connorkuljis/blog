@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 
 	"github.com/connorkuljis/content/internal/model"
+	"github.com/connorkuljis/content/internal/util"
 )
 
 type Page interface {
@@ -42,7 +43,7 @@ type CategoryPage struct {
 }
 
 func (p CategoryPage) Filepath() string {
-	return filepath.Join("public", slugify(p.Category.Title), "index.html")
+	return filepath.Join("public", util.Slugify(p.Category.Title), "index.html")
 }
 
 func (p CategoryPage) TemplateName() string {
@@ -65,7 +66,7 @@ type EntryPage struct {
 }
 
 func (p EntryPage) Filepath() string {
-	return filepath.Join("public", slugify(p.Category.Title), slugify(p.Entry.Title), "index.html")
+	return filepath.Join("public", util.Slugify(p.Category.Title), util.Slugify(p.Entry.Title), "index.html")
 }
 
 func (p EntryPage) TemplateName() string {

@@ -5,10 +5,9 @@ import (
 	"html/template"
 	"os"
 	"path/filepath"
-	"regexp"
-	"strings"
 
 	"github.com/connorkuljis/content/internal/store"
+	"github.com/connorkuljis/content/internal/util"
 	"github.com/jmoiron/sqlx"
 	"github.com/yuin/goldmark"
 )
@@ -85,7 +84,8 @@ func (s *Site) Render() error {
 	}
 
 	funcMap := template.FuncMap{
-		"slugify": slugify,
+		"slugify":  util.Slugify,
+		"truncate": util.Truncate,
 	}
 
 	tpls, err := template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html")
@@ -118,17 +118,4 @@ func renderPage(tpls *template.Template, page Page) error {
 	}
 
 	return nil
-}
-
-func slugify(s string) string {
-	// Convert to lowercase
-	s = strings.ToLower(s)
-
-	// Replace non-alphanumeric characters with a hyphen
-	s = regexp.MustCompile(`[^a-z0-9]+`).ReplaceAllString(s, "-")
-
-	// Remove leading and trailing hyphens
-	s = strings.Trim(s, "-")
-
-	return s
 }
