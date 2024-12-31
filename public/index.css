@@ -2,17 +2,19 @@
 @import url("/styles/variables.css");
 @import url("/styles/global.css");
 
-.wrapper {
+.body {
   margin: 0 auto;
   padding: 1.5rem;
   max-width: 42rem;
 }
 
 .main {
-  padding-top: 1.5rem;
+  padding-top: 3.5rem;
 }
 
-.content {
+.markdown {
+  padding-top: 1.5rem;
+
   &>*+* {
     margin-top: 1.5rem;
   }
@@ -22,30 +24,27 @@
   & h3,
   & h4,
   & h5 {
-    font-weight: var(--fw-semi-bold);
+    font-size: var(--fs-500);
   }
 }
 
 .title {
   font-size: var(--fs-600);
+}
 
-  & a {
-    color: inherit;
-  }
+.title a {
+  color: inherit;
 }
 
 .subtitle {
   color: var(--clr-neutral-600);
+  padding-bottom: 0.25rem;
 }
 
-#site-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
+.section {
+  padding-bottom: 2.25rem;
 }
 
-#site-nav>ul {
-  display: inline-flex;
-  gap: 1rem;
+.section>*+* {
+  margin-top: 1.5rem;
 }
