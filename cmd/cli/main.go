@@ -293,7 +293,7 @@ func listCategories(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 	categoryRepo := store.NewCategoryRepository(db)
 
-	categories, err := categoryRepo.ReadAllCategoriesWithEntries()
+	categories, err := categoryRepo.ReadAllCategories()
 	if err != nil {
 		return err
 	}
