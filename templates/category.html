@@ -16,15 +16,12 @@
       </hgroup>
 
       <div>
-        {{ $categorySlug := slugify .Category.Title }}
         <!-- nowrap -->
         {{ range .Entries }}
         <details>
           <summary>
             <h3>
-              <a href="/{{ $categorySlug }}/{{ slugify .Title }}"
-                >{{ .Title }}</a
-              >
+              <a href="/{{ slugify .Title }}">{{ .Title }}</a>
             </h3>
           </summary>
           <p>{{ truncate .Content }}</p>
