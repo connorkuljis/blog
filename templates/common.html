@@ -14,14 +14,17 @@
 <!-- header -->
 {{ define "header" }}
 <header class="container">
-  <hgroup>
-    <h1><a href="/">{{ .Site.Title }}</a></h1>
-  </hgroup>
   <nav>
     <ul>
+      <li>
+        <strong><a href="/">{{ .Site.Title }}</a></strong>
+      </li>
+    </ul>
+    <ul>
       <li><a href="/">home</a></li>
-      <li><a href="/blog">blog</a></li>
-      <li><a href="/journal">journal</a></li>
+      {{ range .Site.Categories }}
+      <li><a href="/{{ slugify .Title }}">{{ slugify .Title }}</a></li>
+      {{ end }}
     </ul>
   </nav>
 </header>

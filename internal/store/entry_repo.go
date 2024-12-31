@@ -42,9 +42,9 @@ func (r *EntryRepository) ReadAllEntries() ([]model.Entry, error) {
 	return entries, nil
 }
 
-func (r *EntryRepository) ReadAllEntriesByCategoryID(categoryID int64) ([]model.Entry, error) {
+func (r *EntryRepository) ReadPublishedEntriesByCategoryID(categoryID int64) ([]model.Entry, error) {
 	var entries []model.Entry
-	err := r.db.Select(&entries, "SELECT * FROM entries WHERE category_id = ? ORDER BY created_at DESC", categoryID)
+	err := r.db.Select(&entries, "SELECT * FROM entries WHERE category_id = ? and publish = 1 ORDER BY created_at DESC", categoryID)
 	if err != nil {
 		return nil, fmt.Errorf("Error getting all entries: %w", err)
 	}
@@ -52,7 +52,7 @@ func (r *EntryRepository) ReadAllEntriesByCategoryID(categoryID int64) ([]model.
 	return entries, nil
 }
 
-func (r *EntryRepository) ReadAllEntriesWithCategoryData() ([]model.Entry, error) {
+func (r *EntryRepository) ReadPublishedEntries() ([]model.Entry, error) {
 	var entries []model.Entry
 	q := `
 SELECT 
@@ -71,6 +71,8 @@ INNER JOIN
 	categories as c
 ON
 	c.id = e.category_id
+WHERE 
+	e.publish = 1
 ORDER BY 
 	e.created_at DESC
 `

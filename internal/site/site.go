@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/connorkuljis/content/internal/model"
 	"github.com/connorkuljis/content/internal/store"
 	"github.com/connorkuljis/content/internal/util"
 	"github.com/jmoiron/sqlx"
@@ -13,10 +14,16 @@ import (
 )
 
 type Site struct {
-	Title string
+	Title      string
+	Categories []model.Category
 
 	DB             *sqlx.DB
 	MarkdownParser goldmark.Markdown
+}
+
+type NavItem struct {
+	Name     string
+	Resource string
 }
 
 func (s *Site) Init() error {
@@ -37,26 +44,42 @@ func (s *Site) Init() error {
 }
 
 func (s *Site) Render() error {
-	categories, err := store.NewCategoryRepository(s.DB).ReadAllCategoriesWithEntries()
+	categories, err := store.NewCategoryRepository(s.DB).ReadAllCategories()
 	if err != nil {
 		return err
 	}
 
-	allEntries, err := store.NewEntryRepository(s.DB).ReadAllEntriesWithCategoryData()
+	s.Categories = categories
+
+	publishedEntries, err := store.NewEntryRepository(s.DB).ReadPublishedEntries()
 	if err != nil {
 		return err
 	}
 
 	pages := []Page{
 		HomePage{
-			Site:       s,
-			Categories: categories,
-			Entries:    allEntries,
+			Site:          s,
+			RecentEntries: publishedEntries,
 		},
 	}
 
+	for _, entry := range publishedEntries {
+		// parse markdown to html
+		var buf bytes.Buffer
+		err := s.MarkdownParser.Convert([]byte(entry.Content), &buf)
+		if err != nil {
+			return err
+		}
+
+		pages = append(pages, EntryPage{
+			Site:    s,
+			Entry:   entry,
+			Content: template.HTML(buf.String()),
+		})
+	}
+
 	for _, category := range categories {
-		matchedEntries, err := store.NewEntryRepository(s.DB).ReadAllEntriesByCategoryID(category.ID)
+		entries, err := store.NewEntryRepository(s.DB).ReadPublishedEntriesByCategoryID(category.ID)
 		if err != nil {
 			return err
 		}
@@ -64,23 +87,8 @@ func (s *Site) Render() error {
 		pages = append(pages, CategoryPage{
 			Site:     s,
 			Category: category,
-			Entries:  matchedEntries,
+			Entries:  entries,
 		})
-
-		for _, entry := range matchedEntries {
-			var buf bytes.Buffer
-			err := s.MarkdownParser.Convert([]byte(entry.Content), &buf)
-			if err != nil {
-				return err
-			}
-
-			pages = append(pages, EntryPage{
-				Site:     s,
-				Category: category,
-				Entry:    entry,
-				Content:  template.HTML(buf.String()),
-			})
-		}
 	}
 
 	funcMap := template.FuncMap{

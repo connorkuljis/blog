@@ -11,29 +11,35 @@
 
     <!-- main -->
     <main class="container">
-      <!-- entries -->
-      <section id="entries">
-        <h1>Entries</h1>
-        {{ range .Entries}}
+      <hgroup>
+        <h1>Recent Entries</h1>
+        <p>Last ten (10) entries</p>
+      </hgroup>
+
+      <section>
+        <!-- entries -->
+        {{ range .RecentEntries}}
         <details>
           <summary>
-            <!-- time formatting -->
-            {{ $datetime := .CreatedAt.Format "2006-01-02"}}
-            <!-- nowrap -->
-            {{ $timestamp := .CreatedAt.Format "Jan 02, 2006"}}
-            <!-- ./time formatting -->
-            <time datetime="{{ $datetime }}">{{ $timestamp }}</time>
-            <h3>
-              <a href="/{{ slugify .CategoryTitle }}/{{ slugify .Title }}"
-                >{{ .Title }}</a
-              >
-            </h3>
+            <hgroup>
+              <h3>
+                <a href="/{{ slugify .CategoryTitle }}/{{ slugify .Title }}"
+                  >{{ .Title }}</a
+                >
+              </h3>
+              <!-- time formatting -->
+              {{ $datetime := .CreatedAt.Format "2006-01-02"}}
+              <!-- nowrap -->
+              {{ $timestamp := .CreatedAt.Format "Jan 02, 2006"}}
+              <!-- ./time formatting -->
+              <time datetime="{{ $datetime }}">{{ $timestamp }}</time>
+            </hgroup>
           </summary>
           <p><em>{{ truncate .Content }}</em></p>
         </details>
         {{ end }}
+        <!-- ./entries -->
       </section>
-      <!-- ./entries -->
     </main>
     <!-- ./main -->
   </body>
