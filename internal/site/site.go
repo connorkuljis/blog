@@ -56,10 +56,15 @@ func (s *Site) Render() error {
 		return err
 	}
 
+	recentEntries, err := store.NewEntryRepository(s.DB).ReadRecentlyPublishedEntries(10)
+	if err != nil {
+		return err
+	}
+
 	pages := []Page{
 		HomePage{
 			Site:          s,
-			RecentEntries: publishedEntries,
+			RecentEntries: recentEntries,
 		},
 	}
 
