@@ -13,14 +13,9 @@ import (
 
 	"github.com/cheynewallace/tabby"
 	"github.com/connorkuljis/content/internal/model"
-	"github.com/connorkuljis/content/internal/site"
 	"github.com/connorkuljis/content/internal/store"
 	"github.com/jmoiron/sqlx"
 	"github.com/urfave/cli/v3"
-	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/extension"
-	"github.com/yuin/goldmark/parser"
-	"github.com/yuin/goldmark/renderer/html"
 )
 
 const sqlxKey = "db"
@@ -40,44 +35,6 @@ func main() {
 			return ctx, nil
 		},
 		Commands: []*cli.Command{
-			{
-				Name: "render",
-				Action: func(ctx context.Context, c *cli.Command) error {
-					db := ctx.Value(sqlxKey).(*sqlx.DB)
-
-					md := goldmark.New(
-						goldmark.WithExtensions(
-							extension.GFM,
-						),
-						goldmark.WithParserOptions(
-							parser.WithAutoHeadingID(),
-						),
-						goldmark.WithRendererOptions(
-							html.WithHardWraps(),
-							html.WithXHTML(),
-						),
-					)
-
-					s := site.Site{
-						Title:          "Connor's Blog",
-						DB:             db,
-						MarkdownParser: md,
-					}
-
-					err := s.Init()
-					if err != nil {
-						return err
-					}
-
-					err = s.Render()
-					if err != nil {
-						return err
-					}
-
-					return nil
-				},
-			},
-
 			{
 				Name:  "entries",
 				Usage: "Operations for creating, editing, deleting and listing entries.",
