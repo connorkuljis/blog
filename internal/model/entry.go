@@ -11,12 +11,12 @@ import (
 
 type Entry struct {
 	ID         int64     `db:"id"`
-	CategoryID int64     `db:"category_id" yaml:"category_id"`
-	Title      string    `db:"title" yaml:"title"`
+	CategoryID int64     `db:"category_id"`
+	Title      string    `db:"title"`
 	Content    string    `db:"content"`
-	CreatedAt  time.Time `db:"created_at" yaml:"created_at"`
-	UpdatedAt  time.Time `db:"updated_at" yaml:"updated_at"`
-	Publish    int       `db:"publish" yaml:"publish"`
+	CreatedAt  time.Time `db:"created_at"`
+	UpdatedAt  time.Time `db:"updated_at"`
+	Publish    int       `db:"publish"`
 
 	CategoryTitle       string `db:"category_title"`
 	CategoryDescription string `db:"category_description"`

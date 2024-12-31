@@ -15,9 +15,8 @@ type Page interface {
 }
 
 type HomePage struct {
-	Site       *Site
-	Categories []model.Category
-	Entries    []model.Entry
+	Site          *Site
+	RecentEntries []model.Entry
 }
 
 func (p HomePage) Filepath() string {
@@ -30,9 +29,8 @@ func (p HomePage) TemplateName() string {
 
 func (p HomePage) Data() map[string]any {
 	return map[string]any{
-		"Site":       p.Site,
-		"Categories": p.Categories,
-		"Entries":    p.Entries,
+		"Site":          p.Site,
+		"RecentEntries": p.RecentEntries,
 	}
 }
 
@@ -59,14 +57,13 @@ func (p CategoryPage) Data() map[string]any {
 }
 
 type EntryPage struct {
-	Site     *Site
-	Category model.Category
-	Entry    model.Entry
-	Content  template.HTML
+	Site    *Site
+	Entry   model.Entry
+	Content template.HTML
 }
 
 func (p EntryPage) Filepath() string {
-	return filepath.Join("public", util.Slugify(p.Category.Title), util.Slugify(p.Entry.Title), "index.html")
+	return filepath.Join("public", util.Slugify(p.Entry.Title), "index.html")
 }
 
 func (p EntryPage) TemplateName() string {
@@ -75,9 +72,8 @@ func (p EntryPage) TemplateName() string {
 
 func (p EntryPage) Data() map[string]any {
 	return map[string]any{
-		"Site":     p.Site,
-		"Entry":    p.Entry,
-		"Content":  p.Content,
-		"Category": p.Category,
+		"Site":    p.Site,
+		"Entry":   p.Entry,
+		"Content": p.Content,
 	}
 }

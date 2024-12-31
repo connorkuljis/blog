@@ -2,10 +2,12 @@ package util
 
 import "unicode/utf8"
 
+const maxlen = 180
+
 func Truncate(s string) string {
-	if utf8.RuneCountInString(s) <= 80 {
+	if utf8.RuneCountInString(s) <= maxlen {
 		return s
 	}
 	runes := []rune(s)
-	return string(runes[:80]) + "..."
+	return string(runes[:maxlen]) + "..."
 }

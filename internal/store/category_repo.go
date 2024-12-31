@@ -42,24 +42,6 @@ func (r *CategoryRepo) ReadAllCategories() ([]model.Category, error) {
 	return categories, nil
 }
 
-func (r *CategoryRepo) ReadAllCategoriesWithEntries() ([]model.Category, error) {
-	categories, err := r.ReadAllCategories()
-	if err != nil {
-		return []model.Category{}, err
-	}
-
-	for i, c := range categories {
-		var entries []model.Entry
-		err := r.db.Select(&entries, "SELECT * FROM entries WHERE category_id = ? ORDER by created_at DESC", c.ID)
-		if err != nil {
-			return []model.Category{}, err
-		}
-		categories[i].Entries = entries
-	}
-
-	return categories, nil
-}
-
 func (r *CategoryRepo) DeleteCategoryByTitle(id int64) error {
 	_, err := r.db.Exec("DELETE FROM categories WHERE id = ?", id)
 	if err != nil {

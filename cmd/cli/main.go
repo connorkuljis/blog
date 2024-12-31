@@ -106,7 +106,7 @@ func listEntries(ctx context.Context, c *cli.Command) error {
 
 	entryRepo := store.NewEntryRepository(db)
 
-	entries, err := entryRepo.ReadAllEntriesWithCategoryData()
+	entries, err := entryRepo.ReadPublishedEntries()
 	if err != nil {
 		return err
 	}
@@ -210,7 +210,7 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 
 	entryRepo := store.NewEntryRepository(db)
-	entries, err := entryRepo.ReadAllEntriesWithCategoryData()
+	entries, err := entryRepo.ReadPublishedEntries()
 	if err != nil {
 		return err
 	}
@@ -246,7 +246,7 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 	entryRepo := store.NewEntryRepository(db)
 
-	entries, err := entryRepo.ReadAllEntriesWithCategoryData()
+	entries, err := entryRepo.ReadPublishedEntries()
 	if err != nil {
 		return err
 	}
