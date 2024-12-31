@@ -42,7 +42,7 @@ func main() {
 					{
 						Name:   "list",
 						Usage:  "List all entries.",
-						Action: listEntries,
+						Action: listEntriesCommand,
 					},
 					{
 						Name:   "print",
@@ -100,13 +100,13 @@ func main() {
 	}
 }
 
-// listEntries lists all entries.
-func listEntries(ctx context.Context, c *cli.Command) error {
+// listEntriesCommand lists all entries.
+func listEntriesCommand(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 
 	entryRepo := store.NewEntryRepository(db)
 
-	entries, err := entryRepo.ReadPublishedEntries()
+	entries, err := entryRepo.ReadAllEntries()
 	if err != nil {
 		return err
 	}
@@ -210,7 +210,7 @@ func editEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 
 	entryRepo := store.NewEntryRepository(db)
-	entries, err := entryRepo.ReadPublishedEntries()
+	entries, err := entryRepo.ReadAllEntries()
 	if err != nil {
 		return err
 	}
