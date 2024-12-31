@@ -4,43 +4,25 @@
   <title>{{ .Site.Title }}</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/index.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+  />
 </head>
 {{ end }}
 
 <!-- header -->
-{{ define "site-header" }}
-<header class="site-header">
-  <h1><a href="/">{{ .Site.Title }}</a></h1>
-  <!-- site-nav -->
-  {{ template "site-nav" . }}
+{{ define "header" }}
+<header class="container">
+  <hgroup>
+    <h1><a href="/">{{ .Site.Title }}</a></h1>
+  </hgroup>
+  <nav>
+    <ul>
+      <li><a href="/">home</a></li>
+      <li><a href="/blog">blog</a></li>
+      <li><a href="/journal">journal</a></li>
+    </ul>
+  </nav>
 </header>
-
-<style>
-  .site-header {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-</style>
-{{ end }}
-
-<!-- nav -->
-{{ define "site-nav" }}
-<nav>
-  <ul class="nav-items" role="list">
-    <li><a href="/">home</a></li>
-    <li><a href="/blog">blog</a></li>
-    <li><a href="/journal">journal</a></li>
-  </ul>
-</nav>
-
-<style>
-  .nav-items {
-    display: inline-flex;
-    flex-wrap: nowrap;
-    gap: 1rem;
-  }
-</style>
 {{ end }}

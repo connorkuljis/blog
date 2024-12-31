@@ -4,25 +4,32 @@
   <!-- head -->
   {{ template "head" . }}
 
-  <body class="body">
+  <body>
     <!-- header -->
-    {{ template "site-header" . }}
+    {{ template "header" . }}
 
     <!-- main -->
-    <main class="main">
-      <h1 class="title">{{ .Category.Title }}</h1>
-      <div class="subtitle">{{ .Category.Description }}</div>
+    <main class="container">
+      <hgroup>
+        <h1>{{ .Category.Title }}</h1>
+        <p>{{ .Category.Description }}</p>
+      </hgroup>
 
       <div>
-        <ul role="list">
-          {{ $categorySlug := slugify .Category.Title }}
-          <!-- nowrap -->
-          {{ range .Entries }}
-          <li>
-            <a href="/{{ $categorySlug }}/{{ slugify .Title }}">{{ .Title }}</a>
-          </li>
-          {{ end }}
-        </ul>
+        {{ $categorySlug := slugify .Category.Title }}
+        <!-- nowrap -->
+        {{ range .Entries }}
+        <details>
+          <summary>
+            <h3>
+              <a href="/{{ $categorySlug }}/{{ slugify .Title }}"
+                >{{ .Title }}</a
+              >
+            </h3>
+          </summary>
+          <p>{{ truncate .Content }}</p>
+        </details>
+        {{ end }}
       </div>
     </main>
   </body>
