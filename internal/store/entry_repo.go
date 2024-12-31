@@ -52,6 +52,27 @@ func (r *EntryRepository) ReadPublishedEntriesByCategoryID(categoryID int64) ([]
 	return entries, nil
 }
 
+func (r *EntryRepository) ReadRecentlyPublishedEntries(limit int) ([]model.Entry, error) {
+	var entries []model.Entry
+	q := `
+SELECT 
+	* 
+FROM 
+	entries 
+WHERE 
+	publish = 1 
+ORDER BY 
+	created_at DESC 
+LIMIT ?
+`
+	err := r.db.Select(&entries, q, limit)
+	if err != nil {
+		return nil, fmt.Errorf("Error getting all entries: %w", err)
+	}
+
+	return entries, nil
+}
+
 func (r *EntryRepository) ReadPublishedEntries() ([]model.Entry, error) {
 	var entries []model.Entry
 	q := `

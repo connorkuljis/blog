@@ -13,7 +13,7 @@
     <main class="container">
       <hgroup>
         <h1>Recent Entries</h1>
-        <p>Last ten (10) entries</p>
+        <p>What I've been up to lately - my last 10 entries</p>
       </hgroup>
 
       <section>
@@ -23,9 +23,7 @@
           <summary>
             <hgroup>
               <h3>
-                <a href="/{{ slugify .CategoryTitle }}/{{ slugify .Title }}"
-                  >{{ .Title }}</a
-                >
+                <a href="/{{ slugify .Title }}">{{ .Title }}</a>
               </h3>
               <!-- time formatting -->
               {{ $datetime := .CreatedAt.Format "2006-01-02"}}
