@@ -4,17 +4,17 @@
   <!-- head -->
   {{ template "head" . }}
 
-  <body class="body">
+  <body>
     <!-- header -->
-    {{ template "site-header" . }}
+    {{ template "header" . }}
 
     <!-- main -->
-    <main class="main">
-      <article class="entry" id="{{ slugify .Entry.Title }}">
-        <h1 class="title">{{ .Entry.Title }}</h1>
-        <div class="subtitle">{{ .Entry.CreatedAt.Format "Jan 02, 2006"}}</div>
-        <div class="markdown">{{ .Content }}</div>
-      </article>
+    <main class="container">
+      <hgroup>
+        <h1>{{ .Entry.Title }}</h1>
+        <p>{{ .Entry.CreatedAt.Format "Jan 02, 2006"}}</p>
+      </hgroup>
+      <div>{{ .Content }}</div>
     </main>
   </body>
 </html>
