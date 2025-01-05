@@ -89,7 +89,7 @@ func (s *Site) Render() error {
 		}
 
 		if s.Publish {
-			entries = filterPublishedEntries(siteEntries)
+			entries = filterPublishedEntries(entries)
 		}
 
 		pages = append(pages, CategoryPage{
