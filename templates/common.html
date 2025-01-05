@@ -4,23 +4,20 @@
   <title>{{ .Site.Title }}</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-  />
+  <link rel="stylesheet" href="/index.css" />
 </head>
 {{ end }}
 
 <!-- header -->
 {{ define "header" }}
 <header class="container">
-  <nav>
-    <ul>
+  <nav class="nav">
+    <ul role="list">
       <li>
-        <strong><a href="/">{{ .Site.Title }}</a></strong>
+        <h1 class="title"><a href="/">{{ .Site.Title }}</a></h1>
       </li>
     </ul>
-    <ul>
+    <ul role="list">
       <li><a href="/">home</a></li>
       {{ range .Site.Categories }}
       <li><a href="/{{ slugify .Title }}">{{ slugify .Title }}</a></li>
