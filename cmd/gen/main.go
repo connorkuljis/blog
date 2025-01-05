@@ -15,7 +15,7 @@ import (
 
 const (
 	title   = "Connor's Blog"
-	publish = true
+	publish = false
 )
 
 func main() {

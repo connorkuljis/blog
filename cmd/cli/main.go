@@ -246,7 +246,7 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
 	entryRepo := store.NewEntryRepository(db)
 
-	entries, err := entryRepo.ReadPublishedEntries()
+	entries, err := entryRepo.ReadAllEntries()
 	if err != nil {
 		return err
 	}
