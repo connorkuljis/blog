@@ -23,7 +23,7 @@ func (p HomePage) Filepath() string {
 }
 
 func (p HomePage) TemplateName() string {
-	return "index.html"
+	return "_index.html"
 }
 
 type CategoryPage struct {
@@ -37,7 +37,7 @@ func (p CategoryPage) Filepath() string {
 }
 
 func (p CategoryPage) TemplateName() string {
-	return "category.html"
+	return "_category.html"
 }
 
 type EntryPage struct {
@@ -48,9 +48,9 @@ type EntryPage struct {
 }
 
 func (p EntryPage) Filepath() string {
-	return filepath.Join("public", util.Slugify(p.CurrentEntry.Title), "index.html")
+	return filepath.Join("public", util.Slugify(p.Category.Title), util.Slugify(p.CurrentEntry.Title), "index.html")
 }
 
 func (p EntryPage) TemplateName() string {
-	return "entry.html"
+	return "_entry.html"
 }
