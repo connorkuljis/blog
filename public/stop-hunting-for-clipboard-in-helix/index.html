@@ -7,10 +7,7 @@
   <title>Connor&#39;s Blog</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-  />
+  <link rel="stylesheet" href="/index.css" />
 </head>
 
 
@@ -18,13 +15,13 @@
     
     
 <header class="container">
-  <nav>
-    <ul>
+  <nav class="nav">
+    <ul role="list">
       <li>
-        <strong><a href="/">Connor&#39;s Blog</a></strong>
+        <h1 class="title"><a href="/">Connor&#39;s Blog</a></h1>
       </li>
     </ul>
-    <ul>
+    <ul role="list">
       <li><a href="/">home</a></li>
       
       <li><a href="/blog">blog</a></li>
@@ -42,11 +39,15 @@
 
     
     <main class="container">
+      
+      <a href="/projects">back to projects</a>
       <hgroup>
-        <h1>Stop Hunting for Clipboard in Helix</h1>
-        <p>Dec 28, 2024</p>
+        <p class="subtitle">
+          Dec 28, 2024
+        </p>
+        <h1 class="title">Stop Hunting for Clipboard in Helix</h1>
       </hgroup>
-      <div><p>I have been using <a href="https://helix-editor.com/">Helix</a> for over a year now and had been running the command <code>:clipboard-yank</code> to copy text. It turns out,  you can yank (copy) text to the system clipboard with <code>Space + y</code>. Super handy!</p>
+      <div class="markdown"><p>I have been using <a href="https://helix-editor.com/">Helix</a> for over a year now and had been running the command <code>:clipboard-yank</code> to copy text. It turns out,  you can yank (copy) text to the system clipboard with <code>Space + y</code>. Super handy!</p>
 </div>
     </main>
   </body>

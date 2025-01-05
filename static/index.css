@@ -2,14 +2,23 @@
 @import url("/styles/variables.css");
 @import url("/styles/global.css");
 
-.body {
+.container {
   margin: 0 auto;
-  padding: 1.5rem;
-  max-width: 42rem;
+  padding: 1rem;
+  max-width: 1200px;
 }
 
-.main {
-  padding-top: 3.5rem;
+.nav {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+
+  &>ul {
+    display: flex;
+    gap: 0.5rem;
+  }
 }
 
 .markdown {

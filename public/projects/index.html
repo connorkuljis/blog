@@ -7,10 +7,7 @@
   <title>Connor&#39;s Blog</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-  />
+  <link rel="stylesheet" href="/index.css" />
 </head>
 
 
@@ -18,13 +15,13 @@
     
     
 <header class="container">
-  <nav>
-    <ul>
+  <nav class="nav">
+    <ul role="list">
       <li>
-        <strong><a href="/">Connor&#39;s Blog</a></strong>
+        <h1 class="title"><a href="/">Connor&#39;s Blog</a></h1>
       </li>
     </ul>
-    <ul>
+    <ul role="list">
       <li><a href="/">home</a></li>
       
       <li><a href="/blog">blog</a></li>
@@ -43,14 +40,26 @@
     
     <main class="container">
       <hgroup>
-        <h1>Projects</h1>
-        <p>Things I&#39;ve built / created</p>
+        <h1 class="title">Projects</h1>
+        <p class="subtitle">Things I&#39;ve built / created</p>
       </hgroup>
 
-      <div>
+      <ul>
         
         
-      </div>
+        <li>
+          <h3>
+            <a href="/uses">Uses</a>
+          </h3>
+        </li>
+        
+        <li>
+          <h3>
+            <a href="/stop-hunting-for-clipboard-in-helix">Stop Hunting for Clipboard in Helix</a>
+          </h3>
+        </li>
+        
+      </ul>
     </main>
   </body>
 </html>

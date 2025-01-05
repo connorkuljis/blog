@@ -13,7 +13,10 @@ import (
 	"github.com/yuin/goldmark/renderer/html"
 )
 
-const title = "Connor's Blog"
+const (
+	title   = "Connor's Blog"
+	publish = true
+)
 
 func main() {
 	start := time.Now()
@@ -47,6 +50,7 @@ func generateSite() error {
 		Title:          title,
 		DB:             db,
 		MarkdownParser: md,
+		Publish:        publish,
 	}
 
 	err = s.Init()

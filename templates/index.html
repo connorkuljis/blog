@@ -12,31 +12,21 @@
     <!-- main -->
     <main class="container">
       <hgroup>
-        <h1>Recent Entries</h1>
-        <p>What I've been up to lately - my last 10 entries</p>
+        <h1 class="title">Recent Entries</h1>
       </hgroup>
 
       <section>
         <!-- entries -->
-        {{ range .RecentEntries}}
-        <details>
-          <summary>
-            <hgroup>
-              <h3>
-                <a href="/{{ slugify .Title }}">{{ .Title }}</a>
-              </h3>
-              <!-- time formatting -->
-              {{ $datetime := .CreatedAt.Format "2006-01-02"}}
-              <!-- nowrap -->
-              {{ $timestamp := .CreatedAt.Format "Jan 02, 2006"}}
-              <!-- ./time formatting -->
-              <time datetime="{{ $datetime }}">{{ $timestamp }}</time>
-            </hgroup>
-          </summary>
-          <p><em>{{ truncate .Content }}</em></p>
-        </details>
-        {{ end }}
-        <!-- ./entries -->
+        <ul>
+          {{ range .Site.Entries }}
+          <li>
+            <h3>
+              <a href="/{{ slugify .Title }}">{{ .Title }}</a>
+            </h3>
+          </li>
+          {{ end }}
+          <!-- ./entries -->
+        </ul>
       </section>
     </main>
     <!-- ./main -->

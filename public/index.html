@@ -7,10 +7,7 @@
   <title>Connor&#39;s Blog</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-  />
+  <link rel="stylesheet" href="/index.css" />
 </head>
 
 
@@ -18,13 +15,13 @@
     
     
 <header class="container">
-  <nav>
-    <ul>
+  <nav class="nav">
+    <ul role="list">
       <li>
-        <strong><a href="/">Connor&#39;s Blog</a></strong>
+        <h1 class="title"><a href="/">Connor&#39;s Blog</a></h1>
       </li>
     </ul>
-    <ul>
+    <ul role="list">
       <li><a href="/">home</a></li>
       
       <li><a href="/blog">blog</a></li>
@@ -44,54 +41,27 @@
     
     <main class="container">
       <hgroup>
-        <h1>Recent Entries</h1>
-        <p>What I've been up to lately - my last 10 entries</p>
+        <h1 class="title">Recent Entries</h1>
       </hgroup>
 
       <section>
         
-        
-        <details>
-          <summary>
-            <hgroup>
-              <h3>
-                <a href="/uses">Uses</a>
-              </h3>
-              
-              
-              
-              
-              
-              <time datetime="2024-12-31">Dec 31, 2024</time>
-            </hgroup>
-          </summary>
-          <p><em>The programs I install on my machine(s).
-
-
-## For the Terminal 👾
-
-* [ghostty](https://github.com/ghostty-org/ghostty)
-  * *👻 Ghostty is a fast, feature-rich, and cross-platform ter...</em></p>
-        </details>
-        
-        <details>
-          <summary>
-            <hgroup>
-              <h3>
-                <a href="/stop-hunting-for-clipboard-in-helix">Stop Hunting for Clipboard in Helix</a>
-              </h3>
-              
-              
-              
-              
-              
-              <time datetime="2024-12-28">Dec 28, 2024</time>
-            </hgroup>
-          </summary>
-          <p><em>I have been using [Helix](https://helix-editor.com/) for over a year now and had been running the command `:clipboard-yank` to copy text. It turns out,  you can yank (copy) text to...</em></p>
-        </details>
-        
-        
+        <ul>
+          
+          <li>
+            <h3>
+              <a href="/uses">Uses</a>
+            </h3>
+          </li>
+          
+          <li>
+            <h3>
+              <a href="/stop-hunting-for-clipboard-in-helix">Stop Hunting for Clipboard in Helix</a>
+            </h3>
+          </li>
+          
+          
+        </ul>
       </section>
     </main>
     

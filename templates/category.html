@@ -11,23 +11,20 @@
     <!-- main -->
     <main class="container">
       <hgroup>
-        <h1>{{ .Category.Title }}</h1>
-        <p>{{ .Category.Description }}</p>
+        <h1 class="title">{{ .Category.Title }}</h1>
+        <p class="subtitle">{{ .Category.Description }}</p>
       </hgroup>
 
-      <div>
+      <ul>
         <!-- nowrap -->
         {{ range .Entries }}
-        <details>
-          <summary>
-            <h3>
-              <a href="/{{ slugify .Title }}">{{ .Title }}</a>
-            </h3>
-          </summary>
-          <p>{{ truncate .Content }}</p>
-        </details>
+        <li>
+          <h3>
+            <a href="/{{ slugify .Title }}">{{ .Title }}</a>
+          </h3>
+        </li>
         {{ end }}
-      </div>
+      </ul>
     </main>
   </body>
 </html>

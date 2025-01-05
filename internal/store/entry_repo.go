@@ -42,63 +42,9 @@ func (r *EntryRepository) ReadAllEntries() ([]model.Entry, error) {
 	return entries, nil
 }
 
-func (r *EntryRepository) ReadPublishedEntriesByCategoryID(categoryID int64) ([]model.Entry, error) {
+func (r *EntryRepository) ReadAllByCategoryID(categoryID int64) ([]model.Entry, error) {
 	var entries []model.Entry
-	err := r.db.Select(&entries, "SELECT * FROM entries WHERE category_id = ? and publish = 1 ORDER BY created_at DESC", categoryID)
-	if err != nil {
-		return nil, fmt.Errorf("Error getting all entries: %w", err)
-	}
-
-	return entries, nil
-}
-
-func (r *EntryRepository) ReadRecentlyPublishedEntries(limit int) ([]model.Entry, error) {
-	var entries []model.Entry
-	q := `
-SELECT 
-	* 
-FROM 
-	entries 
-WHERE 
-	publish = 1 
-ORDER BY 
-	created_at DESC 
-LIMIT ?
-`
-	err := r.db.Select(&entries, q, limit)
-	if err != nil {
-		return nil, fmt.Errorf("Error getting all entries: %w", err)
-	}
-
-	return entries, nil
-}
-
-func (r *EntryRepository) ReadPublishedEntries() ([]model.Entry, error) {
-	var entries []model.Entry
-	q := `
-SELECT 
-	e.id,
-	e.title,
-	e.category_id,
-	e.content,
-	e.created_at,
-	e.updated_at,
-	e.publish,
-	c.title AS category_title,
-	c.description AS category_description
-FROM 
-	entries AS e
-INNER JOIN
-	categories as c
-ON
-	c.id = e.category_id
-WHERE 
-	e.publish = 1
-ORDER BY 
-	e.created_at DESC
-`
-
-	err := r.db.Select(&entries, q)
+	err := r.db.Select(&entries, "SELECT * FROM entries WHERE category_id = ? ORDER BY created_at DESC", categoryID)
 	if err != nil {
 		return nil, fmt.Errorf("Error getting all entries: %w", err)
 	}
