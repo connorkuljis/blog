@@ -1,0 +1,155 @@
+
+<!doctype html>
+<html lang="en">
+  
+  
+<head>
+  <title>Connor&#39;s Blog</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/index.css" />
+</head>
+
+
+  <body>
+    
+    
+<header class="container">
+  <nav class="nav">
+    <ul role="list">
+      <li>
+        <h1 class="title"><a href="/">Connor&#39;s Blog</a></h1>
+      </li>
+    </ul>
+    <ul role="list">
+      <li><a href="/">home</a></li>
+      
+      <li><a href="/blog">blog</a></li>
+      
+      <li><a href="/journal">journal</a></li>
+      
+      <li><a href="/til">til</a></li>
+      
+      <li><a href="/projects">projects</a></li>
+      
+    </ul>
+  </nav>
+</header>
+
+
+    
+    <main class="container">
+      
+      <a href="/journal">back to journal</a>
+      <hgroup>
+        <p class="subtitle">
+          Dec 17, 2024
+        </p>
+        <h1 class="title">Setting up a VPS on Vulr</h1>
+      </hgroup>
+      <div class="markdown"><h2 id="setup-vultr-account">Setup Vultr Account</h2>
+<ul>
+<li>
+<p>Create Account on Vultr</p>
+</li>
+<li>
+<p>Add credit card.</p>
+<ul>
+<li>If your card cannot be added, select a custom amount and add $6.00</li>
+</ul>
+</li>
+<li>
+<p>Create a ssh-key</p>
+</li>
+</ul>
+<h2 id="create-a-user-with-sudo-permissions-on-debian">Create a User with sudo permissions on Debian</h2>
+<ul>
+<li>
+<p>Add user with sudo permission:<br />
+<code>adduser --ingroup sudo connor</code></p>
+<ul>
+<li>
+<p>type and re-type a user password.</p>
+</li>
+<li>
+<p>when prompted for full name, just keep pressing enter, leave it empty for all fields.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>You can now login to the user account:<br />
+<code>login connor</code></p>
+</li>
+</ul>
+<h2 id="delete-user">Delete User</h2>
+<ul>
+<li>
+<p>to delete a user:<br />
+<code>sudo userdel username</code></p>
+</li>
+<li>
+<p>update packages.<br />
+<code>sudo apt update</code></p>
+</li>
+</ul>
+<h2 id="install-caddy">Install Caddy</h2>
+<ul>
+<li><a href="https://caddyserver.com/docs/install#debian-ubuntu-raspbian">install caddy</a><br />
+<code>sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl</code><br />
+<code>curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg</code><br />
+<code>curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list</code><br />
+<code>sudo apt update</code><br />
+<code>sudo apt install caddy</code></li>
+</ul>
+<h2 id="copy-static-content">Copy Static Content</h2>
+<ul>
+<li>Copy public html to vps:<br />
+<code>scp -r public connor@45.77.171.155:~/kuljis.xyz</code></li>
+</ul>
+<h2 id="firewall">Firewall</h2>
+<pre><code class="language-bash">connor@kuljis:~$ sudo ufw status
+[sudo] password for connor:
+Status: active
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW       Anywhere
+22/tcp (v6)                ALLOW       Anywhere (v6)
+
+connor@kuljis:~$ sudo ufw enable
+Command may disrupt existing ssh connections. Proceed with operation (y|n)? y
+Firewall is active and enabled on system startup
+connor@kuljis:~$ sudo ufw status
+Status: active
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW       Anywhere
+22/tcp (v6)                ALLOW       Anywhere (v6)
+
+connor@kuljis:~$ sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+Rule added
+Rule added (v6)
+Rule added
+Rule added (v6)
+
+connor@kuljis:~$ sudo ufw status
+Status: active
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW       Anywhere
+80/tcp                     ALLOW       Anywhere
+443                        ALLOW       Anywhere
+22/tcp (v6)                ALLOW       Anywhere (v6)
+80/tcp (v6)                ALLOW       Anywhere (v6)
+443 (v6)                   ALLOW       Anywhere (v6)
+</code></pre>
+</div>
+    </main>
+  </body>
+</html>
