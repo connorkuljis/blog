@@ -1,0 +1,18 @@
+<!-- header -->
+{{ define "header" }}
+<header class="container">
+  <nav class="nav">
+    <ul role="list">
+      <li>
+        <h1 class="title"><a href="/">{{ .Site.Title }}</a></h1>
+      </li>
+    </ul>
+    <ul role="list">
+      <li><a href="/">home</a></li>
+	  {{ range .Site.NavItems }}
+		  <li><a href="/{{ slugify . }}">{{ slugify . }}</a></li>
+	  {{ end }} 
+    </ul>
+  </nav>
+</header>
+{{ end }}
