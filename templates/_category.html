@@ -17,10 +17,10 @@
 
       <ul>
         <!-- nowrap -->
-        {{ range .Entries }}
+        {{ $c := .Category.Title }} {{ range .Category.Entries }}
         <li>
           <h3>
-            <a href="/{{ slugify .Title }}">{{ .Title }}</a>
+            <a href="/{{ slugify $c }}/{{ slugify .Title }}">{{ .Title }}</a>
           </h3>
         </li>
         {{ end }}

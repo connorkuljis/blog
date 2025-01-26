@@ -14,8 +14,8 @@ type Page interface {
 }
 
 type HomePage struct {
-	Site            *Site
-	FeaturedEntries []model.Entry
+	Site       *Site
+	Categories []model.Category
 }
 
 func (p HomePage) Filepath() string {

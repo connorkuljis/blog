@@ -7,28 +7,22 @@
   <body>
     <!-- header -->
     {{ template "header" . }}
-    <!-- ./header -->
 
     <!-- main -->
     <main class="container">
-      <hgroup>
-        <h1 class="title">Recent Entries</h1>
-      </hgroup>
-
+      <!-- entries -->
+      {{ range .Categories }} {{ $c := .Title }}
       <section>
-        <!-- entries -->
+        <h3>{{ .Title }}</h3>
         <ul>
-          {{ range .Site.Entries }}
+          {{ range .Entries }}
           <li>
-            <h3>
-              <a href="/{{ slugify .Title }}">{{ .Title }}</a>
-            </h3>
+            <a href="/{{ slugify $c }}/{{ slugify .Title }}">{{ .Title }}</a>
           </li>
           {{ end }}
-          <!-- ./entries -->
         </ul>
       </section>
+      {{ end }}
     </main>
-    <!-- ./main -->
   </body>
 </html>

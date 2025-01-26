@@ -19,9 +19,8 @@ var funcMap = template.FuncMap{
 }
 
 type Site struct {
-	Title      string
-	Categories []model.Category
-	Entries    []model.Entry
+	Title    string
+	NavItems []string
 
 	DB             *sqlx.DB
 	MarkdownParser goldmark.Markdown
@@ -58,49 +57,39 @@ func filterPublishedEntries(entries []model.Entry) []model.Entry {
 }
 
 func (s *Site) Render() error {
+	// Setup repositories
 	categoryRepo := store.NewCategoryRepository(s.DB)
+	entryRepo := store.NewEntryRepository(s.DB)
+
+	// 1. Read all categories
 	categories, err := categoryRepo.ReadAllCategories()
 	if err != nil {
 		return err
 	}
-	s.Categories = categories
 
-	entryRepo := store.NewEntryRepository(s.DB)
-	siteEntries, err := entryRepo.ReadAllEntries()
-	if err != nil {
-		return err
-	}
-	s.Entries = siteEntries
-
-	if s.Publish {
-		s.Entries = filterPublishedEntries(siteEntries)
-	}
-
-	pages := []Page{
-		HomePage{
-			Site: s,
-		},
-	}
-
-	for _, category := range categories {
+	// 2. Read all entries by category
+	for i, category := range categories {
 		entries, err := entryRepo.ReadAllByCategoryID(category.ID)
 		if err != nil {
 			return err
 		}
+		categories[i].Entries = entries
+	}
 
-		if s.Publish {
-			entries = filterPublishedEntries(entries)
-		}
+	var pages []Page
+	for _, category := range categories {
+		var cp CategoryPage
 
-		pages = append(pages, CategoryPage{
+		cp = CategoryPage{
 			Site:     s,
 			Category: category,
-			Entries:  entries,
-		})
+		}
 
-		// build the entry pages and parse md content to templatable safe HTML
-		for _, entry := range entries {
-			// parse markdown to html
+		pages = append(pages, cp)
+
+		for _, entry := range category.Entries {
+			var ep EntryPage
+
 			var buf bytes.Buffer
 			err := s.MarkdownParser.Convert([]byte(entry.Content), &buf)
 			if err != nil {
@@ -108,14 +97,28 @@ func (s *Site) Render() error {
 			}
 			content := template.HTML(buf.String())
 
-			pages = append(pages, EntryPage{
+			ep = EntryPage{
 				Site:         s,
 				Category:     category,
 				CurrentEntry: entry,
 				Content:      content,
-			})
+			}
+
+			pages = append(pages, ep)
 		}
 	}
+
+	var navItems []string
+	err = s.DB.Select(&navItems, "SELECT title FROM categories ORDER BY title")
+	if err != nil {
+		return err
+	}
+	s.NavItems = navItems
+
+	pages = append(pages, HomePage{
+		Site:       s,
+		Categories: categories,
+	})
 
 	tpls, err := template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html")
 	if err != nil {

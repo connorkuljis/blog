@@ -9,7 +9,8 @@ type Category struct {
 	ID          int64  `db:"id"`
 	Title       string `db:"title"`
 	Description string `db:"description"`
-	Entries     []Entry
+
+	Entries []Entry
 }
 
 func NewCategory(title, description string) *Category {
