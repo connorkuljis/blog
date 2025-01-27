@@ -1,5 +1,5 @@
 cli := "./cli"
-gen := "./gen"
+gen := "./ssg"
 
 public := "./public"
 port := "3000"
@@ -10,7 +10,7 @@ build-cli:
     go build -v -o {{ cli }} ./cmd/cli/main.go
 
 build-gen: 
-    go build -v -o {{ gen }} ./cmd/gen/main.go
+    go build -v -o {{ gen }} ./cmd/ssg/main.go
 
 clean:
     rm -f {{ cli }} {{ gen}}
