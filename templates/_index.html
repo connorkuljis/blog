@@ -1,28 +1,31 @@
 <!-- index.html -->
 <!doctype html>
 <html lang="en">
-  <!-- head -->
-  {{ template "head" . }}
+<!-- head -->
+{{ template "head" . }}
 
-  <body>
-    <!-- header -->
-    {{ template "header" . }}
+<body>
+	<!-- header -->
+	{{ template "header" . }}
 
-    <!-- main -->
-    <main class="container">
-      <!-- entries -->
-      {{ range .Categories }} {{ $c := .Title }}
-      <section>
-        <h3>{{ .Title }}</h3>
-        <ul>
-          {{ range .Entries }}
-          <li>
-            <a href="/{{ slugify $c }}/{{ slugify .Title }}">{{ .Title }}</a>
-          </li>
-          {{ end }}
-        </ul>
-      </section>
-      {{ end }}
-    </main>
-  </body>
+	<!-- main -->
+	<main class="container">
+		<!-- entries -->
+		{{ range .Categories }}
+		<!-- nowrap -->
+		{{ $c := .Title }}
+		<section class="grid-item">
+			<h3>{{ .Title }}</h3>
+			<ul>
+				{{ range .Entries }}
+				<li>
+					<a href="/{{ slugify $c }}/{{ slugify .Title }}">{{ .Title }}</a>
+				</li>
+				{{ end }}
+			</ul>
+		</section>
+		{{ end }}
+	</main>
+</body>
+
 </html>
