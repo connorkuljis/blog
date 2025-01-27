@@ -1,30 +1,31 @@
 <!-- category.html -->
 <!doctype html>
 <html lang="en">
-  <!-- head -->
-  {{ template "head" . }}
+<!-- head -->
+{{ template "head" . }}
 
-  <body>
-    <!-- header -->
-    {{ template "header" . }}
+<body>
+	<!-- header -->
+	{{ template "header" . }}
 
-    <!-- main -->
-    <main class="container">
-      <hgroup>
-        <h1 class="title">{{ .Category.Title }}</h1>
-        <p class="subtitle">{{ .Category.Description }}</p>
-      </hgroup>
+	<!-- main -->
+	<main class="container">
+		<hgroup>
+			<h1 class="title">{{ .Category.Title }}</h1>
+			<p class="subtitle">{{ .Category.Description }}</p>
+		</hgroup>
 
-      <ul>
-        <!-- nowrap -->
-        {{ $c := .Category.Title }} {{ range .Category.Entries }}
-        <li>
-          <h3>
-            <a href="/{{ slugify $c }}/{{ slugify .Title }}">{{ .Title }}</a>
-          </h3>
-        </li>
-        {{ end }}
-      </ul>
-    </main>
-  </body>
+		<ul>
+			<!-- nowrap -->
+			{{ $c := .Category.Title }} {{ range .Category.Entries }}
+			<li>
+				<h3>
+					<a href="/{{ slugify $c }}/{{ slugify .Title }}">{{ .Title }}</a>
+				</h3>
+			</li>
+			{{ end }}
+		</ul>
+	</main>
+</body>
+
 </html>

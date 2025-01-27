@@ -1,24 +1,27 @@
 <!-- entry.html -->
 <!doctype html>
 <html lang="en">
-  <!-- head -->
-  {{ template "head" . }}
+<!-- head -->
+{{ template "head" . }}
 
-  <body>
-    <!-- header -->
-    {{ template "header" . }}
+<body>
+	<!-- header -->
+	{{ template "header" . }}
 
-    <!-- main -->
-    <main class="container">
-      {{ $slug := slugify .Category.Title }}
-      <a href="/{{ $slug }}">back to {{ $slug }}</a>
-      <hgroup>
-        <p class="subtitle">
-          {{ .CurrentEntry.CreatedAt.Format "Jan 02, 2006"}}
-        </p>
-        <h1 class="title">{{ .CurrentEntry.Title }}</h1>
-      </hgroup>
-      <div class="markdown">{{ .Content }}</div>
-    </main>
-  </body>
+	<!-- main -->
+	<main class="container">
+		<h1 class="title">{{ .CurrentEntry.Title }}</h1>
+		<p class="subtitle">
+			{{ .CurrentEntry.CreatedAt.Format "Jan 02, 2006"}}
+		</p>
+		<div class="markdown">{{ .Content }}</div>
+	</main>
+</body>
+
 </html>
+
+{{ define "back" }}
+<!-- nowrap -->
+{{ $slug := slugify .Category.Title }}
+<a href="/{{ $slug }}">back to {{ $slug }}</a>
+{{ end }}
