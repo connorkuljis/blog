@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/connorkuljis/content/internal/site"
+	"github.com/connorkuljis/content/internal/ssg"
 	"github.com/connorkuljis/content/internal/store"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
@@ -20,14 +20,7 @@ const (
 
 func main() {
 	start := time.Now()
-	err := generateSite()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("took: %d ms", time.Since(start).Milliseconds())
-}
 
-func generateSite() error {
 	db, err := store.Connect()
 	if err != nil {
 		log.Fatal(err)
@@ -46,22 +39,22 @@ func generateSite() error {
 		),
 	)
 
-	s := site.Site{
+	site := ssg.Site{
 		Title:          title,
 		DB:             db,
 		MarkdownParser: md,
 		Publish:        publish,
 	}
 
-	err = s.Init()
+	err = site.Init()
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 
-	err = s.Render()
+	err = site.Render()
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 
-	return nil
+	fmt.Printf("took: %d ms", time.Since(start).Milliseconds())
 }

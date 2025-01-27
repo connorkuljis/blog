@@ -1,4 +1,4 @@
-package site
+package ssg
 
 import (
 	"html/template"

@@ -1,4 +1,4 @@
-package site
+package ssg
 
 import (
 	"bytes"
@@ -143,6 +143,7 @@ func renderPage(tpls *template.Template, page Page) error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
 	err = tpls.ExecuteTemplate(f, page.TemplateName(), page) // note: render page struct directly into the template data.
 	if err != nil {
