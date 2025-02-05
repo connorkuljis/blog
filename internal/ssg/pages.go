@@ -1,7 +1,6 @@
 package ssg
 
 import (
-	"html/template"
 	"path/filepath"
 
 	"github.com/connorkuljis/content/internal/model"
@@ -44,7 +43,6 @@ type EntryPage struct {
 	Site         *Site
 	Category     model.Category
 	CurrentEntry model.Entry
-	Content      template.HTML
 }
 
 func (p EntryPage) Filepath() string {

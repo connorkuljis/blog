@@ -9,23 +9,27 @@
 	{{ template "header" . }}
 
 	<!-- main -->
-	<main class="container">
-		<!-- entries -->
-		{{ range .Categories }}
-		<!-- nowrap -->
-		{{ $c := .Title }}
-		<section class="grid-item">
-			<h3>{{ .Title }}</h3>
-			<ul>
-				{{ range .Entries }}
-				<li>
-					<a href="/{{ slugify $c }}/{{ slugify .Title }}">{{ .Title }}</a>
-				</li>
-				{{ end }}
-			</ul>
+	<main>
+		<section class="about">
+			{{ template "about" . }} 
 		</section>
-		{{ end }}
+
+			{{ range .Categories }}
+			<!-- nowrap -->
+			{{ $category := .Title }}
+			<section class="category" id="{{ slugify $category }}">
+				<h3>{{ .Title }}</h3>
+				{{ range .Entries }}
+				<a href="/{{ slugify $category }}/{{ slugify .Title }}">{{ .Title }}</a>
+				<p>{{ .Markdown }}</p>
+				{{ end }}
+			</section>
+			{{ end }}
 	</main>
 </body>
 
 </html>
+
+{{ define "about" }}
+<p>I'm Connor and this is my website. Welcome!</p>
+{{ end }} 

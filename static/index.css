@@ -2,43 +2,22 @@
 @import url("/styles/variables.css");
 @import url("/styles/global.css");
 
-.container {
-  margin: 0 auto;
-  padding: 1rem;
-  max-width: 1200px;
+body {
+	max-width: 768px;
+	margin: 0 auto;
 }
 
-.nav {
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-
-  &>ul {
-    display: flex;
-    gap: 0.5rem;
-  }
+body > header {
+	padding: 1rem;
 }
 
-.markdown {
-  padding-top: 1.5rem;
-
-  &>*+* {
-    margin-top: 1.5rem;
-  }
-
-  & h1,
-  & h2,
-  & h3,
-  & h4,
-  & h5 {
-    font-size: var(--fs-500);
-  }
+body > main {
+	padding: 1rem;
+	margin-top: 0.5rem;
 }
 
-.title {
-  font-size: var(--fs-600);
+body > main > *+* {
+	margin-top: 1.5rem;
 }
 
 .title a {
@@ -48,12 +27,4 @@
 .subtitle {
   color: var(--clr-neutral-600);
   padding-bottom: 0.25rem;
-}
-
-.section {
-  padding-bottom: 2.25rem;
-}
-
-.section>*+* {
-  margin-top: 1.5rem;
 }

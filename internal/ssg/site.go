@@ -1,12 +1,10 @@
 package ssg
 
 import (
-	"bytes"
 	"html/template"
 	"os"
 	"path/filepath"
 
-	"github.com/connorkuljis/content/internal/model"
 	"github.com/connorkuljis/content/internal/store"
 	"github.com/connorkuljis/content/internal/util"
 	"github.com/jmoiron/sqlx"
@@ -45,80 +43,52 @@ func (s *Site) Init() error {
 	return nil
 }
 
-func filterPublishedEntries(entries []model.Entry) []model.Entry {
-	var publishedEntries []model.Entry
-	for _, entry := range entries {
-		if entry.Publish == 1 {
-			publishedEntries = append(publishedEntries, entry)
-		}
-
-	}
-	return publishedEntries
-}
-
 func (s *Site) Render() error {
-	// Setup repositories
 	categoryRepo := store.NewCategoryRepository(s.DB)
 	entryRepo := store.NewEntryRepository(s.DB)
 
-	// 1. Read all categories
-	categories, err := categoryRepo.ReadAllCategories()
-	if err != nil {
-		return err
-	}
-
-	// 2. Read all entries by category
-	for i, category := range categories {
-		entries, err := entryRepo.ReadAllByCategoryID(category.ID)
-		if err != nil {
-			return err
-		}
-		categories[i].Entries = entries
-	}
-
-	var pages []Page
-	for _, category := range categories {
-		var cp CategoryPage
-
-		cp = CategoryPage{
-			Site:     s,
-			Category: category,
-		}
-
-		pages = append(pages, cp)
-
-		for _, entry := range category.Entries {
-			var ep EntryPage
-
-			var buf bytes.Buffer
-			err := s.MarkdownParser.Convert([]byte(entry.Content), &buf)
-			if err != nil {
-				return err
-			}
-			content := template.HTML(buf.String())
-
-			ep = EntryPage{
-				Site:         s,
-				Category:     category,
-				CurrentEntry: entry,
-				Content:      content,
-			}
-
-			pages = append(pages, ep)
-		}
-	}
-
 	var navItems []string
-	err = s.DB.Select(&navItems, "SELECT title FROM categories ORDER BY title")
+	err := s.DB.Select(&navItems, "SELECT title FROM categories ORDER BY title")
 	if err != nil {
 		return err
 	}
 	s.NavItems = navItems
 
-	pages = append(pages, HomePage{
-		Site:       s,
-		Categories: categories,
-	})
+	categories, err := categoryRepo.ReadAllCategories()
+	if err != nil {
+		return err
+	}
+
+	var pages []Page
+	for i := range categories {
+		entries, err := entryRepo.ReadAllByCategoryID(categories[i].ID)
+		if err != nil {
+			return err
+		}
+
+		categories[i].Entries = entries
+
+		for j := range categories[i].Entries {
+			err := categories[i].Entries[j].ContentMdToHTML(s.MarkdownParser)
+			if err != nil {
+				return err
+			}
+
+			pages = append(pages, EntryPage{
+				Site:         s,
+				Category:     categories[i],
+				CurrentEntry: categories[i].Entries[j],
+			})
+		}
+
+		pages = append(pages, CategoryPage{
+			Site:     s,
+			Category: categories[i],
+		})
+
+	}
+
+	pages = append(pages, HomePage{Site: s, Categories: categories})
 
 	tpls, err := template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html")
 	if err != nil {
