@@ -56,5 +56,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("took: %d ms", time.Since(start).Milliseconds())
+	fmt.Printf("built site in: %d ms\n", time.Since(start).Milliseconds())
 }
