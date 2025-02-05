@@ -4,12 +4,12 @@ gen := "./ssg"
 public := "./public"
 port := "3000"
 
-all: clean build-cli build-gen
+all: clean build-cli build-ssg
 
 build-cli: 
     go build -v -o {{ cli }} ./cmd/cli/main.go
 
-build-gen: 
+build-ssg: 
     go build -v -o {{ gen }} ./cmd/ssg/main.go
 
 clean:

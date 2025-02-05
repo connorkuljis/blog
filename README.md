@@ -1,7 +1,7 @@
 # Content
 
 - `cli` - terminal interface to interact with content sqlite database.
-- `gen` - generate connors static website.
+- `ssg` - run the static site generator.
 
 ## Usage
 
