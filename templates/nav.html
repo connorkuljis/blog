@@ -1,0 +1,16 @@
+<!-- nav.html -->
+{{ define "nav" }}
+<nav class="nav">
+	<ul role="list">
+		<li>
+			<a href="/">home</a>
+		</li>
+
+		{{ range .Site.NavItems }}
+		<li>
+			<a href="/{{ slugify . }}">{{ slugify . }}</a>
+		</li>
+		{{ end }}
+	</ul>
+</nav>
+{{ end }}

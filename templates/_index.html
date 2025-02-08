@@ -1,35 +1,68 @@
 <!-- index.html -->
 <!doctype html>
 <html lang="en">
-<!-- head -->
+
 {{ template "head" . }}
 
 <body>
-	<!-- header -->
 	{{ template "header" . }}
 
-	<!-- main -->
-	<main>
-		<section class="about">
-			{{ template "about" . }} 
-		</section>
+	<div class="grid">
+		{{ template "aside" . }}
 
-			{{ range .Categories }}
-			<!-- nowrap -->
-			{{ $category := .Title }}
-			<section class="category" id="{{ slugify $category }}">
-				<h3>{{ .Title }}</h3>
-				{{ range .Entries }}
-				<a href="/{{ slugify $category }}/{{ slugify .Title }}">{{ .Title }}</a>
-				<p>{{ .Markdown }}</p>
-				{{ end }}
-			</section>
-			{{ end }}
-	</main>
+		<main class="main">
+			<div class="owl">
+				{{ template "blog-roll" . }}
+			</div>
+		</main>
+
+		{{ template "panel" . }}
+	</div>
 </body>
 
 </html>
 
-{{ define "about" }}
-<p>I'm Connor and this is my website. Welcome!</p>
-{{ end }} 
+{{ define "blog-roll" }}
+<!-- blog-roll -->
+<div class="blog-roll">
+	{{ range .Categories }}
+	{{ $category := .Title }}
+	<section class="category" id="{{ slugify $category }}">
+		<div class="owl">
+			<h3>{{ .Title }}</h3>
+			{{ range .Entries }}
+			<article>
+				<a href="/{{ slugify $category }}/{{ slugify .Title }}">{{ .Title }}</a>
+
+				<div class="owl">
+					{{ .Markdown }}
+				</div>
+			</article>
+			{{ end }}
+		</div>
+	</section>
+	{{ end }}
+</div>
+{{ end }}
+
+
+{{ define "panel" }}
+<!-- panel -->
+<div class="panel">
+	<ul role="list">
+		{{ range .Categories }}
+		{{ $category := .Title }}
+		<li>
+			<h3>{{ .Title }}</h3>
+			{{ range .Entries }}
+			<ul role="list">
+				<li>
+					<a href="/{{ slugify $category }}/{{ slugify .Title }}">{{ .Title }}</a>
+				</li>
+			</ul>
+			{{ end }}
+		</li>
+		{{ end }}
+	</ul>
+</div>
+{{ end }}
