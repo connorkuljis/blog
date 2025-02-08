@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/connorkuljis/content/internal/ssg"
+	"github.com/connorkuljis/content/internal/site"
 	"github.com/connorkuljis/content/internal/store"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
@@ -39,11 +39,10 @@ func main() {
 		),
 	)
 
-	site := ssg.Site{
+	site := site.Site{
 		Title:          title,
 		DB:             db,
 		MarkdownParser: md,
-		Publish:        publish,
 	}
 
 	err = site.Init()
