@@ -1,4 +1,4 @@
-package ssg
+package site
 
 import (
 	"path/filepath"
