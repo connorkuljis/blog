@@ -8,24 +8,28 @@
 	<!-- header -->
 	{{ template "header" . }}
 
-	<!-- main -->
-	<main class="container">
-		<hgroup>
-			<h1 class="title">{{ .Category.Title }}</h1>
-			<p class="subtitle">{{ .Category.Description }}</p>
-		</hgroup>
+	<div class="grid">
+		{{ template "aside" . }}
 
-		<ul>
-			<!-- nowrap -->
-			{{ $c := .Category.Title }} {{ range .Category.Entries }}
-			<li>
-				<h3>
-					<a href="/{{ slugify $c }}/{{ slugify .Title }}">{{ .Title }}</a>
-				</h3>
-			</li>
-			{{ end }}
-		</ul>
-	</main>
+		<!-- main -->
+		<main class="main">
+			<div class="owl">
+				<h1>{{ .Category.Title }} | {{ .Category.Description }}</h1>
+
+				<div>
+					<ul role="list">
+						{{ $category := slugify .Category.Title }}
+						{{ range .Category.Entries }}
+						{{ $title := slugify .Title }}
+						<li>
+							<a href="/{{ $category }}/{{ $title }}">{{ .Title }}</a>
+						</li>
+						{{ end }}
+					</ul>
+				</div>
+			</div>
+		</main>
+	</div>
 </body>
 
 </html>

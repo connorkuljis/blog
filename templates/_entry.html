@@ -8,20 +8,19 @@
 	<!-- header -->
 	{{ template "header" . }}
 
-	<!-- main -->
-	<main class="container">
-		<h1 class="title">{{ .CurrentEntry.Title }}</h1>
-		<p class="subtitle">
-			{{ .CurrentEntry.CreatedAt.Format "Jan 02, 2006"}}
-		</p>
-		<div class="markdown">{{ .CurrentEntry.Markdown }}</div>
-	</main>
+	<div class="grid">
+		<!-- main -->
+		<main class="main">
+			<div class="owl">
+				<h1>{{ .CurrentEntry.Title }}</h1>
+				<div>{{ .CurrentEntry.CreatedAt.Format "Jan 02, 2006"}}</div>
+
+				<div class="owl">
+					{{ .CurrentEntry.Markdown }}
+				</div>
+			</div>
+		</main>
+	</div>
 </body>
 
 </html>
-
-{{ define "back" }}
-<!-- nowrap -->
-{{ $slug := slugify .Category.Title }}
-<a href="/{{ $slug }}">back to {{ $slug }}</a>
-{{ end }}

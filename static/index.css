@@ -2,22 +2,35 @@
 @import url("/styles/variables.css");
 @import url("/styles/global.css");
 
-body {
-	max-width: 768px;
-	margin: 0 auto;
-}
+.header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
 
-body > header {
 	padding: 1rem;
+	border-bottom: 1px solid var(--clr-neutral-600);
 }
 
-body > main {
-	padding: 1rem;
-	margin-top: 0.5rem;
+.header > .nav > ul[role="list"] {
+	display: inline-flex;
+	gap: 0.5rem;
 }
 
-body > main > *+* {
+.owl > *+* {
 	margin-top: 1.5rem;
+}
+
+.aside {
+	padding-top: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.panel {
+	font-size: var(--fs-200)
 }
 
 .title a {
@@ -27,4 +40,21 @@ body > main > *+* {
 .subtitle {
   color: var(--clr-neutral-600);
   padding-bottom: 0.25rem;
+}
+
+.grid {
+	min-height: 100dvh;
+	display: grid;
+	grid-template-columns: 2fr 5fr 3fr;
+
+	&>* {
+		padding: 1rem;
+	}
+
+	&>.main {
+		grid-column-start: 2;
+
+		border-left: 1px solid var(--clr-neutral-600);
+		border-right: 1px solid var(--clr-neutral-600);
+	}
 }

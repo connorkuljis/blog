@@ -1,24 +1,7 @@
 <!-- header -->
 {{ define "header" }}
-<header>
+<header class="header">
 	<h1 class="title"><a href="/">{{ .Site.Title }}</a></h1>
 	{{ template "nav" . }}
 </header>
-{{ end }}
-
-{{ define "nav" }}
-<nav>
-	<ul class="nav-items" role="list">
-		<li><a href="/">home</a></li>
-		{{ range .Site.NavItems }}
-		<li><a href="/{{ slugify . }}">{{ slugify . }}</a></li>
-		{{ end }}
-	</ul>
-	<style>
-		.nav-items {
-			display: flex;
-			gap: 0.5rem;
-		}
-	</style>
-</nav>
 {{ end }}
