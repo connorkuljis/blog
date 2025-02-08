@@ -2,43 +2,35 @@
 @import url("/styles/variables.css");
 @import url("/styles/global.css");
 
-.container {
-  margin: 0 auto;
-  padding: 1rem;
-  max-width: 1200px;
+.header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+
+	padding: 1rem;
+	border-bottom: 1px solid var(--clr-neutral-600);
 }
 
-.nav {
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-
-  &>ul {
-    display: flex;
-    gap: 0.5rem;
-  }
+.header > .nav > ul[role="list"] {
+	display: inline-flex;
+	gap: 0.5rem;
 }
 
-.markdown {
-  padding-top: 1.5rem;
-
-  &>*+* {
-    margin-top: 1.5rem;
-  }
-
-  & h1,
-  & h2,
-  & h3,
-  & h4,
-  & h5 {
-    font-size: var(--fs-500);
-  }
+.owl > *+* {
+	margin-top: 1.5rem;
 }
 
-.title {
-  font-size: var(--fs-600);
+.aside {
+	padding-top: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.panel {
+	font-size: var(--fs-200)
 }
 
 .title a {
@@ -50,10 +42,19 @@
   padding-bottom: 0.25rem;
 }
 
-.section {
-  padding-bottom: 2.25rem;
-}
+.grid {
+	min-height: 100dvh;
+	display: grid;
+	grid-template-columns: 2fr 5fr 3fr;
 
-.section>*+* {
-  margin-top: 1.5rem;
+	&>* {
+		padding: 1rem;
+	}
+
+	&>.main {
+		grid-column-start: 2;
+
+		border-left: 1px solid var(--clr-neutral-600);
+		border-right: 1px solid var(--clr-neutral-600);
+	}
 }

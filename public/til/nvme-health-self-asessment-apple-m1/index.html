@@ -1,53 +1,63 @@
 
 <!doctype html>
 <html lang="en">
-  
-  
+
+
+
+
 <head>
-  <title>Connor&#39;s Blog</title>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/index.css" />
+	<title>Connor&#39;s Blog</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="/index.css" />
 </head>
 
 
-  <body>
-    
-    
-<header class="container">
-  <nav class="nav">
-    <ul role="list">
-      <li>
-        <h1 class="title"><a href="/">Connor&#39;s Blog</a></h1>
-      </li>
-    </ul>
-    <ul role="list">
-      <li><a href="/">home</a></li>
-	  
-		  <li><a href="/blog">blog</a></li>
-	  
-		  <li><a href="/projects">projects</a></li>
-	  
-		  <li><a href="/til">til</a></li>
-	  
-		  <li><a href="/journal">journal</a></li>
-	   
-    </ul>
-  </nav>
+<body>
+	
+	
+<header class="header">
+	<h1 class="title"><a href="/">Connor&#39;s Blog</a></h1>
+	
+<nav class="nav">
+	<ul role="list">
+		<li>
+			<a href="/">home</a>
+		</li>
+
+		
+		<li>
+			<a href="/blog">blog</a>
+		</li>
+		
+		<li>
+			<a href="/journal">journal</a>
+		</li>
+		
+		<li>
+			<a href="/projects">projects</a>
+		</li>
+		
+		<li>
+			<a href="/til">til</a>
+		</li>
+		
+	</ul>
+</nav>
+
 </header>
 
 
-    
-    <main class="container">
-      
-      <a href="/til">back to til</a>
-      <hgroup>
-        <p class="subtitle">
-          Dec 25, 2024
-        </p>
-        <h1 class="title">NVMe Health Self Asessment (Apple M1)</h1>
-      </hgroup>
-      <div class="markdown"><p><code>brew install smartmontools</code></p>
+	<div class="grid">
+		<div></div>
+		
+		<main class="main">
+			<div class="owl">
+				<h1>NVMe Health Self Asessment (Apple M1)</h1>
+				<div>Dec 25, 2024</div>
+
+				<div class="owl">
+					<p><code>brew install smartmontools</code></p>
 <pre><code>sudo smartctl -a /dev/disk0
 
 smartctl 7.4 2023-08-01 r5530 [Darwin 23.4.0 arm64] (local build)
@@ -92,7 +102,12 @@ Unsafe Shutdowns:                   33
 Media and Data Integrity Errors:    0
 Error Information Log Entries:      0
 </code></pre>
-</div>
-    </main>
-  </body>
+
+				</div>
+			</div>
+		</main>
+		<div></div>
+	</div>
+</body>
+
 </html>

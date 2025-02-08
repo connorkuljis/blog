@@ -1,53 +1,63 @@
 
 <!doctype html>
 <html lang="en">
-  
-  
+
+
+
+
 <head>
-  <title>Connor&#39;s Blog</title>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="/index.css" />
+	<title>Connor&#39;s Blog</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="/index.css" />
 </head>
 
 
-  <body>
-    
-    
-<header class="container">
-  <nav class="nav">
-    <ul role="list">
-      <li>
-        <h1 class="title"><a href="/">Connor&#39;s Blog</a></h1>
-      </li>
-    </ul>
-    <ul role="list">
-      <li><a href="/">home</a></li>
-	  
-		  <li><a href="/blog">blog</a></li>
-	  
-		  <li><a href="/projects">projects</a></li>
-	  
-		  <li><a href="/til">til</a></li>
-	  
-		  <li><a href="/journal">journal</a></li>
-	   
-    </ul>
-  </nav>
+<body>
+	
+	
+<header class="header">
+	<h1 class="title"><a href="/">Connor&#39;s Blog</a></h1>
+	
+<nav class="nav">
+	<ul role="list">
+		<li>
+			<a href="/">home</a>
+		</li>
+
+		
+		<li>
+			<a href="/blog">blog</a>
+		</li>
+		
+		<li>
+			<a href="/journal">journal</a>
+		</li>
+		
+		<li>
+			<a href="/projects">projects</a>
+		</li>
+		
+		<li>
+			<a href="/til">til</a>
+		</li>
+		
+	</ul>
+</nav>
+
 </header>
 
 
-    
-    <main class="container">
-      
-      <a href="/blog">back to blog</a>
-      <hgroup>
-        <p class="subtitle">
-          Jan 14, 2025
-        </p>
-        <h1 class="title">Importing ASIC Business Names Dataset into SQLite</h1>
-      </hgroup>
-      <div class="markdown"><h1 id="importing-asic-business-names-dataset-into-sqlite-guide">Importing ASIC Business Names Dataset into SQLite Guide</h1>
+	<div class="grid">
+		<div></div>
+		
+		<main class="main">
+			<div class="owl">
+				<h1>Importing ASIC Business Names Dataset into SQLite</h1>
+				<div>Jan 14, 2025</div>
+
+				<div class="owl">
+					<h1 id="importing-asic-business-names-dataset-into-sqlite-guide">Importing ASIC Business Names Dataset into SQLite Guide</h1>
 <h2 id="get-the-dataset">Get the dataset</h2>
 <p><a href="https://www.data.gov.au/dataset/ds-dga-bc515135-4bb6-4d50-957a-3713709a76d3/">ASIC Business Names Dataset</a></p>
 <ul>
@@ -137,7 +147,12 @@ Business = Nourishing Your World
 <p>Query <code>business</code> virtual table with full text search.</p>
 <pre><code class="language-sql">select * from businesses WHERE business_name MATCH 'software';
 </code></pre>
-</div>
-    </main>
-  </body>
+
+				</div>
+			</div>
+		</main>
+		<div></div>
+	</div>
+</body>
+
 </html>
