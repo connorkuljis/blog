@@ -2,6 +2,14 @@
 @import url("/styles/variables.css");
 @import url("/styles/global.css");
 
+body {
+	max-width: 1198px;
+	margin: 0 auto;
+	padding-left: 3%;
+	padding-right: 3%;
+}
+
+
 .header {
 	display: flex;
 	flex-direction: row;
@@ -9,8 +17,8 @@
 	justify-content: space-between;
 	gap: 1rem;
 
-	padding: 1rem;
-	border-bottom: 1px solid var(--clr-neutral-600);
+	padding-top: 2.25rem;
+	padding-bottom: 3rem;
 }
 
 .header > .nav > ul[role="list"] {
@@ -23,14 +31,9 @@
 }
 
 .aside {
-	padding-top: 1rem;
 	display: flex;
 	flex-direction: column;
 	gap: 1.5rem;
-}
-
-.panel {
-	font-size: var(--fs-200)
 }
 
 .title a {
@@ -43,18 +46,9 @@
 }
 
 .grid {
-	min-height: 100dvh;
 	display: grid;
-	grid-template-columns: 2fr 5fr 3fr;
+	grid-template-columns: 1fr 3fr 1fr;
+	gap: 1rem;
 
-	&>* {
-		padding: 1rem;
-	}
-
-	&>.main {
-		grid-column-start: 2;
-
-		border-left: 1px solid var(--clr-neutral-600);
-		border-right: 1px solid var(--clr-neutral-600);
-	}
+	min-height: 100dvh;
 }
