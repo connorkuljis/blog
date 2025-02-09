@@ -14,8 +14,7 @@ import (
 )
 
 const (
-	title   = "Connor's Blog"
-	publish = false
+	title = "kuljis.xyz"
 )
 
 func main() {
@@ -34,6 +33,7 @@ func main() {
 			parser.WithAutoHeadingID(),
 		),
 		goldmark.WithRendererOptions(
+			html.WithUnsafe(),
 			html.WithHardWraps(),
 			html.WithXHTML(),
 		),
