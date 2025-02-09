@@ -8,28 +8,33 @@
 	<!-- header -->
 	{{ template "header" . }}
 
-	<div class="grid">
-		{{ template "aside" . }}
+	<!-- main -->
+	<main class="main flex-col" gap="2">
+		{{ $category := slugify .Category.Title }}
+		<nav class="wrapper">
+			<ul role="list">
+				<li><a href="/">home</a></li>
+				<span>/</span>
+				<li><a href="/{{ $category }}">{{ $category }}</a></li>
+			</ul>
+		</nav>
 
-		<!-- main -->
-		<main class="main">
-			<div class="owl">
-				<h1>{{ .Category.Title }} | {{ .Category.Description }}</h1>
+		<div class="wrapper">
+			<h1 class="heading">{{ .Category.Title }}</h1>
+			<h2 class="subheading">{{ .Category.Description }}</h2>
+		</div>
 
-				<div>
-					<ul role="list">
-						{{ $category := slugify .Category.Title }}
-						{{ range .Category.Entries }}
-						{{ $title := slugify .Title }}
-						<li>
-							<a href="/{{ $category }}/{{ $title }}">{{ .Title }}</a>
-						</li>
-						{{ end }}
-					</ul>
-				</div>
-			</div>
-		</main>
-	</div>
+		<div class="wrapper">
+			<ul role="list">
+				{{ range .Category.Entries }}
+				{{ $title := slugify .Title }}
+				<li>
+					<a href="/{{ $category }}/{{ $title }}">{{ .Title }}</a>
+				</li>
+				{{ end }}
+			</ul>
+		</div>
+	</main>
 </body>
 
 </html>

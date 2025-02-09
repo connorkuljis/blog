@@ -2,53 +2,61 @@
 @import url("/styles/variables.css");
 @import url("/styles/global.css");
 
-body {
-	max-width: 1198px;
-	margin: 0 auto;
-	padding-left: 3%;
-	padding-right: 3%;
-}
-
-
-.header {
+nav > ul {
 	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	gap: 1rem;
-
-	padding-top: 2.25rem;
-	padding-bottom: 3rem;
-}
-
-.header > .nav > ul[role="list"] {
-	display: inline-flex;
+	flex-wrap: no-wrap;
 	gap: 0.5rem;
 }
 
-.owl > *+* {
+.content > * + * {
 	margin-top: 1.5rem;
 }
 
-.aside {
+.wrapper {
+	display: grid;
+	grid-template-columns: 1fr min(60ch, calc(100% - 64px)) 1fr;
+	grid-column-gap: 32px;
+
+	& > * {
+		grid-column: 2;
+	}
+
+	& > .full-bleed, & > img {
+		width: 100%;
+		grid-column: 1 / 4;
+	}
+}
+
+.header {
+	margin-top: 2rem;
+}
+
+.main {
+	margin-top: 3rem;
+	margin-bottom: 5rem;
+}
+
+.heading {
+	margin-top: 0.5rem;
+	font-size: var(--fs-600);
+	color: var(--clr-neutral-700);
+}
+
+.subheading {
+	margin-top: 0.25rem;
+	color: var(--clr-neutral-600);
+}
+
+.flex-col {
 	display: flex;
 	flex-direction: column;
-	gap: 1.5rem;
+}
+
+.title {
+	color: var(--clr-neutral-600);
 }
 
 .title a {
   color: inherit;
 }
 
-.subtitle {
-  color: var(--clr-neutral-600);
-  padding-bottom: 0.25rem;
-}
-
-.grid {
-	display: grid;
-	grid-template-columns: 1fr 3fr 1fr;
-	gap: 1rem;
-
-	min-height: 100dvh;
-}

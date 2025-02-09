@@ -7,62 +7,32 @@
 <body>
 	{{ template "header" . }}
 
-	<div class="grid">
-		{{ template "aside" . }}
+	<main class="main flex-col" gap="2">
+		<nav class="wrapper">
+			<ul role="list">
+				<li><a href="/">home</a></li>
+			</ul>
+		</nav>
 
-		<main class="main">
-			<div class="owl">
-				{{ template "blog-roll" . }}
-			</div>
-		</main>
+		<div class="wrapper">
+			<h1 class="heading">
+				Software Engineering Graduate from Perth, Western Australia
+			</h1>
+		</div>
 
-		{{ template "panel" . }}
-	</div>
+		<div class="wrapper">
+			<h2 class="subheading">Connor Kuljis</h2>
+
+			<ul role="list">
+				<li>
+					<span><a href="/projects">projects</a> things I have built</span>
+				</li>
+				<li>
+					<span><a href="/blog">blog</a> articles and thoughts</span>
+				</li>
+			</ul>
+		</div>
+	</main>
 </body>
 
 </html>
-
-{{ define "blog-roll" }}
-<!-- blog-roll -->
-<div class="blog-roll">
-	{{ range .Categories }}
-	{{ $category := .Title }}
-	<section class="category" id="{{ slugify $category }}">
-		<div class="owl">
-			<h3>{{ .Title }}</h3>
-			{{ range .Entries }}
-			<article>
-				<a href="/{{ slugify $category }}/{{ slugify .Title }}">{{ .Title }}</a>
-
-				<div class="owl">
-					{{ .Markdown }}
-				</div>
-			</article>
-			{{ end }}
-		</div>
-	</section>
-	{{ end }}
-</div>
-{{ end }}
-
-
-{{ define "panel" }}
-<!-- panel -->
-<div class="panel">
-	<ul>
-		{{ range .Categories }}
-		{{ $category := .Title }}
-		<li>
-			<h3>{{ .Title }}</h3>
-			{{ range .Entries }}
-			<ul>
-				<li>
-					<a href="/{{ slugify $category }}/{{ slugify .Title }}">{{ .Title }}</a>
-				</li>
-			</ul>
-			{{ end }}
-		</li>
-		{{ end }}
-	</ul>
-</div>
-{{ end }}
