@@ -4,9 +4,8 @@
 
 
 
-
 <head>
-	<title>Connor&#39;s Blog</title>
+	<title>kuljis.xyz</title>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" href="/index.css" />
@@ -15,49 +14,33 @@
 
 <body>
 	
-	
 <header class="header">
-	<h1 class="title"><a href="/">Connor&#39;s Blog</a></h1>
-	
-<nav class="nav">
-	<ul role="list">
-		<li>
-			<a href="/">home</a>
-		</li>
-
-		
-		<li>
-			<a href="/blog">blog</a>
-		</li>
-		
-		<li>
-			<a href="/journal">journal</a>
-		</li>
-		
-		<li>
-			<a href="/projects">projects</a>
-		</li>
-		
-		<li>
-			<a href="/til">til</a>
-		</li>
-		
-	</ul>
-</nav>
-
+	<div class="wrapper">
+		<h1 class="title"><a href="/">kuljis.xyz</a></h1>
+	</div>
 </header>
 
 
-	<div class="grid">
-		<div></div>
+	<main class="main flex-col" gap="2">
 		
-		<main class="main">
-			<div class="owl">
-				<h1>Importing ASIC Business Names Dataset into SQLite</h1>
-				<div>Jan 14, 2025</div>
+		
+		<nav class="wrapper">
+			<ul role="list">
+				<li><a href="/">home</a></li>
+				<span>/</span>
+				<li><a href="/blog">blog</a></li>
+				<span>/</span>
+				<li><a href="/blog/importing-asic-business-names-dataset-into-sqlite">importing-asic-business-names-dataset-into-sqlite</a></li>
+			</ul>
+		</nav>
 
-				<div class="owl">
-					<h1 id="importing-asic-business-names-dataset-into-sqlite-guide">Importing ASIC Business Names Dataset into SQLite Guide</h1>
+		<div class="wrapper">
+			<h1 class="heading">Importing ASIC Business Names Dataset into SQLite</h1>
+			<h2 class="subheading">Jan 14, 2025</h2>
+		</div>
+
+		<div class="wrapper content">
+			<h1 id="importing-asic-business-names-dataset-into-sqlite-guide">Importing ASIC Business Names Dataset into SQLite Guide</h1>
 <h2 id="get-the-dataset">Get the dataset</h2>
 <p><a href="https://www.data.gov.au/dataset/ds-dga-bc515135-4bb6-4d50-957a-3713709a76d3/">ASIC Business Names Dataset</a></p>
 <ul>
@@ -148,11 +131,8 @@ Business = Nourishing Your World
 <pre><code class="language-sql">select * from businesses WHERE business_name MATCH 'software';
 </code></pre>
 
-				</div>
-			</div>
-		</main>
-		<div></div>
-	</div>
+		</div>
+	</main>
 </body>
 
 </html>
