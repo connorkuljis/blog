@@ -1,5 +1,5 @@
 :root {
-  --ff-base: Helvetica, system-ui, sans-serif;
+  --ff-base: -system-ui, sans-serif;
   --ff-markdown: 'Times', 'Times New Roman', serif;
 
   --fw-normal: 400;

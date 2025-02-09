@@ -24,7 +24,7 @@ h6 {
 p,
 li {
   text-wrap: pretty;
-  max-width: 120ch;
+  max-width: 69ch;
 }
 
 a {
@@ -41,4 +41,20 @@ a:hover {
 
 b {
   font-weight: var(--fw-semi-bold);
+}
+
+[gap="0.5"] {
+	gap: 0.5rem;
+}
+
+[gap="1"] {
+	gap: 1rem;
+}
+
+[gap="1.5"] {
+	gap: 1.5rem;
+}
+
+[gap="2"] {
+	gap: 2rem;
 }
