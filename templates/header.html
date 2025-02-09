@@ -1,7 +1,8 @@
 <!-- header -->
 {{ define "header" }}
 <header class="header">
-	<h1 class="title"><a href="/">{{ .Site.Title }}</a></h1>
-	{{ template "nav" . }}
+	<div class="wrapper">
+		<h1 class="title"><a href="/">{{ .Site.Title }}</a></h1>
+	</div>
 </header>
 {{ end }}
