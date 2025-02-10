@@ -11,6 +11,7 @@ type Category struct {
 	Description string `db:"description"`
 
 	Entries []Entry
+	Slug    string
 }
 
 func NewCategory(title, description string) *Category {

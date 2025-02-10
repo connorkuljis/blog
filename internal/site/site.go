@@ -5,10 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/connorkuljis/content/internal/store"
+	"github.com/connorkuljis/content/internal/model"
 	"github.com/connorkuljis/content/internal/util"
-	"github.com/jmoiron/sqlx"
-	"github.com/yuin/goldmark"
 )
 
 var funcMap = template.FuncMap{
@@ -17,107 +15,81 @@ var funcMap = template.FuncMap{
 }
 
 type Site struct {
-	Title    string
-	NavItems []string
-
-	DB             *sqlx.DB
-	MarkdownParser goldmark.Markdown
-
-	Publish bool
+	Title         string
+	Categories    []model.Category
+	RecentEntries []model.Entry
 }
 
 func (s *Site) Init() error {
-	// clean public
-	err := os.RemoveAll("public")
+	err := removePublicDir()
 	if err != nil {
 		return err
 	}
-	os.MkdirAll("public", os.ModePerm)
-
-	// copy all static directory contents into public
-	err = os.CopyFS("public", os.DirFS("static"))
+	err = makePublicDir()
 	if err != nil {
 		return err
 	}
-
+	err = copyStaticFilesIntoPublic()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-func (s *Site) Render() error {
-	categoryRepo := store.NewCategoryRepository(s.DB)
-	entryRepo := store.NewEntryRepository(s.DB)
+func removePublicDir() error {
+	return os.RemoveAll("public")
+}
 
-	var navItems []string
-	err := s.DB.Select(&navItems, "SELECT title FROM categories ORDER BY title")
-	if err != nil {
-		return err
+func makePublicDir() error {
+	return os.MkdirAll("public", os.ModePerm)
+}
+
+func copyStaticFilesIntoPublic() error {
+	return os.CopyFS("public", os.DirFS("static"))
+}
+
+func (s *Site) BuildPages() []Page {
+	pages := []Page{
+		HomePage{Site: s},
 	}
-	s.NavItems = navItems
 
-	categories, err := categoryRepo.ReadAllCategories()
-	if err != nil {
-		return err
-	}
-
-	var pages []Page
-	for i := range categories {
-		entries, err := entryRepo.ReadAllByCategoryID(categories[i].ID)
-		if err != nil {
-			return err
-		}
-
-		categories[i].Entries = entries
-
-		for j := range categories[i].Entries {
-			err := categories[i].Entries[j].ContentMdToHTML(s.MarkdownParser)
-			if err != nil {
-				return err
-			}
-
-			pages = append(pages, EntryPage{
-				Site:         s,
-				Category:     categories[i],
-				CurrentEntry: categories[i].Entries[j],
-			})
-		}
-
+	for _, category := range s.Categories {
 		pages = append(pages, CategoryPage{
 			Site:     s,
-			Category: categories[i],
+			Category: category,
 		})
-
+		for _, entry := range category.Entries {
+			pages = append(pages, EntryPage{
+				Site:         s,
+				Category:     category,
+				CurrentEntry: entry,
+			})
+		}
 	}
 
-	pages = append(pages, HomePage{Site: s, Categories: categories})
+	return pages
+}
 
+func (s *Site) RenderPages(pages []Page) error {
 	tpls, err := template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html")
 	if err != nil {
 		return err
 	}
 
 	for _, page := range pages {
-		err := renderPage(tpls, page)
+		dir := filepath.Dir(page.Filepath())
+		os.MkdirAll(dir, os.ModePerm)
+
+		f, err := os.Create(page.Filepath())
 		if err != nil {
 			return err
 		}
-	}
+		defer f.Close()
 
-	return nil
-}
-
-func renderPage(tpls *template.Template, page Page) error {
-	dir := filepath.Dir(page.Filepath())
-	os.MkdirAll(dir, os.ModePerm)
-
-	f, err := os.Create(page.Filepath())
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	err = tpls.ExecuteTemplate(f, page.TemplateName(), page) // note: render page struct directly into the template data.
-	if err != nil {
-		return err
+		err = tpls.ExecuteTemplate(f, page.TemplateName(), page) // note: render page struct directly into the template data.
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
