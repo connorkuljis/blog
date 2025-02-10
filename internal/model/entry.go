@@ -23,6 +23,7 @@ type Entry struct {
 	Publish    int       `db:"publish"`
 
 	Markdown template.HTML
+	Slug     string
 }
 
 func NewEntry(categoryID int64, title string) *Entry {

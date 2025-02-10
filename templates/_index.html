@@ -21,16 +21,35 @@
 		</div>
 
 		<div class="wrapper">
-			<h2 class="subheading">Connor Kuljis</h2>
+			<div class="flex-col" gap="1">
+				<div class="foo">
+					<img src=" /images/cat.jpg" class="icon" />
+					<h2 class="subheading">Connor Kuljis</h2>
+				</div>
 
-			<ul role="list">
-				<li>
-					<span><a href="/projects">projects</a> things I have built</span>
-				</li>
-				<li>
-					<span><a href="/blog">blog</a> articles and thoughts</span>
-				</li>
-			</ul>
+				<div>
+					<ul class="list">
+						{{ range .Site.Categories }}
+						<li>
+							<span><a href="/{{ .Slug }}">{{ .Title }}</a> {{ .Description }}</span>
+						</li>
+						{{ end }}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="wrapper">
+			<div class="flex-col" gap="1">
+				<h2>Recent entries</h2>
+				<ul class="list">
+					{{ range .Site.RecentEntries }}
+					<li>
+						<a href="/{{ .Slug }}">{{ .Slug }}</a>
+					</li>
+					{{ end }}
+				</ul>
+			</div>
 		</div>
 	</main>
 </body>
