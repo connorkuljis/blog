@@ -2,26 +2,27 @@
 @import url("/styles/variables.css");
 @import url("/styles/global.css");
 
-nav > ul {
+nav>ul {
 	display: flex;
 	flex-wrap: no-wrap;
 	gap: 0.5rem;
 }
 
-.content > * + * {
+.content>*+* {
 	margin-top: 1.5rem;
 }
 
 .wrapper {
 	display: grid;
-	grid-template-columns: 1fr min(60ch, calc(100% - 64px)) 1fr;
-	grid-column-gap: 32px;
+	grid-template-columns: 1fr min(65ch, calc(100% - 4rem)) 1fr;
+	grid-column-gap: 2rem;
 
-	& > * {
+	&>* {
 		grid-column: 2;
 	}
 
-	& > .full-bleed, & > img {
+	&>.full-bleed,
+	&>img {
 		width: 100%;
 		grid-column: 1 / 4;
 	}
@@ -37,13 +38,11 @@ nav > ul {
 }
 
 .heading {
-	margin-top: 0.5rem;
 	font-size: var(--fs-600);
 	color: var(--clr-neutral-700);
 }
 
 .subheading {
-	margin-top: 0.25rem;
 	color: var(--clr-neutral-600);
 }
 
@@ -57,6 +56,23 @@ nav > ul {
 }
 
 .title a {
-  color: inherit;
+	color: inherit;
 }
 
+.foo {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.icon {
+	padding: 0.25rem;
+	height: 2rem;
+	border-radius: 100%;
+}
+
+.list {
+	list-style-position: inside;
+	padding: 0;
+	margin: 0;
+}
