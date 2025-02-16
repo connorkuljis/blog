@@ -1,7 +1,7 @@
 # Content
 
-- `cli` - terminal interface to interact with content sqlite database.
-- `ssg` - run the static site generator.
+- `cms` - terminal interface to interact with content sqlite database.
+- `site` - run the static site generator.
 
 ## Usage
 
@@ -11,7 +11,7 @@ Build everything with the default justfile recipie:
 
 ## Usage 
 
-`./cli --help`
+`./cms --help`
 
-`./gen`
+`./site`
 

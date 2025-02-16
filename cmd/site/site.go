@@ -25,6 +25,10 @@ func main() {
 
 	site := &site.Site{
 		Title: title,
+		Socials: []site.Social{
+			{URL: "https://github.com/connorkuljis"},
+			{URL: "https://linkedin.com/in/connor-kuljis"},
+		},
 	}
 
 	db, err := store.Connect()
