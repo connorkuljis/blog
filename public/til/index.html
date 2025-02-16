@@ -24,22 +24,30 @@
 
 
 	
-	<main class="main flex-col" gap="2">
-		<nav class="wrapper">
-			<ul role="list">
-				<li><a href="/">home</a></li>
-				<span>&#8594;</span>
-				<li><a href="/til">til</a></li>
-			</ul>
-		</nav>
+	<main class="index">
+		<section class="wrapper">
+			<nav>
+				<ul class="breadcrumbs" role="list">
+					<li><a href="/">home</a></li>
+					<span>&#8594;</span>
+					<li><a href="/til">til</a></li>
+				</ul>
 
-		<div class="wrapper">
-			<h1 class="heading">TIL</h1>
-			<h2 class="subheading">Things i&#39;ve learned / collected</h2>
-		</div>
+			</nav>
 
-		<div class="wrapper">
-			<ul class="list">
+			<div>
+				<h1 class="heading">TIL</h1>
+				<h2 class="subheading">Things i&#39;ve learned / collected</h2>
+			</div>
+		</section>
+
+
+		<section class="wrapper">
+			<ul>
+				
+				<li>
+					<span><a href="/til/measuring-execution-time-in-sqlite">Measuring execution time in SQLite</a> 2025 Feb 12</span>
+				</li>
 				
 				<li>
 					<span><a href="/til/stop-hunting-for-clipboard-in-helix">Stop Hunting for Clipboard in Helix</a> 2024 Dec 28</span>
@@ -50,7 +58,7 @@
 				</li>
 				
 			</ul>
-		</div>
+		</section>
 	</main>
 </body>
 

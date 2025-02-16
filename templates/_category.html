@@ -9,29 +9,33 @@
 	{{ template "header" . }}
 
 	<!-- main -->
-	<main class="main flex-col" gap="2">
-		<nav class="wrapper">
-			<ul role="list">
-				<li><a href="/">home</a></li>
-				<span>&#8594;</span>
-				<li><a href="/{{ .Category.Slug }}">{{ slugify .Category.Title }}</a></li>
-			</ul>
-		</nav>
+	<main class="index">
+		<section class="wrapper">
+			<nav>
+				<ul class="breadcrumbs" role="list">
+					<li><a href="/">home</a></li>
+					<span>&#8594;</span>
+					<li><a href="/{{ .Category.Slug }}">{{ slugify .Category.Title }}</a></li>
+				</ul>
 
-		<div class="wrapper">
-			<h1 class="heading">{{ .Category.Title }}</h1>
-			<h2 class="subheading">{{ .Category.Description }}</h2>
-		</div>
+			</nav>
 
-		<div class="wrapper">
-			<ul class="list">
+			<div>
+				<h1 class="heading">{{ .Category.Title }}</h1>
+				<h2 class="subheading">{{ .Category.Description }}</h2>
+			</div>
+		</section>
+
+
+		<section class="wrapper">
+			<ul>
 				{{ range .Category.Entries }}
 				<li>
 					<span><a href="/{{ .Slug }}">{{ .Title }}</a> {{ .CreatedAt.Format "2006 Jan 2" }}</span>
 				</li>
 				{{ end }}
 			</ul>
-		</div>
+		</section>
 	</main>
 </body>
 

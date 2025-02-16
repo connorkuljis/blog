@@ -1,11 +1,11 @@
 /* styles/global.css */
 
 body {
-  margin: 0;
-  font-family: var(--ff-base);
-  color: var(--clr-body);
-  background-color: var(--clr-bg);
-  line-height: 1.6;
+	margin: 0;
+	font-family: var(--ff-base);
+	color: var(--clr-body);
+	background-color: var(--clr-bg);
+	line-height: 1.6;
 }
 
 h1,
@@ -14,33 +14,32 @@ h3,
 h4,
 h5,
 h6 {
-  font-size: var(--fs-400);
-  font-weight: var(--fw-normal);
+	font-size: var(--fs-400);
+	font-weight: var(--fw-normal);
 
-  text-wrap: balance;
-  color: var(--clr-heading);
+	color: var(--clr-heading);
 }
 
 p,
 li {
-  text-wrap: pretty;
-  max-width: 69ch;
+	text-wrap: pretty;
+	max-width: 69ch;
 }
 
 a {
-  text-decoration: none;
+	text-decoration: none;
 
-  color: var(--clr-accent);
+	color: var(--clr-accent);
 }
 
 a:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 
-  color: var(--clr-blue-200);
+	color: var(--clr-blue-200);
 }
 
 b {
-  font-weight: var(--fw-semi-bold);
+	font-weight: var(--fw-semi-bold);
 }
 
 [gap="0.5"] {
@@ -57,4 +56,8 @@ b {
 
 [gap="2"] {
 	gap: 2rem;
+}
+
+pre {
+	overflow-x: auto;
 }
