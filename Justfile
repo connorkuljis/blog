@@ -1,20 +1,14 @@
-cli := "./cli"
-gen := "./ssg"
+all: clean build-cms build-site
 
-public := "./public"
-port := "3000"
+build-cms: 
+    go build -v ./cmd/cms/cms.go
 
-all: clean build-cli build-ssg
-
-build-cli: 
-    go build -v -o {{ cli }} ./cmd/cli/main.go
-
-build-ssg: 
-    go build -v -o {{ gen }} ./cmd/ssg/main.go
+build-site: 
+    go build -v ./cmd/site/site.go
 
 clean:
-    rm -f {{ cli }} {{ gen}}
+    rm -f ./cms ./site
 
 serve:
-    python3 -m http.server -d {{ public }} {{ port }}
+    python3 -m http.server -d ./public 3000
 

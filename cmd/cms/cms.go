@@ -133,7 +133,7 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 	fmt.Scanf("%d", &index)
 
 	if index < 0 || index > len(categories)-1 {
-		fmt.Errorf("invalid input")
+		return fmt.Errorf("invalid input")
 	}
 
 	category := categories[index]
@@ -196,7 +196,7 @@ func printEntry(ctx context.Context, c *cli.Command) error {
 	fmt.Scanf("%d", &index)
 
 	if index < 0 || index > len(entries)-1 {
-		fmt.Errorf("invalid input")
+		return fmt.Errorf("invalid input")
 	}
 
 	entry := entries[index]
@@ -381,9 +381,9 @@ func GetInputWithPrompt(prompt string) (string, error) {
 
 func printEntries(entries []model.Entry) {
 	t := tabby.New()
-	t.AddHeader("INDEX", "CATEGORY", "TITLE", "CREATED", "CHAR")
+	t.AddHeader("INDEX", "TITLE", "CREATED", "CHARS")
 	for i, entry := range entries {
-		t.AddLine(i, entry.CategoryTitle, entry.Title, entry.CreatedAt.Format("2006-01-02"), len(entry.Content))
+		t.AddLine(i, entry.Title, entry.CreatedAt.Format("2006-01-02"), len(entry.Content))
 	}
 	t.Print()
 }
