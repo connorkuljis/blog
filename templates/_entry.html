@@ -6,27 +6,32 @@
 <body>
 	{{ template "header" . }}
 
-	<main class="main flex-col" gap="2">
+	<main class="index">
 		{{ $category := slugify .Category.Title }}
 		{{ $entry := slugify .CurrentEntry.Title }}
-		<nav class="wrapper">
-			<ul role="list">
-				<li><a href="/">home</a></li>
-				<span>&#8594;</span>
-				<li><a href="/{{ $category }}">{{ $category }}</a></li>
-				<span>&#8594;</span>
-				<li><a href="/{{ $category }}/{{ $entry }}">{{ $entry }}</a></li>
-			</ul>
-		</nav>
+		<section class="wrapper">
+			<nav>
+				<ul class="breadcrumbs" role="list">
+					<li><a href="/">home</a></li>
+					<span>&#8594;</span>
+					<li><a href="/{{ $category }}">{{ $category }}</a></li>
+					<span>&#8594;</span>
+					<li><a href="/{{ $category }}/{{ $entry }}">{{ $entry }}</a></li>
+				</ul>
 
-		<div class="wrapper">
-			<h1 class="heading">{{ .CurrentEntry.Title }}</h1>
-			<h2 class="subheading">{{ .CurrentEntry.CreatedAt.Format "Jan 02, 2006"}}</h2>
-		</div>
+			</nav>
 
-		<div class="wrapper content">
-			{{ .CurrentEntry.Markdown }}
-		</div>
+			<div>
+				<h1 class="heading">{{ .CurrentEntry.Title }}</h1>
+				<h2 class="subheading">{{ .CurrentEntry.CreatedAt.Format "Jan 02, 2006"}}</h2>
+			</div>
+		</section>
+
+		<section class="wrapper">
+			<div class="content">
+				{{ .CurrentEntry.Markdown }}
+			</div>
+		</section>
 	</main>
 </body>
 

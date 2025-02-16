@@ -1,0 +1,68 @@
+
+<!doctype html>
+<html lang="en">
+
+
+
+<head>
+	<title>kuljis.xyz</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="/index.css" />
+</head>
+
+
+<body>
+	
+<header class="header">
+	<div class="wrapper">
+		<h1 class="title"><a href="/">kuljis.xyz</a></h1>
+	</div>
+</header>
+
+
+	<main class="index">
+		
+		
+		<section class="wrapper">
+			<nav>
+				<ul class="breadcrumbs" role="list">
+					<li><a href="/">home</a></li>
+					<span>&#8594;</span>
+					<li><a href="/til">til</a></li>
+					<span>&#8594;</span>
+					<li><a href="/til/measuring-execution-time-in-sqlite">measuring-execution-time-in-sqlite</a></li>
+				</ul>
+
+			</nav>
+
+			<div>
+				<h1 class="heading">Measuring execution time in SQLite</h1>
+				<h2 class="subheading">Feb 12, 2025</h2>
+			</div>
+		</section>
+
+		<section class="wrapper">
+			<div class="content">
+				<p>Today I learned how to measure query execution times in SQLite.</p>
+<p>All you have to do is enable the <code>.timer</code> command.</p>
+<h1 id="example">Example</h1>
+<pre><code class="language-bash">sqlite&gt; .timer on
+sqlite&gt; select id, title from categories;
+Run Time: real 0.001 user 0.000160 sys 0.00008
+</code></pre>
+<h1 id="real-vs-user-vs-system-time">Real vs User vs System Time</h1>
+<h2 id="real-time-wall-clock-time">Real Time (Wall Clock Time)</h2>
+<p>Real time is the total elapsed time from the moment I started the command until it finished.<br />
+This includes cpu time, waiting for i/o, sleep time.</p>
+<ol start="2">
+<li>User time is cpu time spent in user mode</li>
+</ol>
+<p>Sys timer</p>
+
+			</div>
+		</section>
+	</main>
+</body>
+
+</html>

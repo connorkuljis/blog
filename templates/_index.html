@@ -7,51 +7,53 @@
 <body>
 	{{ template "header" . }}
 
-	<main class="main flex-col" gap="2">
-		<nav class="wrapper">
-			<ul role="list">
-				<li><a href="/">home</a></li>
-			</ul>
-		</nav>
+	<main class="index">
+		<section class="wrapper">
+			<nav>
+				<ul class="breadcrumbs" role="list">
+					<li><a href="/">home</a></li>
+				</ul>
 
-		<div class="wrapper">
+			</nav>
+
 			<h1 class="heading">
 				Software Engineering Graduate from Perth, Western Australia
 			</h1>
-		</div>
+		</section>
 
-		<div class="wrapper">
-			<div class="flex-col" gap="1">
-				<div class="foo">
-					<img src=" /images/cat.jpg" class="icon" />
-					<h2 class="subheading">Connor Kuljis</h2>
-				</div>
 
-				<div>
-					<ul class="list">
-						{{ range .Site.Categories }}
-						<li>
-							<span><a href="/{{ .Slug }}">{{ .Title }}</a> {{ .Description }}</span>
-						</li>
-						{{ end }}
-					</ul>
-				</div>
+		<section class="wrapper">
+			<div class="bio">
+				<img src=" /images/cat.jpg" class="icon" />
+				<h2 class="subheading">Connor Kuljis</h2>
 			</div>
-		</div>
 
-		<div class="wrapper">
-			<div class="flex-col" gap="1">
-				<h2>Recent entries</h2>
-				<ul class="list">
-					{{ range .Site.RecentEntries }}
-					<li>
-						<a href="/{{ .Slug }}">{{ .Slug }}</a>
-					</li>
-					{{ end }}
-				</ul>
-			</div>
-		</div>
+			<ul>
+				{{ range .Site.Categories }}
+				<li>
+					<span><a href="/{{ .Slug }}">{{ .Title }}</a> {{ .Description }}</span>
+				</li>
+				{{ end }}
+			</ul>
+		</section>
+
+		<section class="wrapper">
+			<h2>Recent entries</h2>
+			<ul>
+				{{ range .Site.RecentEntries }}
+				<li>
+					<span>{{ .CreatedAt.Format "2006-01-02" }} - <a href="/{{ .Slug }}">{{ .Slug }}</a></span>
+				</li>
+				{{ end }}
+			</ul>
+		</section>
+
+		<section class="wrapper">
+			<h2>Socials</h2>
+			{{ template "socials" . }}
+		</section>
 	</main>
+	</div>
 </body>
 
 </html>

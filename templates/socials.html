@@ -1,0 +1,12 @@
+<!-- socials.html -->
+{{ define "socials" }}
+<div class="socials-wrapper">
+	<ul>
+		{{ range .Site.Socials }}
+		<li class="social">
+			<a href="{{ .URL }}">{{ .URL }}</a>
+		</li>
+		{{ end }}
+	</ul>
+</div>
+{{ end }}

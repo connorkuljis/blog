@@ -3,7 +3,7 @@
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 h1,
@@ -11,20 +11,24 @@ h2,
 h3,
 h4,
 p {
-  margin: 0;
+	margin: 0;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+	list-style-position: inside;
 }
 
 ul[role="list"] {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
+	list-style-type: none;
 }
 
 img {
-  height: auto;
-  /* Maintains aspect ratio */
-  max-width: 100%;
-  /* Ensures the image doesn't exceed its container's width */
-  vertical-align: middle;
-  /* Aligns images vertically */
+	height: auto;
+	/* Maintains aspect ratio */
+	max-width: 100%;
+	/* Ensures the image doesn't exceed its container's width */
+	vertical-align: middle;
+	/* Aligns images vertically */
 }

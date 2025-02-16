@@ -15,9 +15,17 @@ var funcMap = template.FuncMap{
 }
 
 type Site struct {
-	Title         string
-	Categories    []model.Category
+	Title      string
+	Categories []model.Category
+
 	RecentEntries []model.Entry
+	Socials       []Social
+}
+
+type Social struct {
+	URL         string
+	Description string
+	IconPath    string
 }
 
 func (s *Site) Init() error {
@@ -86,7 +94,7 @@ func (s *Site) RenderPages(pages []Page) error {
 		}
 		defer f.Close()
 
-		err = tpls.ExecuteTemplate(f, page.TemplateName(), page) // note: render page struct directly into the template data.
+		err = tpls.ExecuteTemplate(f, page.TemplateName(), page)
 		if err != nil {
 			return err
 		}
