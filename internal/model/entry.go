@@ -25,8 +25,9 @@ type Entry struct {
 	UpdatedAt        time.Time      `db:"updated_at"`
 	IsDraft          int            `db:"is_draft"`
 
-	Markdown template.HTML
-	Slug     string
+	CategoryTitle string
+	Markdown      template.HTML
+	Slug          string
 }
 
 func NewEntry(categoryID int64, title string) *Entry {

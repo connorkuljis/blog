@@ -18,8 +18,9 @@ import (
 )
 
 const (
-	title = "kuljis.xyz"
-	limit = 10
+	title           string = "kuljis.xyz"
+	limit           int    = 10
+	enableDraftMode bool   = true
 )
 
 var funcMap = template.FuncMap{
@@ -89,38 +90,58 @@ func getCategoriesAndEntries(db *sqlx.DB, md goldmark.Markdown) ([]model.Categor
 	entryRepo := store.NewEntryRepository(db)
 
 	for i := range categories {
-		// Retrieve all entries associated with the current category's ID.
-		entries, err := entryRepo.ReadAllByCategoryID(categories[i].ID)
-		if err != nil {
-			return categories, err
+		var entries []model.Entry
+		if enableDraftMode {
+			var err error
+			entries, err = entryRepo.ReadAllByCategoryID(categories[i].ID)
+			if err != nil {
+				return categories, err
+			}
+		} else {
+			var err error
+			entries, err = entryRepo.ReadAllPublishedByCategoryID(categories[i].ID)
+			if err != nil {
+				return categories, err
+			}
 		}
 
+		for j := range entries {
+			// Convert the Markdown content of the entry to HTML.
+			err := entries[j].ContentMdToHTML(md) // side-effect: updates markdown field.
+			if err != nil {
+				return categories, err
+			}
+
+			entries[j].CategoryTitle = categories[i].Title
+			// Generate a slug for the entry, combining the category slug and the entry title.
+			entries[j].Slug = categories[i].Slug + "/" + util.Slugify(entries[j].Title)
+		}
 		// Assign retrieved entries to corresponding category.
 		// Establishes relationship between a category and its entries.
 		categories[i].Entries = entries
 
 		// Generate a slug for the category based on its title.
 		categories[i].Slug = util.Slugify(categories[i].Title)
-
-		for j := range entries {
-			// Convert the Markdown content of the entry to HTML.
-			err := entries[j].ContentMdToHTML(md)
-			if err != nil {
-				return categories, err
-			}
-
-			// Generate a slug for the entry, combining the category slug and the entry title.
-			entries[j].Slug = categories[i].Slug + "/" + util.Slugify(entries[j].Title)
-		}
 	}
 
 	return categories, nil
 }
 
 func getRecentEntries(db *sqlx.DB, md goldmark.Markdown, limit int) ([]model.Entry, error) {
-	entries, err := store.NewEntryRepository(db).ReadRecentEntries(limit)
-	if err != nil {
-		return entries, err
+	var entries []model.Entry
+	entryRepo := store.NewEntryRepository(db)
+	if enableDraftMode {
+		var err error
+		entries, err = entryRepo.ReadRecentEntries(limit)
+		if err != nil {
+			return entries, err
+		}
+	} else {
+		var err error
+		entries, err = entryRepo.ReadRecentPublishedEntries(limit)
+		if err != nil {
+			return entries, err
+		}
 	}
 
 	categoryRepo := store.NewCategoryRepository(db)
