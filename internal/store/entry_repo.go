@@ -52,9 +52,29 @@ func (r *EntryRepository) ReadRecentEntries(limit int) ([]model.Entry, error) {
 	return entries, nil
 }
 
+func (r *EntryRepository) ReadRecentPublishedEntries(limit int) ([]model.Entry, error) {
+	var entries []model.Entry
+	err := r.db.Select(&entries, "SELECT * FROM entries WHERE is_draft = 0 ORDER BY created_at DESC LIMIT ?", limit)
+	if err != nil {
+		return nil, fmt.Errorf("Error getting all entries: %w", err)
+	}
+
+	return entries, nil
+}
+
 func (r *EntryRepository) ReadAllByCategoryID(categoryID int64) ([]model.Entry, error) {
 	var entries []model.Entry
 	err := r.db.Select(&entries, "SELECT * FROM entries WHERE category_id = ? ORDER BY created_at DESC", categoryID)
+	if err != nil {
+		return nil, fmt.Errorf("Error getting all entries: %w", err)
+	}
+
+	return entries, nil
+}
+
+func (r *EntryRepository) ReadAllPublishedByCategoryID(categoryID int64) ([]model.Entry, error) {
+	var entries []model.Entry
+	err := r.db.Select(&entries, "SELECT * FROM entries WHERE category_id = ? AND is_draft = 0 ORDER BY created_at DESC", categoryID)
 	if err != nil {
 		return nil, fmt.Errorf("Error getting all entries: %w", err)
 	}
