@@ -2,6 +2,7 @@ package model
 
 import (
 	"bytes"
+	"database/sql"
 	"fmt"
 	"io"
 	"strings"
@@ -14,13 +15,15 @@ import (
 )
 
 type Entry struct {
-	ID         int64     `db:"id"`
-	CategoryID int64     `db:"category_id"`
-	Title      string    `db:"title"`
-	Content    string    `db:"content"`
-	CreatedAt  time.Time `db:"created_at"`
-	UpdatedAt  time.Time `db:"updated_at"`
-	Publish    int       `db:"publish"`
+	ID               int64          `db:"id"`
+	CategoryID       int64          `db:"category_id"`
+	Title            string         `db:"title"`
+	Content          string         `db:"content"`
+	Description      sql.NullString `db:"description"`
+	FeaturedImageURL sql.NullString `db:"featured_image_url"`
+	CreatedAt        time.Time      `db:"created_at"`
+	UpdatedAt        time.Time      `db:"updated_at"`
+	IsDraft          int            `db:"is_draft"`
 
 	Markdown template.HTML
 	Slug     string
@@ -44,7 +47,7 @@ func (e Entry) String() string {
 	sb.WriteString(fmt.Sprintf("category_id: %d\n", e.CategoryID))
 	sb.WriteString(fmt.Sprintf("created_at: %s\n", e.CreatedAt.UTC().Format(time.RFC3339)))
 	sb.WriteString(fmt.Sprintf("updated_at: %s\n", e.UpdatedAt.UTC().Format(time.RFC3339)))
-	sb.WriteString(fmt.Sprintf("publish: %d\n", e.Publish))
+	sb.WriteString(fmt.Sprintf("publish: %d\n", e.IsDraft))
 	sb.WriteString("---\n")
 	sb.WriteString(fmt.Sprintf("%s", e.Content))
 

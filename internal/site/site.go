@@ -6,18 +6,12 @@ import (
 	"path/filepath"
 
 	"github.com/connorkuljis/content/internal/model"
-	"github.com/connorkuljis/content/internal/util"
 )
 
-var funcMap = template.FuncMap{
-	"slugify":  util.Slugify,
-	"truncate": util.Truncate,
-}
-
+// Site data is available to every page.
 type Site struct {
-	Title      string
-	Categories []model.Category
-
+	Title         string
+	Categories    []model.Category
 	RecentEntries []model.Entry
 	Socials       []Social
 }
@@ -60,7 +54,6 @@ func (s *Site) BuildPages() []Page {
 	pages := []Page{
 		HomePage{Site: s},
 	}
-
 	for _, category := range s.Categories {
 		pages = append(pages, CategoryPage{
 			Site:     s,
@@ -74,16 +67,10 @@ func (s *Site) BuildPages() []Page {
 			})
 		}
 	}
-
 	return pages
 }
 
-func (s *Site) RenderPages(pages []Page) error {
-	tpls, err := template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html")
-	if err != nil {
-		return err
-	}
-
+func (s *Site) RenderPages(t *template.Template, pages []Page) error {
 	for _, page := range pages {
 		dir := filepath.Dir(page.Filepath())
 		os.MkdirAll(dir, os.ModePerm)
@@ -94,7 +81,7 @@ func (s *Site) RenderPages(pages []Page) error {
 		}
 		defer f.Close()
 
-		err = tpls.ExecuteTemplate(f, page.TemplateName(), page)
+		err = t.ExecuteTemplate(f, page.TemplateName(), page)
 		if err != nil {
 			return err
 		}

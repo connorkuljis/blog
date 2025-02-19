@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"time"
 
@@ -18,7 +19,13 @@ import (
 
 const (
 	title = "kuljis.xyz"
+	limit = 10
 )
+
+var funcMap = template.FuncMap{
+	"slugify":  util.Slugify,
+	"truncate": util.Truncate,
+}
 
 func main() {
 	start := time.Now()
@@ -44,7 +51,7 @@ func main() {
 	}
 	site.Categories = categories
 
-	recentEntries, err := getRecentEntries(db, md)
+	recentEntries, err := getRecentEntries(db, md, limit)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,7 +64,12 @@ func main() {
 
 	pages := site.BuildPages()
 
-	err = site.RenderPages(pages)
+	t, err := template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = site.RenderPages(t, pages)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -105,8 +117,8 @@ func getCategoriesAndEntries(db *sqlx.DB, md goldmark.Markdown) ([]model.Categor
 	return categories, nil
 }
 
-func getRecentEntries(db *sqlx.DB, md goldmark.Markdown) ([]model.Entry, error) {
-	entries, err := store.NewEntryRepository(db).ReadRecentEntries(5)
+func getRecentEntries(db *sqlx.DB, md goldmark.Markdown, limit int) ([]model.Entry, error) {
+	entries, err := store.NewEntryRepository(db).ReadRecentEntries(limit)
 	if err != nil {
 		return entries, err
 	}
