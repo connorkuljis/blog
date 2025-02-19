@@ -1,35 +1,35 @@
 :root {
-  --ff-base: -system-ui, sans-serif;
-  --ff-markdown: 'Times', 'Times New Roman', serif;
+	--ff-base: "Bricolage Grotesque", serif;
+	--ff-markdown: 'Times', 'Times New Roman', serif;
 
-  --fw-normal: 400;
-  --fw-semi-bold: 600;
-  --fw-bold: 700;
+	--fw-normal: 400;
+	--fw-semi-bold: 600;
+	--fw-bold: 700;
 
-  --clr-neutral-900: hsl(0, 0%, 0%);
-  --clr-neutral-800: hsl(0, 0%, 10%);
-  --clr-neutral-700: hsl(0, 0%, 25%);
-  --clr-neutral-600: hsl(0, 0%, 40%);
-  --clr-neutral-500: hsl(0, 0%, 50%);
-  --clr-neutral-400: hsl(0, 0%, 60%);
-  --clr-neutral-300: hsl(0, 0%, 75%);
-  --clr-neutral-200: hsl(0, 0%, 90%);
-  --clr-neutral-100: hsl(0, 0%, 100%);
+	--clr-neutral-900: hsl(0, 0%, 0%);
+	--clr-neutral-800: hsl(0, 0%, 10%);
+	--clr-neutral-700: hsl(0, 0%, 25%);
+	--clr-neutral-600: hsl(0, 0%, 40%);
+	--clr-neutral-500: hsl(0, 0%, 50%);
+	--clr-neutral-400: hsl(0, 0%, 60%);
+	--clr-neutral-300: hsl(0, 0%, 75%);
+	--clr-neutral-200: hsl(0, 0%, 90%);
+	--clr-neutral-100: hsl(0, 0%, 100%);
 
-  --clr-blue-400: hsl(225, 72%, 33%);
-  --clr-blue-300: hsl(225, 72%, 43%);
+	--clr-blue-400: hsl(225, 72%, 33%);
+	--clr-blue-300: hsl(225, 72%, 43%);
 
-  --clr-bg: var(--clr-neutral-100);
-  --clr-body: var(--clr-neutral-800);
-  --clr-heading: var(--clr-neutral-900);
-  --clr-accent: var(--clr-blue-300);
+	--clr-bg: var(--clr-neutral-100);
+	--clr-body: var(--clr-neutral-800);
+	--clr-heading: var(--clr-neutral-900);
+	--clr-accent: var(--clr-blue-300);
 
-  --fs-200: 0.75rem;
-  --fs-300: 0.825rem;
-  --fs-400: 1rem;
-  --fs-500: 1.25rem;
-  --fs-600: 1.5rem;
-  --fs-700: 2rem;
-  --fs-800: 2.5rem;
-  --fs-900: 3rem;
+	--fs-200: 0.75rem;
+	--fs-300: 0.825rem;
+	--fs-400: 1rem;
+	--fs-500: 1.25rem;
+	--fs-600: 1.5rem;
+	--fs-700: 2rem;
+	--fs-800: 2.5rem;
+	--fs-900: 3rem;
 }

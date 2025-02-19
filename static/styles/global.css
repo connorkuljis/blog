@@ -1,10 +1,17 @@
 /* styles/global.css */
 
-body {
+html {
 	margin: 0;
+
 	font-family: var(--ff-base);
+	font-optical-sizing: auto;
+	font-style: normal;
+	font-variation-settings:
+		"wdth" 100;
+
 	color: var(--clr-body);
 	background-color: var(--clr-bg);
+
 	line-height: 1.6;
 }
 
@@ -16,46 +23,27 @@ h5,
 h6 {
 	font-size: var(--fs-400);
 	font-weight: var(--fw-normal);
-
 	color: var(--clr-heading);
 }
 
 p,
 li {
 	text-wrap: pretty;
-	max-width: 69ch;
+	max-width: 90ch;
 }
 
 a {
 	text-decoration: none;
-
 	color: var(--clr-accent);
 }
 
 a:hover {
 	text-decoration: underline;
-
 	color: var(--clr-blue-200);
 }
 
 b {
 	font-weight: var(--fw-semi-bold);
-}
-
-[gap="0.5"] {
-	gap: 0.5rem;
-}
-
-[gap="1"] {
-	gap: 1rem;
-}
-
-[gap="1.5"] {
-	gap: 1.5rem;
-}
-
-[gap="2"] {
-	gap: 2rem;
 }
 
 pre {
