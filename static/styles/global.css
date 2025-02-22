@@ -1,17 +1,12 @@
 /* styles/global.css */
 
-html {
+body {
 	margin: 0;
-
 	font-family: var(--ff-base);
 	font-optical-sizing: auto;
 	font-style: normal;
-	font-variation-settings:
-		"wdth" 100;
-
 	color: var(--clr-body);
 	background-color: var(--clr-bg);
-
 	line-height: 1.6;
 }
 
@@ -29,7 +24,7 @@ h6 {
 p,
 li {
 	text-wrap: pretty;
-	max-width: 90ch;
+	/* max-width: 80ch; */
 }
 
 a {
@@ -47,5 +42,18 @@ b {
 }
 
 pre {
+	background-color: var(--clr-neutral-100);
+	border: 1px solid var(--clr-neutral-600);
+	padding: 0.5rem;
+	border-radius: 0.5rem;
 	overflow-x: auto;
+}
+
+code {
+	font-family: var(--ff-mono);
+	color: var(--clr-neutral-600);
+}
+
+hr {
+	width: 100%;
 }
