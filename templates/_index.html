@@ -7,53 +7,63 @@
 <body>
 	{{ template "header" . }}
 
-	<main class="index">
-		<section class="wrapper">
-			<nav>
-				<ul class="breadcrumbs" role="list">
-					<li><a href="/">home</a></li>
+	<main class="index-page">
+		<div class="wrapper">
+			<section>
+				<nav>
+					<ul class="breadcrumbs" role="list">
+						<li><a href="/">Home</a></li>
+					</ul>
+				</nav>
+
+				<h1 class="heading">
+					Software Engineering Graduate from Perth, Western Australia
+				</h1>
+			</section>
+
+			<section>
+				<div class="bio">
+					<img src=" /images/cat.jpg" class="icon" />
+					<h2 class="subheading">Connor Kuljis</h2>
+				</div>
+
+				<ul class="site-categories-list" role="list">
+					{{ range .Site.Categories }}
+					<li>
+						<a href="/{{ .Slug }}">
+							<h2>{{ .Title }}</h2>
+							<p>{{ .Description }}</p>
+							<p>{{ len .Entries }}</p>
+						</a>
+					</li>
+					{{ end }}
 				</ul>
+			</section>
 
-			</nav>
+			<section>
+				<h2>Recent entries</h2>
+				<ul class="recent-entries-list" role="list">
+					{{ range .Site.RecentEntries }}
+					<li>
+						<a href="/{{ .Slug }}">
+							<h2>{{ .Title }}</h2>
+							<p>{{ .CreatedAt.Format "2006-01-02" }}</p>
+							<p>{{ .Description.String }}</p>
+							{{ if .FeaturedImageURL.Valid }}
+							<img src="/{{ .FeaturedImageURL.String }}" />
+							{{ end }}
+						</a>
+					</li>
+					{{ end }}
+				</ul>
+			</section>
 
-			<h1 class="heading">
-				Software Engineering Graduate from Perth, Western Australia
-			</h1>
-		</section>
-
-
-		<section class="wrapper">
-			<div class="bio">
-				<img src=" /images/cat.jpg" class="icon" />
-				<h2 class="subheading">Connor Kuljis</h2>
-			</div>
-
-			<ul>
-				{{ range .Site.Categories }}
-				<li>
-					<span><a href="/{{ .Slug }}">{{ .Title }}</a> {{ .Description }}</span>
-				</li>
-				{{ end }}
-			</ul>
-		</section>
-
-		<section class="wrapper">
-			<h2>Recent entries</h2>
-			<ul>
-				{{ range .Site.RecentEntries }}
-				<li>
-					<span>{{ .CreatedAt.Format "2006-01-02" }} - <a href="/{{ .Slug }}">{{ .Slug }}</a></span>
-				</li>
-				{{ end }}
-			</ul>
-		</section>
-
-		<section class="wrapper">
-			<h2>Socials</h2>
-			{{ template "socials" . }}
-		</section>
+			<section>
+				<h2>Socials</h2>
+				{{ template "socials" . }}
+			</section>
+		</div>
 	</main>
-	</div>
 </body>
 
 </html>
