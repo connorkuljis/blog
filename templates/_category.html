@@ -9,33 +9,37 @@
 	{{ template "header" . }}
 
 	<!-- main -->
-	<main class="index">
-		<section class="wrapper">
-			<nav>
-				<ul class="breadcrumbs" role="list">
-					<li><a href="/">home</a></li>
-					<span>&#8594;</span>
-					<li><a href="/{{ .Category.Slug }}">{{ slugify .Category.Title }}</a></li>
+	<main class="category-page">
+		<div class="wrapper">
+			<section>
+				<nav>
+					<ul class="breadcrumbs" role="list">
+						<li><a href="/">Home</a></li>
+						<span>&#8594;</span>
+						<li><a href="/{{ .Category.Slug }}">{{ .Category.Title }}</a></li>
+					</ul>
+				</nav>
+
+				<div>
+					<h1 class="heading">{{ .Category.Title }}</h1>
+					<h2 class="subheading">{{ .Category.Description }}</h2>
+				</div>
+			</section>
+
+
+			<section>
+				<ul class="categories-entries-list" role="list">
+					{{ range .Category.Entries }}
+					<li>
+						<a href="/{{ .Slug }}">
+							<h2>{{ .Title }}</h2>
+							<p>{{ .CreatedAt.Format "2006 Jan 2" }}</p>
+						</a>
+					</li>
+					{{ end }}
 				</ul>
-
-			</nav>
-
-			<div>
-				<h1 class="heading">{{ .Category.Title }}</h1>
-				<h2 class="subheading">{{ .Category.Description }}</h2>
-			</div>
-		</section>
-
-
-		<section class="wrapper">
-			<ul>
-				{{ range .Category.Entries }}
-				<li>
-					<span><a href="/{{ .Slug }}">{{ .Title }}</a> {{ .CreatedAt.Format "2006 Jan 2" }}</span>
-				</li>
-				{{ end }}
-			</ul>
-		</section>
+			</section>
+		</div>
 	</main>
 </body>
 

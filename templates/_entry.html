@@ -6,25 +6,26 @@
 <body>
 	{{ template "header" . }}
 
-	<main class="index">
-		{{ $category := slugify .Category.Title }}
-		{{ $entry := slugify .CurrentEntry.Title }}
+	<main class="entry-page">
 		<section class="wrapper">
 			<nav>
 				<ul class="breadcrumbs" role="list">
-					<li><a href="/">home</a></li>
+					<li><a href="/">Home</a></li>
 					<span>&#8594;</span>
-					<li><a href="/{{ $category }}">{{ $category }}</a></li>
+					<li><a href="/{{ .Category.Slug }}">{{ .Category.Title }}</a></li>
 					<span>&#8594;</span>
-					<li><a href="/{{ $category }}/{{ $entry }}">{{ $entry }}</a></li>
+					<li><a href="/{{ .CurrentEntry.Slug }}">{{ .CurrentEntry.Title }}</a></li>
 				</ul>
-
 			</nav>
 
 			<div>
 				<h1 class="heading">{{ .CurrentEntry.Title }}</h1>
 				<h2 class="subheading">{{ .CurrentEntry.CreatedAt.Format "Jan 02, 2006"}}</h2>
 			</div>
+
+			{{ if .CurrentEntry.FeaturedImageURL.Valid }}
+			<img class="full-bleed" src="/{{ .CurrentEntry.FeaturedImageURL.String }}" />
+			{{ end }}
 		</section>
 
 		<section class="wrapper">
