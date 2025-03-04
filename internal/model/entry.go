@@ -28,6 +28,7 @@ type Entry struct {
 	CategoryTitle string
 	Markdown      template.HTML
 	Slug          string
+	WordCount     int
 }
 
 func NewEntry(categoryID int64, title string) *Entry {
