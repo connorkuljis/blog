@@ -10,6 +10,11 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" href="/index.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap"
+		rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
 </head>
 
 
@@ -22,74 +27,114 @@
 </header>
 
 
-	<main class="index">
-		<section class="wrapper">
-			<nav>
-				<ul class="breadcrumbs" role="list">
-					<li><a href="/">home</a></li>
+	<main class="index-page">
+		<div class="wrapper">
+			<section>
+				<nav>
+					<ul class="breadcrumbs" role="list">
+						<li><a href="/">Home</a></li>
+					</ul>
+				</nav>
+
+				<div class="bio">
+					<img src=" /images/cat.jpg" class="icon" />
+					<h2 class="subheading">Connor Kuljis</h2>
+				</div>
+
+				<h1 class="heading">
+					Software Engineering Graduate from Perth, Western Australia
+				</h1>
+			</section>
+
+			<section id="site-categories">
+				<ul class="site-categories-list" role="list">
+					
+					<li>
+						<a class="list-item" href="/blog">
+							<div>
+								<h2>Blog &LeftAngleBracket;2&RightAngleBracket;</h2>
+								<p>All blog posts.</p>
+							</div>
+						</a>
+					</li>
+					
+					<li>
+						<a class="list-item" href="/til">
+							<div>
+								<h2>TIL &LeftAngleBracket;2&RightAngleBracket;</h2>
+								<p>Things i&#39;ve learned / collected</p>
+							</div>
+						</a>
+					</li>
+					
+					<li>
+						<a class="list-item" href="/projects">
+							<div>
+								<h2>Projects &LeftAngleBracket;1&RightAngleBracket;</h2>
+								<p>Things I&#39;ve built / created</p>
+							</div>
+						</a>
+					</li>
+					
 				</ul>
+			</section>
 
-			</nav>
+			<section id="recent-entries">
+				<h2>Recent entries</h2>
 
-			<h1 class="heading">
-				Software Engineering Graduate from Perth, Western Australia
-			</h1>
-		</section>
+				<ul class="recent-entries-list" role="list">
+					
+					<li>
+						<a href="/til/measuring-execution-time-in-sqlite">
+							<h2>Measuring execution time in SQLite</h2>
+							<p class="subheading"></p>
+							<p>Feb 12, 2025</p>
+							
+						</a>
+					</li>
+					
+					<li>
+						<a href="/projects/ausfinder-search-for-australian-businesses">
+							<h2>Ausfinder - Search for Australian Businesses</h2>
+							<p class="subheading">Reverse Search Australian Businesses</p>
+							<p>Feb 5, 2025</p>
+							
+						</a>
+					</li>
+					
+					<li>
+						<a href="/blog/importing-asic-business-names-dataset-into-sqlite">
+							<h2>Importing ASIC Business Names Dataset into SQLite</h2>
+							<p class="subheading"></p>
+							<p>Jan 14, 2025</p>
+							
+						</a>
+					</li>
+					
+					<li>
+						<a href="/blog/uses">
+							<h2>Uses</h2>
+							<p class="subheading"></p>
+							<p>Dec 31, 2024</p>
+							
+						</a>
+					</li>
+					
+					<li>
+						<a href="/til/nvme-health-self-asessment-apple-m1">
+							<h2>NVMe Health Self Asessment (Apple M1)</h2>
+							<p class="subheading"></p>
+							<p>Dec 25, 2024</p>
+							
+						</a>
+					</li>
+					
+				</ul>
+			</section>
 
-
-		<section class="wrapper">
-			<div class="bio">
-				<img src=" /images/cat.jpg" class="icon" />
-				<h2 class="subheading">Connor Kuljis</h2>
-			</div>
-
-			<ul>
+			<section>
+				<h2>Socials</h2>
 				
-				<li>
-					<span><a href="/blog">Blog</a> All blog posts.</span>
-				</li>
-				
-				<li>
-					<span><a href="/til">TIL</a> Things i&#39;ve learned / collected</span>
-				</li>
-				
-				<li>
-					<span><a href="/projects">Projects</a> Things I&#39;ve built / created</span>
-				</li>
-				
-			</ul>
-		</section>
-
-		<section class="wrapper">
-			<h2>Recent entries</h2>
-			<ul>
-				
-				<li>
-					<span>2025-02-12 - <a href="/til/measuring-execution-time-in-sqlite">til/measuring-execution-time-in-sqlite</a></span>
-				</li>
-				
-				<li>
-					<span>2025-02-05 - <a href="/projects/ausfinder-search-for-australian-businesses">projects/ausfinder-search-for-australian-businesses</a></span>
-				</li>
-				
-				<li>
-					<span>2025-01-14 - <a href="/blog/importing-asic-business-names-dataset-into-sqlite">blog/importing-asic-business-names-dataset-into-sqlite</a></span>
-				</li>
-				
-				<li>
-					<span>2024-12-31 - <a href="/blog/uses">blog/uses</a></span>
-				</li>
-				
-				<li>
-					<span>2024-12-28 - <a href="/til/stop-hunting-for-clipboard-in-helix">til/stop-hunting-for-clipboard-in-helix</a></span>
-				</li>
-				
-			</ul>
-		</section>
-
-		<section class="wrapper">
-			<h2>Socials</h2>
-			
 <div class="socials-wrapper">
 	<ul>
 		
@@ -104,9 +149,9 @@
 	</ul>
 </div>
 
-		</section>
+			</section>
+		</div>
 	</main>
-	</div>
 </body>
 
 </html>
