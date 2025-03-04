@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/connorkuljis/content/internal/model"
@@ -105,6 +106,13 @@ func getCategoriesAndEntries(db *sqlx.DB, md goldmark.Markdown) ([]model.Categor
 			}
 		}
 
+		// Assign retrieved entries to corresponding category.
+		// Establishes relationship between a category and its entries.
+		categories[i].Entries = entries
+
+		// Generate a slug for the category based on its title.
+		categories[i].Slug = util.Slugify(categories[i].Title)
+
 		for j := range entries {
 			// Convert the Markdown content of the entry to HTML.
 			err := entries[j].ContentMdToHTML(md) // side-effect: updates markdown field.
@@ -112,16 +120,13 @@ func getCategoriesAndEntries(db *sqlx.DB, md goldmark.Markdown) ([]model.Categor
 				return categories, err
 			}
 
+			words := strings.Split(entries[j].Content, " ")
+			entries[j].WordCount = len(words)
+
 			entries[j].CategoryTitle = categories[i].Title
 			// Generate a slug for the entry, combining the category slug and the entry title.
 			entries[j].Slug = categories[i].Slug + "/" + util.Slugify(entries[j].Title)
 		}
-		// Assign retrieved entries to corresponding category.
-		// Establishes relationship between a category and its entries.
-		categories[i].Entries = entries
-
-		// Generate a slug for the category based on its title.
-		categories[i].Slug = util.Slugify(categories[i].Title)
 	}
 
 	return categories, nil
