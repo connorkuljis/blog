@@ -93,7 +93,7 @@ func (r *EntryRepository) ReadEntryByID(id int64) (*model.Entry, error) {
 }
 
 func (r *EntryRepository) UpdateEntry(entry *model.Entry) error {
-	q := "UPDATE entries SET category_id = ?, title = ?, content = ?, description = ?, preview_image_url = ?, updated_at = ?, is_draft = ? WHERE id = ?"
+	q := "UPDATE entries SET category_id = ?, title = ?, content = ?, description = ?, featured_image_url = ?, updated_at = ?, is_draft = ? WHERE id = ?"
 	_, err := r.db.Exec(q, entry.CategoryID, entry.Title, entry.Content, entry.Description, entry.FeaturedImageURL, entry.UpdatedAt, entry.IsDraft, entry.ID)
 	if err != nil {
 		return err
