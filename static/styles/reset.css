@@ -14,13 +14,9 @@ p {
 	margin: 0;
 }
 
-ul {
+ul[role="list"] {
 	margin: 0;
 	padding: 0;
-	list-style-position: inside;
-}
-
-ul[role="list"] {
 	list-style-type: none;
 }
 
