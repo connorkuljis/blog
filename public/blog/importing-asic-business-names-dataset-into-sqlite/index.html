@@ -9,6 +9,11 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" href="/index.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap"
+		rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
 </head>
 
 
@@ -21,48 +26,49 @@
 </header>
 
 
-	<main class="index">
-		
-		
+	<main class="entry-page">
 		<section class="wrapper">
 			<nav>
 				<ul class="breadcrumbs" role="list">
-					<li><a href="/">home</a></li>
+					<li><a href="/">Home</a></li>
 					<span>&#8594;</span>
-					<li><a href="/blog">blog</a></li>
+					<li><a href="/blog">Blog</a></li>
 					<span>&#8594;</span>
-					<li><a href="/blog/importing-asic-business-names-dataset-into-sqlite">importing-asic-business-names-dataset-into-sqlite</a></li>
+					<li><a href="/blog/importing-asic-business-names-dataset-into-sqlite">Importing ASIC Business Names Dataset into SQLite</a></li>
 				</ul>
-
 			</nav>
 
 			<div>
 				<h1 class="heading">Importing ASIC Business Names Dataset into SQLite</h1>
 				<h2 class="subheading">Jan 14, 2025</h2>
+				<p>376 words</p>
 			</div>
+
+			
 		</section>
 
-		<section class="wrapper">
-			<div class="content">
-				<h1 id="get-the-dataset">Get the dataset</h1>
+		<section class="wrapper content">
+			<h1 id="get-the-dataset">Get the dataset</h1>
 <p><a href="https://www.data.gov.au/dataset/ds-dga-bc515135-4bb6-4d50-957a-3713709a76d3/">ASIC Business Names Dataset</a></p>
 <ul>
 <li>Note: the dataset is tab separated.</li>
 </ul>
 <h1 id="setup-the-sqlite-database">Setup the SQLite database</h1>
 <p>Create a SQLite database and start the command line shell.</p>
-<p><code>sqlite3 data/db.sqlite3</code></p>
+<pre><code class="language-bash">sqlite3 data/db.sqlite3
+</code></pre>
 <h1 id="import-the-csv-file-into-a-new-table">Import the CSV file into a new table.</h1>
 <p>Now that we are in the shell, first we need to enable tab mode. Then we can create the table using the <code>.import</code> command. It will take a while to import the file, so wait a little while and then verify the table creation by viewing the schema.</p>
 <ul>
 <li>Note: omit semi-colons on sqlite commands.</li>
 </ul>
-<pre><code>.mode tabs
+<pre><code class="language-bash">.mode tabs
 .import data/BUSINESS_NAMES_202501.csv business_names
 </code></pre>
 <h1 id="verfify-table-creation-and-population">Verfify table creation and population</h1>
 <p>Verify the table creation by viewing the created schema.</p>
-<p><code>.schema business_names</code></p>
+<pre><code class="language-bash">.schema business_names
+</code></pre>
 <p>Check results</p>
 <pre><code class="language-sql">select count(*) from business_names;
 </code></pre>
@@ -134,7 +140,6 @@ Business = Nourishing Your World
 <pre><code class="language-sql">select * from businesses WHERE business_name MATCH 'software';
 </code></pre>
 
-			</div>
 		</section>
 	</main>
 </body>

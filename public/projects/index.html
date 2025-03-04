@@ -10,6 +10,11 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" href="/index.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap"
+		rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
 </head>
 
 
@@ -24,33 +29,37 @@
 
 
 	
-	<main class="index">
-		<section class="wrapper">
-			<nav>
-				<ul class="breadcrumbs" role="list">
-					<li><a href="/">home</a></li>
-					<span>&#8594;</span>
-					<li><a href="/projects">projects</a></li>
+	<main class="category-page">
+		<div class="wrapper">
+			<section>
+				<nav>
+					<ul class="breadcrumbs" role="list">
+						<li><a href="/">Home</a></li>
+						<span>&#8594;</span>
+						<li><a href="/projects">Projects</a></li>
+					</ul>
+				</nav>
+
+				<div>
+					<h1 class="heading">Projects</h1>
+					<h2 class="subheading">Things I&#39;ve built / created</h2>
+				</div>
+			</section>
+
+
+			<section>
+				<ul class="categories-entries-list" role="list">
+					
+					<li>
+						<a href="/projects/ausfinder-search-for-australian-businesses">
+							<h2>Ausfinder - Search for Australian Businesses</h2>
+							<p>2025 Feb 5</p>
+						</a>
+					</li>
+					
 				</ul>
-
-			</nav>
-
-			<div>
-				<h1 class="heading">Projects</h1>
-				<h2 class="subheading">Things I&#39;ve built / created</h2>
-			</div>
-		</section>
-
-
-		<section class="wrapper">
-			<ul>
-				
-				<li>
-					<span><a href="/projects/ausfinder-search-for-australian-businesses">Ausfinder - Search for Australian Businesses</a> 2025 Feb 5</span>
-				</li>
-				
-			</ul>
-		</section>
+			</section>
+		</div>
 	</main>
 </body>
 

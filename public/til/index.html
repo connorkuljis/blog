@@ -10,6 +10,11 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" href="/index.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap"
+		rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
 </head>
 
 
@@ -24,41 +29,44 @@
 
 
 	
-	<main class="index">
-		<section class="wrapper">
-			<nav>
-				<ul class="breadcrumbs" role="list">
-					<li><a href="/">home</a></li>
-					<span>&#8594;</span>
-					<li><a href="/til">til</a></li>
+	<main class="category-page">
+		<div class="wrapper">
+			<section>
+				<nav>
+					<ul class="breadcrumbs" role="list">
+						<li><a href="/">Home</a></li>
+						<span>&#8594;</span>
+						<li><a href="/til">TIL</a></li>
+					</ul>
+				</nav>
+
+				<div>
+					<h1 class="heading">TIL</h1>
+					<h2 class="subheading">Things i&#39;ve learned / collected</h2>
+				</div>
+			</section>
+
+
+			<section>
+				<ul class="categories-entries-list" role="list">
+					
+					<li>
+						<a href="/til/measuring-execution-time-in-sqlite">
+							<h2>Measuring execution time in SQLite</h2>
+							<p>2025 Feb 12</p>
+						</a>
+					</li>
+					
+					<li>
+						<a href="/til/nvme-health-self-asessment-apple-m1">
+							<h2>NVMe Health Self Asessment (Apple M1)</h2>
+							<p>2024 Dec 25</p>
+						</a>
+					</li>
+					
 				</ul>
-
-			</nav>
-
-			<div>
-				<h1 class="heading">TIL</h1>
-				<h2 class="subheading">Things i&#39;ve learned / collected</h2>
-			</div>
-		</section>
-
-
-		<section class="wrapper">
-			<ul>
-				
-				<li>
-					<span><a href="/til/measuring-execution-time-in-sqlite">Measuring execution time in SQLite</a> 2025 Feb 12</span>
-				</li>
-				
-				<li>
-					<span><a href="/til/stop-hunting-for-clipboard-in-helix">Stop Hunting for Clipboard in Helix</a> 2024 Dec 28</span>
-				</li>
-				
-				<li>
-					<span><a href="/til/nvme-health-self-asessment-apple-m1">NVMe Health Self Asessment (Apple M1)</a> 2024 Dec 25</span>
-				</li>
-				
-			</ul>
-		</section>
+			</section>
+		</div>
 	</main>
 </body>
 

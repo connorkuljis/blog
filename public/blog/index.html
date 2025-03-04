@@ -10,6 +10,11 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" href="/index.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap"
+		rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
 </head>
 
 
@@ -24,41 +29,44 @@
 
 
 	
-	<main class="index">
-		<section class="wrapper">
-			<nav>
-				<ul class="breadcrumbs" role="list">
-					<li><a href="/">home</a></li>
-					<span>&#8594;</span>
-					<li><a href="/blog">blog</a></li>
+	<main class="category-page">
+		<div class="wrapper">
+			<section>
+				<nav>
+					<ul class="breadcrumbs" role="list">
+						<li><a href="/">Home</a></li>
+						<span>&#8594;</span>
+						<li><a href="/blog">Blog</a></li>
+					</ul>
+				</nav>
+
+				<div>
+					<h1 class="heading">Blog</h1>
+					<h2 class="subheading">All blog posts.</h2>
+				</div>
+			</section>
+
+
+			<section>
+				<ul class="categories-entries-list" role="list">
+					
+					<li>
+						<a href="/blog/importing-asic-business-names-dataset-into-sqlite">
+							<h2>Importing ASIC Business Names Dataset into SQLite</h2>
+							<p>2025 Jan 14</p>
+						</a>
+					</li>
+					
+					<li>
+						<a href="/blog/uses">
+							<h2>Uses</h2>
+							<p>2024 Dec 31</p>
+						</a>
+					</li>
+					
 				</ul>
-
-			</nav>
-
-			<div>
-				<h1 class="heading">Blog</h1>
-				<h2 class="subheading">All blog posts.</h2>
-			</div>
-		</section>
-
-
-		<section class="wrapper">
-			<ul>
-				
-				<li>
-					<span><a href="/blog/importing-asic-business-names-dataset-into-sqlite">Importing ASIC Business Names Dataset into SQLite</a> 2025 Jan 14</span>
-				</li>
-				
-				<li>
-					<span><a href="/blog/uses">Uses</a> 2024 Dec 31</span>
-				</li>
-				
-				<li>
-					<span><a href="/blog/useful-shorcuts-for-programmers">Useful Shorcuts For Programmers</a> 2024 Dec 11</span>
-				</li>
-				
-			</ul>
-		</section>
+			</section>
+		</div>
 	</main>
 </body>
 
