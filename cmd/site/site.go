@@ -156,6 +156,7 @@ func getRecentEntries(db *sqlx.DB, md goldmark.Markdown, limit int) ([]model.Ent
 			return entries, err
 		}
 
+		entries[i].CategoryTitle = category.Title
 		entries[i].Slug = fmt.Sprintf("%s/%s", util.Slugify(category.Title), util.Slugify(entries[i].Title))
 		entries[i].ContentMdToHTML(md)
 	}
