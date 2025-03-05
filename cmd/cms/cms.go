@@ -22,8 +22,8 @@ const sqlxKey = "db"
 
 func main() {
 	cmd := &cli.Command{
-		Name:  "content",
-		Usage: "My content management system to store markdown entries in sqlite. Portable, Simple, Isolated",
+		Name:  "cms",
+		Usage: "A portable and simple content management system.",
 		Before: func(ctx context.Context, c *cli.Command) (context.Context, error) {
 			db, err := store.Connect()
 			if err != nil {
@@ -45,12 +45,7 @@ func main() {
 						Action: listEntriesCommand,
 					},
 					{
-						Name:   "print",
-						Usage:  "Print entry content",
-						Action: printEntry,
-					},
-					{
-						Name:   "new",
+						Name:   "create",
 						Usage:  "Create a new entry.",
 						Action: createEntry,
 					},
@@ -116,13 +111,13 @@ func listEntriesCommand(ctx context.Context, c *cli.Command) error {
 	return nil
 }
 
-// createEntry creates a new entry.
 func createEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	categoryRepo := store.NewCategoryRepository(db)
+
 	entryRepo := store.NewEntryRepository(db)
 
-	categories, err := categoryRepo.ReadAllCategories()
+	categories, err := store.NewCategoryRepository(db).ReadAllCategories()
+
 	if err != nil {
 		return err
 	}
@@ -177,31 +172,6 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 	default:
 		return fmt.Errorf("bad input")
 	}
-
-	return nil
-}
-
-func printEntry(ctx context.Context, c *cli.Command) error {
-	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	entryRepo := store.NewEntryRepository(db)
-
-	entries, err := entryRepo.ReadAllEntries()
-	if err != nil {
-		return err
-	}
-	printEntries(entries)
-
-	var index int
-	fmt.Printf("entry index: ")
-	fmt.Scanf("%d", &index)
-
-	if index < 0 || index > len(entries)-1 {
-		return fmt.Errorf("invalid input")
-	}
-
-	entry := entries[index]
-
-	fmt.Println(entry.Content)
 
 	return nil
 }
