@@ -51,6 +51,7 @@
 							<h2>{{ .Title }}</h2>
 							<p class="subheading">{{ .Description.String }}</p>
 							<p>{{ .CreatedAt.Format "Jan 2, 2006" }}</p>
+							<p>{{ .CategoryTitle }}</p>
 							{{ if .FeaturedImageURL.Valid }}
 							<img src="/{{ .FeaturedImageURL.String }}" />
 							{{ end }}
