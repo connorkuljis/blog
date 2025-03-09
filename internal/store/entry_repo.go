@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/connorkuljis/content/internal/model"
+	"github.com/connorkuljis/blog/internal/model"
 	"github.com/jmoiron/sqlx"
 )
 

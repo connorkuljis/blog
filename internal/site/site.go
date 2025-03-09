@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/connorkuljis/content/internal/model"
+	"github.com/connorkuljis/blog/internal/model"
 )
 
 // Site data is available to every page.
