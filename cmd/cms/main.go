@@ -12,8 +12,8 @@ import (
 	"time"
 
 	"github.com/cheynewallace/tabby"
-	"github.com/connorkuljis/content/internal/model"
-	"github.com/connorkuljis/content/internal/store"
+	"github.com/connorkuljis/blog/internal/model"
+	"github.com/connorkuljis/blog/internal/store"
 	"github.com/jmoiron/sqlx"
 	"github.com/urfave/cli/v3"
 )
@@ -36,14 +36,10 @@ func main() {
 		},
 		Commands: []*cli.Command{
 			{
-				Name:  "entries",
-				Usage: "Operations for creating, editing, deleting and listing entries.",
+				Name:   "entries",
+				Usage:  "Operations for creating, editing, deleting and listing entries.",
+				Action: listEntriesCommand,
 				Commands: []*cli.Command{
-					{
-						Name:   "list",
-						Usage:  "List all entries.",
-						Action: listEntriesCommand,
-					},
 					{
 						Name:   "create",
 						Usage:  "Create a new entry.",
@@ -62,28 +58,19 @@ func main() {
 				},
 			},
 			{
-				Name:  "categories",
-				Usage: "operations on categories",
+				Name:   "categories",
+				Usage:  "operations on categories",
+				Action: listCategories,
 				Commands: []*cli.Command{
 					{
-						Name:   "list",
-						Usage:  "List all categories.",
-						Action: listCategories,
-					},
-					{
-						Name:   "new",
+						Name:   "create",
 						Usage:  "Create a new category.",
 						Action: createCategory,
 					},
 					{
-						Name:  "delete",
-						Usage: "Delete a category.",
-						Flags: []cli.Flag{
-							&cli.IntFlag{
-								Name: "id",
-							},
-						},
-						// Action: deleteCategory,
+						Name:   "delete",
+						Usage:  "Delete a category.",
+						Action: deleteCategory,
 					},
 				},
 			},
@@ -307,27 +294,34 @@ func createCategory(ctx context.Context, c *cli.Command) error {
 }
 
 // deleteCategory deletes a category.
-// TODO: check flags or first argument.
-// func deleteCategory(ctx context.Context, c *cli.Command) error {
-// 	db := ctx.Value(sqlxKey).(*sqlx.DB)
+func deleteCategory(ctx context.Context, c *cli.Command) error {
+	// db := ctx.Value(sqlxKey).(*sqlx.DB)
+	//
+	// first := c.Args().First()
+	// if first == "" {
+	// 	// TODO: define errors such as missing argument, invalid argument ect...
+	// 	return fmt.Errorf("error: missing 1 positional argument: id")
+	// }
+	//
+	// repo := store.NewCategoryRepository(db)
+	//
+	// category, err := repo.ReadCategoryByID(id)
+	// if err != nil {
+	// 	return err
+	// }
+	//
+	// fmt.Println("Are you sure you want to delete category '" + category.Title + "'")
+	//
+	// err = repo.DeleteCategoryByTitle(id)
+	// if err != nil {
+	// 	return err
+	// }
+	//
+	// fmt.Println("Deleted category.")
+	// fmt.Printf("'%s': %s\n", category.Title, category.Description)
 
-// 	repo := store.NewCategoryRepository(db)
-
-// 	category, err := repo.ReadCategoryByID(id)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	err = repo.DeleteCategoryByTitle(id)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	fmt.Println("Deleted category.")
-// 	fmt.Printf("'%s': %s\n", category.Title, category.Description)
-
-// 	return nil
-// }
+	return nil
+}
 
 // GetInputWithPrompt prints a prompt to the user and returns the input string from the keyboard
 func GetInputWithPrompt(prompt string) (string, error) {
@@ -351,9 +345,9 @@ func GetInputWithPrompt(prompt string) (string, error) {
 
 func printEntries(entries []model.Entry) {
 	t := tabby.New()
-	t.AddHeader("INDEX", "TITLE", "CREATED", "CHARS")
-	for i, entry := range entries {
-		t.AddLine(i, entry.Title, entry.CreatedAt.Format("2006-01-02"), len(entry.Content))
+	t.AddHeader("ID", "TITLE", "CREATED", "CHARS")
+	for _, entry := range entries {
+		t.AddLine(entry.ID, entry.Title, entry.CreatedAt.Format("2006-01-02"), len(entry.Content))
 	}
 	t.Print()
 }
