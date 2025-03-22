@@ -4,13 +4,11 @@ import (
 	"bytes"
 	"database/sql"
 	"fmt"
-	"io"
 	"strings"
 	"time"
 
 	"html/template"
 
-	"github.com/adrg/frontmatter"
 	"github.com/yuin/goldmark"
 )
 
@@ -56,7 +54,7 @@ func (e Entry) String() string {
 	return sb.String()
 }
 
-func (e *Entry) ContentMdToHTML(parser goldmark.Markdown) error {
+func (e *Entry) ToHTML(parser goldmark.Markdown) error {
 	var buf bytes.Buffer
 	err := parser.Convert([]byte(e.Content), &buf)
 	if err != nil {
@@ -64,17 +62,6 @@ func (e *Entry) ContentMdToHTML(parser goldmark.Markdown) error {
 	}
 
 	e.Markdown = template.HTML(buf.String())
-
-	return nil
-}
-
-func (e *Entry) LoadFromContentString(r io.Reader) error {
-	b, err := frontmatter.Parse(r, e)
-	if err != nil {
-		return err
-	}
-
-	e.Content = string(b)
 
 	return nil
 }

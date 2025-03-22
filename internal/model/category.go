@@ -18,6 +18,10 @@ func NewCategory(title, description string) *Category {
 	return &Category{Title: title, Description: description}
 }
 
+func (c *Category) AddEntries(entries []Entry) {
+	c.Entries = entries
+}
+
 func (c Category) String() string {
 	var sb strings.Builder
 
