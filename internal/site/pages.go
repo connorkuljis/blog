@@ -4,7 +4,6 @@ import (
 	"path/filepath"
 
 	"github.com/connorkuljis/blog/internal/model"
-	"github.com/connorkuljis/blog/internal/util"
 )
 
 type Page interface {
@@ -13,8 +12,7 @@ type Page interface {
 }
 
 type HomePage struct {
-	Site       *Site
-	Categories []model.Category
+	Site *Site
 }
 
 func (p HomePage) Filepath() string {
@@ -28,11 +26,10 @@ func (p HomePage) TemplateName() string {
 type CategoryPage struct {
 	Site     *Site
 	Category model.Category
-	Entries  []model.Entry
 }
 
 func (p CategoryPage) Filepath() string {
-	return filepath.Join("public", util.Slugify(p.Category.Title), "index.html")
+	return filepath.Join("public", p.Category.Slug, "index.html")
 }
 
 func (p CategoryPage) TemplateName() string {
@@ -40,13 +37,12 @@ func (p CategoryPage) TemplateName() string {
 }
 
 type EntryPage struct {
-	Site         *Site
-	Category     model.Category
-	CurrentEntry model.Entry
+	Site  *Site
+	Entry model.Entry
 }
 
 func (p EntryPage) Filepath() string {
-	return filepath.Join("public", util.Slugify(p.Category.Title), util.Slugify(p.CurrentEntry.Title), "index.html")
+	return filepath.Join("public", p.Entry.Slug, "index.html")
 }
 
 func (p EntryPage) TemplateName() string {
