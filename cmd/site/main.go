@@ -40,6 +40,11 @@ func main() {
 		},
 	}
 
+	err := site.Init()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	db, err := store.Connect()
 	if err != nil {
 		log.Fatal(err)
@@ -47,19 +52,12 @@ func main() {
 
 	md := markdownParser()
 
-	categories, err := getCategoriesAndEntries(db, md)
+	site.Categories, err = getCategoriesAndEntries(db, md)
 	if err != nil {
 		log.Fatal(err)
 	}
-	site.Categories = categories
 
-	recentEntries, err := getRecentEntries(db, md, limit)
-	if err != nil {
-		log.Fatal(err)
-	}
-	site.RecentEntries = recentEntries
-
-	err = site.Init()
+	site.RecentEntries, err = getRecentEntries(db, md, limit)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -91,19 +89,18 @@ func getCategoriesAndEntries(db *sqlx.DB, md goldmark.Markdown) ([]model.Categor
 	entryRepo := store.NewEntryRepository(db)
 
 	for i := range categories {
+
 		var entries []model.Entry
+		var err error
+
 		if enableDraftMode {
-			var err error
 			entries, err = entryRepo.ReadAllByCategoryID(categories[i].ID)
-			if err != nil {
-				return categories, err
-			}
 		} else {
-			var err error
 			entries, err = entryRepo.ReadAllPublishedByCategoryID(categories[i].ID)
-			if err != nil {
-				return categories, err
-			}
+		}
+
+		if err != nil {
+			return categories, err
 		}
 
 		// Assign retrieved entries to corresponding category.
@@ -115,7 +112,7 @@ func getCategoriesAndEntries(db *sqlx.DB, md goldmark.Markdown) ([]model.Categor
 
 		for j := range entries {
 			// Convert the Markdown content of the entry to HTML.
-			err := entries[j].ContentMdToHTML(md) // side-effect: updates markdown field.
+			err := entries[j].ToHTML(md) // side-effect: updates markdown field.
 			if err != nil {
 				return categories, err
 			}
@@ -133,20 +130,19 @@ func getCategoriesAndEntries(db *sqlx.DB, md goldmark.Markdown) ([]model.Categor
 }
 
 func getRecentEntries(db *sqlx.DB, md goldmark.Markdown, limit int) ([]model.Entry, error) {
-	var entries []model.Entry
 	entryRepo := store.NewEntryRepository(db)
+
+	var entries []model.Entry
+	var err error
+
 	if enableDraftMode {
-		var err error
 		entries, err = entryRepo.ReadRecentEntries(limit)
-		if err != nil {
-			return entries, err
-		}
 	} else {
-		var err error
 		entries, err = entryRepo.ReadRecentPublishedEntries(limit)
-		if err != nil {
-			return entries, err
-		}
+	}
+
+	if err != nil {
+		return entries, err
 	}
 
 	categoryRepo := store.NewCategoryRepository(db)
@@ -158,7 +154,7 @@ func getRecentEntries(db *sqlx.DB, md goldmark.Markdown, limit int) ([]model.Ent
 
 		entries[i].CategoryTitle = category.Title
 		entries[i].Slug = fmt.Sprintf("%s/%s", util.Slugify(category.Title), util.Slugify(entries[i].Title))
-		entries[i].ContentMdToHTML(md)
+		entries[i].ToHTML(md)
 	}
 
 	return entries, nil
