@@ -1,5 +1,5 @@
 site:
-	go run ./cmd/site
+	go run -v ./cmd/site
 
 cms: clean
 	go build -v ./cmd/cms
