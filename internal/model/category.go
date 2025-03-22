@@ -3,6 +3,8 @@ package model
 import (
 	"fmt"
 	"strings"
+
+	"github.com/connorkuljis/blog/internal/util"
 )
 
 type Category struct {
@@ -19,7 +21,11 @@ func NewCategory(title, description string) *Category {
 }
 
 func (c *Category) AddEntries(entries []Entry) {
-	c.Entries = entries
+	c.Entries = append(c.Entries, entries...)
+}
+
+func (c *Category) Slugify() {
+	c.Slug = util.Slugify(c.Title)
 }
 
 func (c Category) String() string {
