@@ -9,6 +9,7 @@ import (
 
 	"html/template"
 
+	"github.com/connorkuljis/blog/internal/util"
 	"github.com/yuin/goldmark"
 )
 
@@ -23,10 +24,10 @@ type Entry struct {
 	UpdatedAt        time.Time      `db:"updated_at"`
 	IsDraft          int            `db:"is_draft"`
 
-	CategoryTitle string
-	Markdown      template.HTML
-	Slug          string
-	WordCount     int
+	Category  Category
+	Markdown  template.HTML
+	Slug      string
+	WordCount int
 }
 
 func NewEntry(categoryID int64, title string) *Entry {
@@ -64,4 +65,16 @@ func (e *Entry) ToHTML(parser goldmark.Markdown) error {
 	e.Markdown = template.HTML(buf.String())
 
 	return nil
+}
+
+func (e *Entry) Slugify(categorySlug string) {
+	e.Slug = categorySlug + "/" + util.Slugify(e.Title)
+}
+
+func (e *Entry) CalculateWordCount() {
+	e.WordCount = len(strings.Split(e.Content, " "))
+}
+
+func (e *Entry) AddCategory(category Category) {
+	e.Category = category
 }

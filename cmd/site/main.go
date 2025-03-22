@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"html/template"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/connorkuljis/blog/internal/model"
@@ -89,7 +88,6 @@ func getCategoriesAndEntries(db *sqlx.DB, md goldmark.Markdown) ([]model.Categor
 	entryRepo := store.NewEntryRepository(db)
 
 	for i := range categories {
-
 		var entries []model.Entry
 		var err error
 
@@ -103,27 +101,20 @@ func getCategoriesAndEntries(db *sqlx.DB, md goldmark.Markdown) ([]model.Categor
 			return categories, err
 		}
 
-		// Assign retrieved entries to corresponding category.
-		// Establishes relationship between a category and its entries.
-		categories[i].Entries = entries
-
-		// Generate a slug for the category based on its title.
-		categories[i].Slug = util.Slugify(categories[i].Title)
+		categories[i].Slugify()
 
 		for j := range entries {
-			// Convert the Markdown content of the entry to HTML.
 			err := entries[j].ToHTML(md) // side-effect: updates markdown field.
 			if err != nil {
 				return categories, err
 			}
 
-			words := strings.Split(entries[j].Content, " ")
-			entries[j].WordCount = len(words)
-
-			entries[j].CategoryTitle = categories[i].Title
-			// Generate a slug for the entry, combining the category slug and the entry title.
-			entries[j].Slug = categories[i].Slug + "/" + util.Slugify(entries[j].Title)
+			entries[j].Slugify(categories[i].Slug)
+			entries[j].CalculateWordCount()
+			entries[j].AddCategory(categories[i])
 		}
+
+		categories[i].AddEntries(entries)
 	}
 
 	return categories, nil
@@ -131,6 +122,7 @@ func getCategoriesAndEntries(db *sqlx.DB, md goldmark.Markdown) ([]model.Categor
 
 func getRecentEntries(db *sqlx.DB, md goldmark.Markdown, limit int) ([]model.Entry, error) {
 	entryRepo := store.NewEntryRepository(db)
+	categoryRepo := store.NewCategoryRepository(db)
 
 	var entries []model.Entry
 	var err error
@@ -145,16 +137,19 @@ func getRecentEntries(db *sqlx.DB, md goldmark.Markdown, limit int) ([]model.Ent
 		return entries, err
 	}
 
-	categoryRepo := store.NewCategoryRepository(db)
 	for i := range entries {
 		category, err := categoryRepo.ReadCategoryByID(entries[i].CategoryID)
 		if err != nil {
 			return entries, err
 		}
+		category.Slugify()
 
-		entries[i].CategoryTitle = category.Title
-		entries[i].Slug = fmt.Sprintf("%s/%s", util.Slugify(category.Title), util.Slugify(entries[i].Title))
-		entries[i].ToHTML(md)
+		entries[i].AddCategory(category)
+		entries[i].Slugify(category.Slug)
+		err = entries[i].ToHTML(md)
+		if err != nil {
+			return entries, err
+		}
 	}
 
 	return entries, nil
