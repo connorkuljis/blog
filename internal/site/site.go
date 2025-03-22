@@ -61,9 +61,8 @@ func (s *Site) BuildPages() []Page {
 		})
 		for _, entry := range category.Entries {
 			pages = append(pages, EntryPage{
-				Site:         s,
-				Category:     category,
-				CurrentEntry: entry,
+				Site:  s,
+				Entry: entry,
 			})
 		}
 	}
