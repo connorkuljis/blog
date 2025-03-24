@@ -4,30 +4,25 @@
 <!-- head -->
 {{ template "head" . }}
 
-<body>
+<body class="layout">
 	<!-- header -->
 	{{ template "header" . }}
 
+	<nav class="nav">
+		<ul class="breadcrumbs" role="list">
+			<li><a href="/">Home</a></li>
+			<span>&#8594;</span>
+			<li><a href="/{{ .Category.Slug }}">{{ .Category.Title }}</a></li>
+		</ul>
+	</nav>
+
 	<!-- main -->
-	<main class="category-page">
+	<main class="main">
 		<div class="wrapper">
-			<section>
-				<nav>
-					<ul class="breadcrumbs" role="list">
-						<li><a href="/">Home</a></li>
-						<span>&#8594;</span>
-						<li><a href="/{{ .Category.Slug }}">{{ .Category.Title }}</a></li>
-					</ul>
-				</nav>
+			<h1 class="heading">{{ .Category.Title }}</h1>
+			<h2 class="subheading">{{ .Category.Description }}</h2>
 
-				<div>
-					<h1 class="heading">{{ .Category.Title }}</h1>
-					<h2 class="subheading">{{ .Category.Description }}</h2>
-				</div>
-			</section>
-
-
-			<section>
+			<section id="category-entries">
 				<ul class="categories-entries-list" role="list">
 					{{ range .Category.Entries }}
 					<li>

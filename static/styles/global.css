@@ -1,13 +1,13 @@
 /* styles/global.css */
 
 body {
-	margin: 0;
+	max-width: 1100px;
+	margin: 0 auto;
 	font-family: var(--ff-base);
-	font-optical-sizing: auto;
 	font-style: normal;
 	color: var(--clr-body);
 	background-color: var(--clr-bg);
-	line-height: 1.6;
+	line-height: var(--line-height);
 }
 
 h1,
@@ -16,6 +16,7 @@ h3,
 h4,
 h5,
 h6 {
+	font-family: var(--ff-heading);
 	font-size: var(--fs-400);
 	font-weight: var(--fw-normal);
 	color: var(--clr-heading);
@@ -24,7 +25,7 @@ h6 {
 p,
 li {
 	text-wrap: pretty;
-	/* max-width: 80ch; */
+	max-width: 70ch;
 }
 
 a {
@@ -34,7 +35,6 @@ a {
 
 a:hover {
 	text-decoration: underline;
-	color: var(--clr-blue-200);
 }
 
 b {
@@ -42,16 +42,18 @@ b {
 }
 
 pre {
-	background-color: var(--clr-neutral-100);
-	border: 1px solid var(--clr-neutral-600);
-	padding: 0.5rem;
-	border-radius: 0.5rem;
 	overflow-x: auto;
+
+	padding: 0.825rem;
+	border-radius: 0.125rem;
+
+	background-color: var(--clr-neutral-100);
+
+	border: 1px solid var(--clr-neutral-600);
 }
 
 code {
 	font-family: var(--ff-mono);
-	color: var(--clr-neutral-600);
 }
 
 hr {

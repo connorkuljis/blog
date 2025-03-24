@@ -3,37 +3,39 @@
 <html lang="en">
 {{ template "head" . }}
 
-<body>
+<body class="layout">
 	{{ template "header" . }}
 
-	<main class="entry-page">
-		<section class="wrapper">
-			<nav>
-				<ul class="breadcrumbs" role="list">
-					<li><a href="/">Home</a></li>
-					<span>&#8594;</span>
-					<li><a href="/{{ .Entry.Category.Slug }}">{{ .Entry.Category.Title }}</a></li>
-					<span>&#8594;</span>
-					<li><a href="/{{ .Entry.Slug }}">{{ .Entry.Title }}</a></li>
-				</ul>
-			</nav>
+	<nav class="nav">
+		<ul class="breadcrumbs" role="list">
+			<li><a href="/">Home</a></li>
+			<span>&#8594;</span>
+			<li><a href="/{{ .Entry.Category.Slug }}">{{ .Entry.Category.Title }}</a></li>
+			<span>&#8594;</span>
+			<li><a href="/{{ .Entry.Slug }}">{{ .Entry.Title }}</a></li>
+		</ul>
+	</nav>
 
-			<div>
-				<h1 class="heading">{{ .Entry.Title }}</h1>
-				<h2 class="subheading">{{ .Entry.CreatedAt.Format "Jan 02, 2006"}}</h2>
-				<p>{{ .Entry.WordCount }} words</p>
-			</div>
+	<main class="main">
+		<article>
+			<header class="wrapper">
+				<hgroup>
+					<h1 class="heading">{{ .Entry.Title }}</h1>
+					<h2 class="subheading">{{ .Entry.CreatedAt.Format "Jan 02, 2006"}}</h2>
+					<p>{{ .Entry.WordCount }} words</p>
+				</hgroup>
 
-			{{ if .Entry.FeaturedImageURL.Valid }}
-			<div class="full-bleed">
-				<img src="/{{ .Entry.FeaturedImageURL.String }}" />
-			</div>
-			{{ end }}
-		</section>
+				{{ if .Entry.FeaturedImageURL.Valid }}
+				<div class="full-bleed">
+					<img src="/{{ .Entry.FeaturedImageURL.String }}" />
+				</div>
+				{{ end }}
+			</header>
 
-		<section class="wrapper content">
-			{{ .Entry.Markdown }}
-		</section>
+			<section class="wrapper content">
+				{{ .Entry.Markdown }}
+			</section>
+		</article>
 	</main>
 </body>
 
