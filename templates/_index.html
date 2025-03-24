@@ -1,78 +1,96 @@
 <!-- index.html -->
 <!doctype html>
+
 <html lang="en">
 
 {{ template "head" . }}
 
-<body>
+<body class="layout">
 	{{ template "header" . }}
 
-	<main class="index-page">
-		<div class="wrapper">
-			<section>
-				<nav>
-					<ul class="breadcrumbs" role="list">
-						<li><a href="/">Home</a></li>
-					</ul>
-				</nav>
+	<nav class="nav">
+		<ul class="breadcrumbs" role="list">
+			<li><a href="/">Home</a></li>
+		</ul>
+	</nav>
 
-				<div class="bio">
-					<img src=" /images/cat.jpg" class="icon" />
-					<h2 class="subheading">Connor Kuljis</h2>
-				</div>
+	<main class="main">
+		<div class="grid">
+			<div id="hero">
+				{{ template "hero" . }}
+			</div>
 
-				<h1 class="heading">
-					Software Engineering Graduate from Perth, Western Australia
-				</h1>
-			</section>
-
-			<section id="site-categories">
-				<ul class="site-categories-list" role="list">
-					{{ range .Site.Categories }}
-					<li>
-						<a class="list-item" href="/{{ .Slug }}">
-							<div>
-								<h2>{{ .Title }}</h2>
-								<p>{{ len .Entries }} {{ .Description }}</p>
-							</div>
-						</a>
-					</li>
-					{{ end }}
-				</ul>
-			</section>
-
-			<section id="recent-entries">
-				<h2>Recent entries</h2>
-
-				<ul class="recent-entries-list" role="list">
-					{{ range .Site.RecentEntries }}
-					<li>
-						<a href="/{{ .Slug }}">
-							<h2>{{ .Title }}</h2>
-							<p class="subheading">{{ .Description.String }}</p>
-							<p>{{ .CreatedAt.Format "Jan 2, 2006" }}</p>
-							<p>{{ .Category.Title }}</p>
-							{{ if .FeaturedImageURL.Valid }}
-							<img src="/{{ .FeaturedImageURL.String }}" />
-							{{ end }}
-						</a>
-					</li>
-					{{ end }}
-				</ul>
-			</section>
-
-			<section>
+			<div id="socials">
 				<h2>Socials</h2>
-				<ul>
-					{{ range .Site.Socials }}
-					<li>
-						<a href="{{ .URL }}">{{ .URL }}</a>
-					</li>
-					{{ end }}
-				</ul>
-			</section>
+				{{ template "socials" . }}
+			</div>
+
+			<!-- recent entries -->
+			<div id="recent-entries">
+				<h2>Recent Entries</h2>
+				{{ template "recent-entries" . }}
+			</div>
+
+			<!-- site categories -->
+			<div id="site-categories">
+				<h2>Site Categories</h2>
+				{{ template "site-categories" . }}
+			</div>
 		</div>
 	</main>
 </body>
 
 </html>
+
+{{ define "hero" }}
+<h1>
+	Software Engineering Graduate from Perth, Western Australia
+</h1>
+
+<div class="bio">
+	<img src=" /images/cat.jpg" class="icon" />
+	<h2>Connor Kuljis</h2>
+</div>
+{{ end }}
+
+{{ define "socials" }}
+<ul class="socials-list" role="list">
+	{{ range .Site.Socials }}
+	<li>
+		<a href="{{ .URL }}">{{ .URL }}</a>
+	</li>
+	{{ end }}
+</ul>
+{{ end }}
+
+{{ define "site-categories" }}
+<ul class="site-categories-list" role="list">
+	{{ range .Site.Categories }}
+	<li>
+		<a href="/{{ .Slug }}">
+			<div>
+				<h3>{{ .Title }}</h3>
+				<p>{{ len .Entries }} {{ .Description }}</p>
+			</div>
+		</a>
+	</li>
+	{{ end }}
+</ul>
+{{ end }}
+
+{{ define "recent-entries" }}
+<ul class="recent-entries-list" role="list">
+	{{ range .Site.RecentEntries }}
+	<li>
+		<a href="/{{ .Slug }}">
+			<div>
+				<div>{{ .CreatedAt.Format "Jan 2, 2006" }}</div>
+				<h3>{{ .Title }}</h3>
+				<div>{{ .Category.Title }}</div>
+			</div>
+			<div>{{ .Description.String }}</div>
+		</a>
+	</li>
+	{{ end }}
+</ul>
+{{ end }}

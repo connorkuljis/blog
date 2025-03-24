@@ -1,9 +1,11 @@
 :root {
 	/* font family */
-	--ff-base: "Bricolage Grotesque", -system-ui, serif;
-	--ff-mono: "Fira Code", -system-ui, monospaced;
+	--ff-base: "Libre Franklin", -system-ui, serif;
+	--ff-heading: "Inter Tight", -system-ui, serif;
+	--ff-mono: "IBM Plex Mono", -system-ui, monospaced;
 
 	/* font weight */
+	--fw-light: 200;
 	--fw-normal: 400;
 	--fw-semi-bold: 600;
 	--fw-bold: 700;
@@ -19,9 +21,6 @@
 	--clr-neutral-200: hsl(0, 0%, 90%);
 	--clr-neutral-100: hsl(0, 0%, 100%);
 
-	--clr-blue-400: hsl(225, 72%, 33%);
-	--clr-blue-300: hsl(225, 72%, 43%);
-
 	/* color layers */
 	--clr-bg: var(--clr-neutral-100);
 	--clr-body: var(--clr-neutral-800);
@@ -29,7 +28,8 @@
 	--clr-accent: var(--clr-blue-300);
 
 	/* font size */
-	--fs: 1.6rem;
+	--fs: 1.4rem;
+	--line-height: 1.2;
 
 	--fs-200: calc(var(--fs) * 0.75);
 	--fs-300: calc(var(--fs) * 0.825);
@@ -41,7 +41,7 @@
 	--fs-900: calc(var(--fs) * 3);
 
 	/* spacing */
-	--gap: 1.6rem;
+	--gap: 1rem;
 
 	--gap-s: calc(var(--gap) * 0.618);
 	--gap-m: var(--gap);
