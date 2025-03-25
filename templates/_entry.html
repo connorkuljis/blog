@@ -7,17 +7,19 @@
 	{{ template "header" . }}
 
 	<nav class="nav">
-		<ul class="breadcrumbs" role="list">
-			<li><a href="/">Home</a></li>
-			<span>&#8594;</span>
-			<li><a href="/{{ .Entry.Category.Slug }}">{{ .Entry.Category.Title }}</a></li>
-			<span>&#8594;</span>
-			<li><a href="/{{ .Entry.Slug }}">{{ .Entry.Title }}</a></li>
-		</ul>
+		<div class="wrapper">
+			<ul class="breadcrumbs" role="list">
+				<li><a href="/">Home</a></li>
+				<span>&#8594;</span>
+				<li><a href="/{{ .Entry.Category.Slug }}">{{ .Entry.Category.Title }}</a></li>
+				<span>&#8594;</span>
+				<li><a href="/{{ .Entry.Slug }}">{{ .Entry.Title }}</a></li>
+			</ul>
+		</div>
 	</nav>
 
 	<main class="main">
-		<article>
+		<article class="wrapper">
 			<header>
 				<hgroup>
 					<h1>{{ .Entry.Title }}</h1>
@@ -30,9 +32,7 @@
 				{{ end }}
 			</header>
 
-			<div class="content">
-				{{ .Entry.Markdown }}
-			</div>
+			{{ .Entry.Markdown }}
 	</main>
 
 	<!-- entry css -->
