@@ -164,7 +164,7 @@ func markdownParser() goldmark.Markdown {
 			parser.WithAutoHeadingID(),
 		),
 		goldmark.WithRendererOptions(
-			html.WithUnsafe(),
+			// html.WithUnsafe(),
 			html.WithHardWraps(),
 			html.WithXHTML(),
 		),
