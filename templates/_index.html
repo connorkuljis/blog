@@ -5,39 +5,48 @@
 
 {{ template "head" . }}
 
-<body class="layout">
+
+<body class="grid-layout">
+	<!-- header -->
 	{{ template "header" . }}
 
+	<!-- nav -->
 	<nav class="nav">
 		<ul class="breadcrumbs" role="list">
 			<li><a href="/">Home</a></li>
 		</ul>
 	</nav>
 
+	<!-- main -->
 	<main class="main">
-		<div class="grid">
-			<div id="hero">
-				{{ template "hero" . }}
-			</div>
-
-			<div id="socials">
-				<h2>Socials</h2>
-				{{ template "socials" . }}
-			</div>
-
-			<!-- recent entries -->
-			<div id="recent-entries">
-				<h2>Recent Entries</h2>
-				{{ template "recent-entries" . }}
-			</div>
-
-			<!-- site categories -->
-			<div id="site-categories">
-				<h2>Site Categories</h2>
-				{{ template "site-categories" . }}
-			</div>
+		<!-- hero -->
+		<div id="hero">
+			{{ template "hero" . }}
 		</div>
+
+		<!-- socials -->
+		<div id="socials">
+			{{ template "socials" . }}
+		</div>
+
+		{{ range .Site.Categories }}
+		<h2>{{ .Title }}</h2>
+		<ul class="entries-grid" id="{{ slugify .Title }}" role="list">
+			{{ range .Entries }}
+			<li class="entry-grid-item">
+				{{ $dt := .CreatedAt.Format "2006-01-02" }}
+				<time datetime="{{ $dt }}">{{ $dt }}</time>
+				<a href="/{{.Slug }}">
+					{{ .Title }}
+				</a>
+			</li>
+			{{ end }}
+		</ul>
+		{{ end }}
 	</main>
+
+	<!-- index css -->
+	<link rel="stylesheet" href="/index.css" />
 </body>
 
 </html>
@@ -46,51 +55,15 @@
 <h1>
 	Software Engineering Graduate from Perth, Western Australia
 </h1>
-
-<div class="bio">
-	<img src=" /images/cat.jpg" class="icon" />
-	<h2>Connor Kuljis</h2>
-</div>
 {{ end }}
 
 {{ define "socials" }}
-<ul class="socials-list" role="list">
-	{{ range .Site.Socials }}
+<ul id="socials-list" role="list">
 	<li>
-		<a href="{{ .URL }}">{{ .URL }}</a>
+		<a href="https://github.com/connorkuljis">Github</a>
 	</li>
-	{{ end }}
-</ul>
-{{ end }}
-
-{{ define "site-categories" }}
-<ul class="site-categories-list" role="list">
-	{{ range .Site.Categories }}
 	<li>
-		<a href="/{{ .Slug }}">
-			<div>
-				<h3>{{ .Title }}</h3>
-				<p>{{ len .Entries }} {{ .Description }}</p>
-			</div>
-		</a>
+		<a href="https://linkedin.com/in/connor-kuljis">Linkedin</a>
 	</li>
-	{{ end }}
-</ul>
-{{ end }}
-
-{{ define "recent-entries" }}
-<ul class="recent-entries-list" role="list">
-	{{ range .Site.RecentEntries }}
-	<li>
-		<a href="/{{ .Slug }}">
-			<div>
-				<div>{{ .CreatedAt.Format "Jan 2, 2006" }}</div>
-				<h3>{{ .Title }}</h3>
-				<div>{{ .Category.Title }}</div>
-			</div>
-			<div>{{ .Description.String }}</div>
-		</a>
-	</li>
-	{{ end }}
 </ul>
 {{ end }}
