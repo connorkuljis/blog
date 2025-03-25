@@ -1,10 +1,10 @@
 /* styles/global.css */
 
+
 body {
-	max-width: 1100px;
-	margin: 0 auto;
 	font-family: var(--ff-base);
 	font-style: normal;
+	font-size: var(--fs-400);
 	color: var(--clr-body);
 	background-color: var(--clr-bg);
 	line-height: var(--line-height);
@@ -17,9 +17,20 @@ h4,
 h5,
 h6 {
 	font-family: var(--ff-heading);
-	font-size: var(--fs-400);
 	font-weight: var(--fw-normal);
-	color: var(--clr-heading);
+}
+
+h1 {
+	text-wrap: pretty;
+	font-size: var(--fs-900);
+}
+
+h2 {
+	font-size: var(--fs-600);
+}
+
+h3 {
+	font-size: var(--fs-500);
 }
 
 p,
@@ -53,6 +64,7 @@ pre {
 }
 
 code {
+	overflow-x: auto;
 	font-family: var(--ff-mono);
 }
 

@@ -1,0 +1,18 @@
+/* /static/entry.css */
+
+.content {
+	margin-top: var(--gap-xl);
+	line-height: 1.4;
+}
+
+.content>*:not(:first-child) {
+	margin-top: var(--gap-s);
+}
+
+hgroup h2 {
+	font-family: var(--ff-mono);
+}
+
+hgroup h3 {
+	text-transform: uppercase;
+}

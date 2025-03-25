@@ -1,0 +1,43 @@
+@import url("/styles/reset.css");
+@import url("/styles/variables.css");
+@import url("/styles/global.css");
+
+.main {
+	padding-top: var(--gap-xl);
+	padding-bottom: var(--gap-xl);
+	margin-bottom: 20dvh;
+}
+
+.main>*:not(:first-child) {
+	margin-top: var(--gap-m);
+}
+
+.breadcrumbs {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+.header {
+	padding-top: var(--gap-xl);
+	padding-bottom: var(--gap-xl);
+}
+
+.nav {
+	padding-top: var(--gap-s);
+	padding-bottom: var(--gap-s);
+
+	border-top: 1px solid var(--clr-neutral-300);
+	border-bottom: 1px solid var(--clr-neutral-300);
+}
+
+.grid-layout {
+	max-width: 768px;
+	margin: 0 auto;
+	padding-left: 3%;
+	padding-right: 3%;
+
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+}

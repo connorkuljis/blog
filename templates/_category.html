@@ -4,7 +4,7 @@
 <!-- head -->
 {{ template "head" . }}
 
-<body class="layout">
+<body class="grid-layout">
 	<!-- header -->
 	{{ template "header" . }}
 
@@ -18,23 +18,21 @@
 
 	<!-- main -->
 	<main class="main">
-		<div class="wrapper">
-			<h1 class="heading">{{ .Category.Title }}</h1>
-			<h2 class="subheading">{{ .Category.Description }}</h2>
+		<hgroup>
+			<h1>{{ .Category.Title }}</h1>
+			<h2>{{ .Category.Description }}</h2>
+		</hgroup>
 
-			<section id="category-entries">
-				<ul class="categories-entries-list" role="list">
-					{{ range .Category.Entries }}
-					<li>
-						<a href="/{{ .Slug }}">
-							<h2>{{ .Title }}</h2>
-							<p>{{ .CreatedAt.Format "2006 Jan 2" }}</p>
-						</a>
-					</li>
-					{{ end }}
-				</ul>
-			</section>
-		</div>
+		<ul class="categories-entries-list" role="list">
+			{{ range .Category.Entries }}
+			<li>
+				<a href="/{{ .Slug }}">
+					<h2>{{ .Title }}</h2>
+					<p>{{ .CreatedAt.Format "2006 Jan 2" }}</p>
+				</a>
+			</li>
+			{{ end }}
+		</ul>
 	</main>
 </body>
 

@@ -28,7 +28,7 @@
 	--clr-accent: var(--clr-blue-300);
 
 	/* font size */
-	--fs: 1.4rem;
+	--fs: 1rem;
 	--line-height: 1.2;
 
 	--fs-200: calc(var(--fs) * 0.75);
@@ -42,7 +42,6 @@
 
 	/* spacing */
 	--gap: 1rem;
-
 	--gap-s: calc(var(--gap) * 0.618);
 	--gap-m: var(--gap);
 	--gap-l: calc(var(--gap) * 1.618);
