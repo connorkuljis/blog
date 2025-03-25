@@ -2,6 +2,33 @@
 @import url("/styles/variables.css");
 @import url("/styles/global.css");
 
+.grid-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.wrapper {
+	padding-left: 3%;
+	padding-right: 3%;
+	max-width: 80rem;
+}
+
+.header {
+	padding-top: var(--gap-l);
+	padding-bottom: var(--gap-xl);
+	/* height: 33dvh; */
+	/* background-image: linear-gradient(to bottom, black 0%, #3c5e6d 20%); */
+	/* background-attachment: fixed; */
+	/* background-size: cover; */
+}
+
+.nav {
+	padding-top: var(--gap-s);
+	padding-bottom: var(--gap-s);
+	border-top: 1px solid var(--clr-neutral-300);
+	border-bottom: 1px solid var(--clr-neutral-300);
+}
+
 .main {
 	padding-top: var(--gap-xl);
 	padding-bottom: var(--gap-xl);
@@ -17,27 +44,4 @@
 	flex-wrap: wrap;
 	align-items: center;
 	gap: 0.25rem;
-}
-
-.header {
-	padding-top: var(--gap-xl);
-	padding-bottom: var(--gap-xl);
-}
-
-.nav {
-	padding-top: var(--gap-s);
-	padding-bottom: var(--gap-s);
-
-	border-top: 1px solid var(--clr-neutral-300);
-	border-bottom: 1px solid var(--clr-neutral-300);
-}
-
-.grid-layout {
-	max-width: 768px;
-	margin: 0 auto;
-	padding-left: 3%;
-	padding-right: 3%;
-
-	display: grid;
-	grid-template-columns: minmax(0, 1fr);
 }

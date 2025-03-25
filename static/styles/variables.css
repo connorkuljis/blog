@@ -29,7 +29,7 @@
 
 	/* font size */
 	--fs: 1rem;
-	--line-height: 1.2;
+	--line-height: 1.5;
 
 	--fs-200: calc(var(--fs) * 0.75);
 	--fs-300: calc(var(--fs) * 0.825);

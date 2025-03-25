@@ -1,6 +1,5 @@
 /* styles/global.css */
 
-
 body {
 	font-family: var(--ff-base);
 	font-style: normal;
@@ -16,12 +15,13 @@ h3,
 h4,
 h5,
 h6 {
+	max-width: 70ch;
 	font-family: var(--ff-heading);
 	font-weight: var(--fw-normal);
 }
 
 h1 {
-	text-wrap: pretty;
+	text-wrap: balance;
 	font-size: var(--fs-900);
 }
 
@@ -35,7 +35,6 @@ h3 {
 
 p,
 li {
-	text-wrap: pretty;
 	max-width: 70ch;
 }
 

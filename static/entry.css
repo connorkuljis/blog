@@ -3,6 +3,8 @@
 .content {
 	margin-top: var(--gap-xl);
 	line-height: 1.4;
+	max-width: 60ch;
+	margin: 0 auto;
 }
 
 .content>*:not(:first-child) {

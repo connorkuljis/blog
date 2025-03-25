@@ -9,30 +9,40 @@
 	{{ template "header" . }}
 
 	<nav class="nav">
-		<ul class="breadcrumbs" role="list">
-			<li><a href="/">Home</a></li>
-			<span>&#8594;</span>
-			<li><a href="/{{ .Category.Slug }}">{{ .Category.Title }}</a></li>
-		</ul>
+		<div class="wrapper">
+			<ul class="breadcrumbs" role="list">
+				<li><a href="/">Home</a></li>
+				<span>&#8594;</span>
+				<li><a href="/{{ .Category.Slug }}">{{ .Category.Title }}</a></li>
+			</ul>
+		</div>
 	</nav>
 
 	<!-- main -->
 	<main class="main">
-		<hgroup>
-			<h1>{{ .Category.Title }}</h1>
-			<h2>{{ .Category.Description }}</h2>
-		</hgroup>
+		<!-- wrapper -->
+		<div class="wrapper">
+			<!-- hgroup -->
+			<hgroup>
+				<h1>{{ .Category.Title }}</h1>
+				<h2>{{ .Category.Description }}</h2>
+			</hgroup>
 
-		<ul class="categories-entries-list" role="list">
-			{{ range .Category.Entries }}
-			<li>
-				<a href="/{{ .Slug }}">
-					<h2>{{ .Title }}</h2>
-					<p>{{ .CreatedAt.Format "2006 Jan 2" }}</p>
-				</a>
-			</li>
-			{{ end }}
-		</ul>
+			<!-- entries list -->
+			<div>
+				<ul class="categories-entries-list" role="list">
+					{{ range .Category.Entries }}
+					<li>
+						<a href="/{{ .Slug }}">
+							<h2>{{ .Title }}</h2>
+							<p>{{ .CreatedAt.Format "2006 Jan 2" }}</p>
+						</a>
+					</li>
+					{{ end }}
+				</ul>
+			</div>
+		</div>
+		<link rel="stylesheet" href="/category.html" />
 	</main>
 </body>
 

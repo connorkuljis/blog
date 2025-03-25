@@ -5,44 +5,57 @@
 
 {{ template "head" . }}
 
-
 <body class="grid-layout">
 	<!-- header -->
 	{{ template "header" . }}
 
 	<!-- nav -->
 	<nav class="nav">
-		<ul class="breadcrumbs" role="list">
-			<li><a href="/">Home</a></li>
-		</ul>
+		<div class="wrapper">
+			<ul class="breadcrumbs" role="list">
+				<li><a href="/">Home</a></li>
+			</ul>
+		</div>
 	</nav>
+
 
 	<!-- main -->
 	<main class="main">
-		<!-- hero -->
-		<div id="hero">
-			{{ template "hero" . }}
-		</div>
+		<!-- wrapper -->
+		<div class="wrapper">
+			<!-- grid index -->
+			<div class="grid-index">
+				<!-- hero -->
+				<div class="hero-wrapper">
+					{{ template "bio" . }}
+					{{ template "socials" . }}
+				</div>
 
-		<!-- socials -->
-		<div id="socials">
-			{{ template "socials" . }}
-		</div>
+				{{ range .Site.Categories }}
 
-		{{ range .Site.Categories }}
-		<h2>{{ .Title }}</h2>
-		<ul class="entries-grid" id="{{ slugify .Title }}" role="list">
-			{{ range .Entries }}
-			<li class="entry-grid-item">
-				{{ $dt := .CreatedAt.Format "2006-01-02" }}
-				<time datetime="{{ $dt }}">{{ $dt }}</time>
-				<a href="/{{.Slug }}">
-					{{ .Title }}
-				</a>
-			</li>
-			{{ end }}
-		</ul>
-		{{ end }}
+				{{ if eq .Title "Blog" }}
+				<div class="blog-wrapper">
+					<h2>{{ .Title }}</h2>
+					{{ template "blog" . }}
+				</div>
+				{{ end }}
+
+				{{ if eq .Title "TIL" }}
+				<div class="til-wrapper">
+					<h2>{{ .Title }}</h2>
+					{{ template "til" . }}
+				</div>
+				{{ end }}
+
+				{{ if eq .Title "Projects" }}
+				<div class="projects-wrapper">
+					<h2>{{ .Title }}</h2>
+					{{ template "projects" . }}
+				</div>
+				{{ end }}
+				{{ end }}
+			</div>
+		</div>
 	</main>
 
 	<!-- index css -->
@@ -51,19 +64,39 @@
 
 </html>
 
-{{ define "hero" }}
-<h1>
-	Software Engineering Graduate from Perth, Western Australia
-</h1>
+{{ define "blog" }}
+<ul class="grid-blog-entries" id="{{ slugify .Title }}" role="list">
+	{{ range .Entries }}
+	<li class="grid-item">
+		{{ $dt := .CreatedAt.Format "2006-01-02" }}
+		<time datetime="{{ $dt }}">{{ $dt }}</time>
+		<a href="/{{.Slug }}">
+			{{ .Title }}
+		</a>
+	</li>
+	{{ end }}
+</ul>
 {{ end }}
 
-{{ define "socials" }}
-<ul id="socials-list" role="list">
-	<li>
-		<a href="https://github.com/connorkuljis">Github</a>
-	</li>
-	<li>
-		<a href="https://linkedin.com/in/connor-kuljis">Linkedin</a>
-	</li>
-</ul>
+{{ define "til" }}
+<div>
+	<ul role="list">
+		{{ range .Entries }}
+		<li><a href="/{{ .Slug }}">{{ .Title }}</a></li>
+		{{ end }}
+	</ul>
+</div>
+{{ end }}
+
+{{ define "projects" }}
+<div class="grid-project-entries">
+	{{ range .Entries }}
+	<div class="grid-item">
+		<h3>{{ .Title }}</h3>
+		<details>
+			<p>{{ .Description.String }}</p>
+		</details>
+	</div>
+	{{ end }}
+</div>
 {{ end }}
