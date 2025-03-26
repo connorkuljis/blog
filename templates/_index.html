@@ -9,10 +9,10 @@
 	<!-- header -->
 	{{ template "header" . }}
 
-	<!-- nav -->
-	<nav class="nav">
+	<!-- nav-breadcrumbs -->
+	<nav class="nav-breadcrumbs">
 		<div class="wrapper">
-			<ul class="breadcrumbs" role="list">
+			<ul class="nav-breadcrumbs-list" role="list">
 				<li><a href="/">Home</a></li>
 			</ul>
 		</div>
@@ -28,6 +28,9 @@
 				<!-- hero -->
 				<div class="hero-wrapper">
 					{{ template "bio" . }}
+				</div>
+
+				<div class="socials-wrapper">
 					{{ template "socials" . }}
 				</div>
 
@@ -35,21 +38,18 @@
 
 				{{ if eq .Title "Blog" }}
 				<div class="blog-wrapper">
-					<h2>{{ .Title }}</h2>
 					{{ template "blog" . }}
 				</div>
 				{{ end }}
 
 				{{ if eq .Title "TIL" }}
 				<div class="til-wrapper">
-					<h2>{{ .Title }}</h2>
 					{{ template "til" . }}
 				</div>
 				{{ end }}
 
 				{{ if eq .Title "Projects" }}
 				<div class="projects-wrapper">
-					<h2>{{ .Title }}</h2>
 					{{ template "projects" . }}
 				</div>
 				{{ end }}
@@ -79,13 +79,11 @@
 {{ end }}
 
 {{ define "til" }}
-<div>
-	<ul role="list">
-		{{ range .Entries }}
-		<li><a href="/{{ .Slug }}">{{ .Title }}</a></li>
-		{{ end }}
-	</ul>
-</div>
+<ul class="list-til" role="list">
+	{{ range .Entries }}
+	<li><a href="/{{ .Slug }}">{{ .Title }}</a></li>
+	{{ end }}
+</ul>
 {{ end }}
 
 {{ define "projects" }}

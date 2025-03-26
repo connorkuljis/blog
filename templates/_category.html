@@ -8,9 +8,10 @@
 	<!-- header -->
 	{{ template "header" . }}
 
-	<nav class="nav">
+	<!-- nav-breadcrumbs -->
+	<nav class="nav-breadcrumbs">
 		<div class="wrapper">
-			<ul class="breadcrumbs" role="list">
+			<ul class="nav-breadcrumbs-list" role="list">
 				<li><a href="/">Home</a></li>
 				<span>&#8594;</span>
 				<li><a href="/{{ .Category.Slug }}">{{ .Category.Title }}</a></li>

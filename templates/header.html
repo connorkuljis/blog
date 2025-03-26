@@ -2,7 +2,20 @@
 {{ define "header" }}
 <header class="header">
 	<div class="wrapper">
-		<div><a href="/">{{ .Site.Title }}</a></div>
+		<div class="flex-header">
+			<!-- site title -->
+			<div>
+				<a href="/">{{ .Site.Title }}</a>
+			</div>
+			<!-- site nav -->
+			<nav class="nav-site-categories">
+				<ul class="nav-site-categories-list" role="navigation">
+					{{ range .Site.Categories }}
+					<li><a href="/{{ .Slug }}">{{ .Title }}</a></li>
+					{{ end }}
+				</ul>
+			</nav>
+		</div>
 	</div>
 </header>
 {{ end }}
