@@ -1,0 +1,11 @@
+/* category.css */
+
+.category-entries {
+	margin-top: var(--gap-xl);
+}
+
+.category-entries-list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap-m);
+}

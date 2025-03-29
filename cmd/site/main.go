@@ -26,6 +26,9 @@ const (
 var funcMap = template.FuncMap{
 	"slugify":  util.Slugify,
 	"truncate": util.Truncate,
+	"sub": func(a, b int) int {
+		return a - b
+	},
 }
 
 func main() {

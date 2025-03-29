@@ -1,42 +1,33 @@
 .grid-index {
 	display: grid;
 	grid-template-areas:
-		"A A ."
-		"S S B"
-		"C C B"
-		"C C B"
-		"D D D"
-	;
-	gap: var(--gap-l);
+		"hero-wrapper hero-wrapper ."
+		"blog-wrapper blog-wrapper til-wrapper"
+		"projects-wrapper projects-wrapper projects-wrapper";
+	gap: var(--gap-xl);
 
 	.hero-wrapper {
-		grid-area: A;
-	}
-
-	.socials-wrapper {
-		grid-area: S;
+		grid-area: hero-wrapper;
 	}
 
 	.blog-wrapper {
-		grid-area: C;
+		grid-area: blog-wrapper;
 	}
 
 	.til-wrapper {
-		grid-area: B;
+		grid-area: til-wrapper;
 	}
 
 	.projects-wrapper {
-		grid-area: D;
+		grid-area: projects-wrapper;
 	}
 
 	@media screen and (max-width: 800px) {
 		grid-template-areas:
-			"A A"
-			"S S"
-			"C C"
-			"B B"
-			"D D"
-		;
+			"hero-wrapper"
+			"blog-wrapper"
+			"til-wrapper"
+			"projects-wrapper";
 	}
 }
 
