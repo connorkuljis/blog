@@ -11,8 +11,9 @@
 
 	<!-- nav-breadcrumbs -->
 	<nav class="nav-breadcrumbs">
+		<!-- wrapper -->
 		<div class="wrapper">
-			<ul class="nav-breadcrumbs-list" role="list">
+			<ul class="container nav-breadcrumbs-list bg">
 				<li><a href="/">Home</a></li>
 			</ul>
 		</div>
@@ -22,7 +23,7 @@
 	<!-- main -->
 	<main class="main">
 		<!-- wrapper -->
-		<div class="wrapper">
+		<div class="wrapper container bg">
 			<!-- grid index -->
 			<div class="grid-index">
 				<!-- hero -->
@@ -30,12 +31,7 @@
 					{{ template "bio" . }}
 				</div>
 
-				<div class="socials-wrapper">
-					{{ template "socials" . }}
-				</div>
-
 				{{ range .Site.Categories }}
-
 				{{ if eq .Title "Blog" }}
 				<div class="blog-wrapper">
 					{{ template "blog" . }}
@@ -87,14 +83,17 @@
 {{ end }}
 
 {{ define "projects" }}
-<div class="grid-project-entries">
+<ul class="grid-project-entries" role="list">
 	{{ range .Entries }}
-	<div class="grid-item">
-		<h3>{{ .Title }}</h3>
-		<details>
+	<li class="grid-item">
+		<a href="/{{ .Slug }}">
+			<h3>{{ .Title }}</h3>
 			<p>{{ .Description.String }}</p>
-		</details>
-	</div>
+			{{ if .FeaturedImageURL.Valid }}
+			<img src="{{ .FeaturedImageURL.String }}" alt="{{ .Title }}" />
+			{{ end }}
+		</a>
+	</li>
 	{{ end }}
-</div>
+</ul>
 {{ end }}

@@ -15,7 +15,6 @@ h3,
 h4,
 h5,
 h6 {
-	max-width: 70ch;
 	font-family: var(--ff-heading);
 	font-weight: var(--fw-normal);
 }
@@ -35,7 +34,7 @@ h3 {
 
 p,
 li {
-	max-width: 70ch;
+	max-width: 120ch;
 }
 
 a {

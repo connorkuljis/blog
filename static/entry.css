@@ -3,7 +3,6 @@
 .entry-content {
 	margin-top: var(--gap-xl);
 	line-height: 1.4;
-	max-width: 60ch;
 
 	h1,
 	h2,

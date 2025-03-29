@@ -9,7 +9,7 @@
 	<!-- nav-breadcrumbs -->
 	<nav class="nav-breadcrumbs">
 		<div class="wrapper">
-			<ul class="nav-breadcrumbs-list" role="list">
+			<ul class="container nav-breadcrumbs-list bg">
 				<li><a href="/">Home</a></li>
 				<span>&#8594;</span>
 				<li><a href="/{{ .Entry.Category.Slug }}">{{ .Entry.Category.Title }}</a></li>
@@ -20,22 +20,24 @@
 	</nav>
 
 	<main class="main">
-		<article class="wrapper">
-			<header>
-				<hgroup>
-					<h1>{{ .Entry.Title }}</h1>
-					<h2>{{ .Entry.CreatedAt.Format "Jan 02, 2006"}}</h2>
-					<p>{{ .Entry.WordCount }} words</p>
-				</hgroup>
+		<div class="wrapper bg">
+			<article>
+				<header>
+					<hgroup>
+						<h1>{{ .Entry.Title }}</h1>
+						<h2>{{ .Entry.CreatedAt.Format "Jan 02, 2006"}}</h2>
+						<p>{{ .Entry.WordCount }} words</p>
+					</hgroup>
 
-				{{ if .Entry.FeaturedImageURL.Valid }}
-				<img src="/{{ .Entry.FeaturedImageURL.String }}" />
-				{{ end }}
-			</header>
+					{{ if .Entry.FeaturedImageURL.Valid }}
+					<img src="/{{ .Entry.FeaturedImageURL.String }}" />
+					{{ end }}
+				</header>
 
-			<div class="entry-content">
-				{{ .Entry.Markdown }}
-			</div>
+				<div class="entry-content">
+					{{ .Entry.Markdown }}
+				</div>
+			</article>
 	</main>
 
 	<!-- entry css -->
