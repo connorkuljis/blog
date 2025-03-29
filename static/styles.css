@@ -12,7 +12,7 @@
 
 /* wrapper is a fixed width container */
 .wrapper {
-	max-width: 1000px;
+	max-width: 128rem;
 	margin: 0 auto;
 }
 
@@ -37,6 +37,10 @@
 	}
 }
 
+.site-header {
+	border-bottom: 1px solid var(--clr-body);
+}
+
 .site-header .top-bar {
 	padding-top: var(--gap-l);
 	padding-bottom: var(--gap-l);
@@ -56,6 +60,10 @@
 	display: flex;
 	align-items: center;
 	gap: var(--gap-s);
+}
+
+.nav-breadcrumbs {
+	border-bottom: 1px solid var(--clr-body);
 }
 
 .nav-breadcrumbs-list {

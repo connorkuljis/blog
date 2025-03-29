@@ -31,18 +31,21 @@
 				{{ range .Site.Categories }}
 				{{ if eq .Title "Blog" }}
 				<div class="blog-wrapper">
+					<h2>{{ .Title }}</h2>
 					{{ template "blog" . }}
 				</div>
 				{{ end }}
 
 				{{ if eq .Title "TIL" }}
 				<div class="til-wrapper">
+					<h2>{{ .Title }}</h2>
 					{{ template "til" . }}
 				</div>
 				{{ end }}
 
 				{{ if eq .Title "Projects" }}
 				<div class="projects-wrapper">
+					<h2>{{ .Title }}</h2>
 					{{ template "projects" . }}
 				</div>
 				{{ end }}
@@ -59,12 +62,15 @@
 </html>
 
 {{ define "blog" }}
-<ul class="grid-blog-entries" id="{{ slugify .Title }}" role="list">
+<ul role="list">
 	{{ range .Entries }}
-	<li class="grid-item">
+	<li>
 		{{ $dt := .CreatedAt.Format "2006-01-02" }}
-		<time datetime="{{ $dt }}">{{ $dt }}</time>
 		<a href="/{{.Slug }}">
+			<time datetime="{{ $dt }}">
+				{{ $dt }}
+			</time>
+			-
 			{{ .Title }}
 		</a>
 	</li>
@@ -73,20 +79,26 @@
 {{ end }}
 
 {{ define "til" }}
-<ul class="list-til" role="list">
+<ul role="list">
 	{{ range .Entries }}
-	<li><a href="/{{ .Slug }}">{{ .Title }}</a></li>
+	<li>
+		<a href="/{{ .Slug }}">{{ .Title }}</a>
+	</li>
 	{{ end }}
 </ul>
 {{ end }}
 
 {{ define "projects" }}
-<ul class="grid-project-entries" role="list">
+<ul role="list">
 	{{ range .Entries }}
-	<li class="grid-item">
+	<li>
 		<a href="/{{ .Slug }}">
-			<h3>{{ .Title }}</h3>
-			<p>{{ .Description.String }}</p>
+			<h3>
+				{{ .Title }}
+			</h3>
+			<p>
+				{{ .Description.String }}
+			</p>
 			{{ if .FeaturedImageURL.Valid }}
 			<img src="{{ .FeaturedImageURL.String }}" alt="{{ .Title }}" />
 			{{ end }}
