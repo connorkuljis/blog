@@ -1,33 +1,25 @@
 <!-- header -->
 {{ define "header" }}
-<header class="header">
-	<div class="wrapper">
-		<div class="container grid splash">
-			<div class="grid-item nav-bar">
-				<div class="site-title">
-					<a href="/">{{ .Site.Title }}</a>
-				</div>
-
-				<nav class="nav">
-					<ul class="site-categories-list" role="navigation">
-						{{ $n := len .Site.Categories }}
-						{{ range $i, $category := .Site.Categories }}
-						<li>
-							<a href="/{{ $category.Slug }}">{{ $category.Title }}</a>
-						</li>
-						<!-- add a separator if not the last item -->
-						{{ if not (eq (sub $n 1) $i) }}
-						<span> • </span>
-						{{ end }}
-						{{ end }}
-					</ul>
-				</nav>
-			</div>
-
-			<div class="grid-item socials-wrapper">
-				{{ template "socials" . }}
-			</div>
+<header class="site-header">
+	<div class="container wrapper top-bar">
+		<div class="site-title">
+			<a href="/">{{ .Site.Title }}</a>
 		</div>
+
+		<nav class="site-nav">
+			<ul role="navigation">
+				{{ $n := len .Site.Categories }}
+				{{ range $i, $category := .Site.Categories }}
+				<li>
+					<a href="/{{ $category.Slug }}">{{ $category.Title }}</a>
+				</li>
+				<!-- add a separator if not the last item -->
+				{{ if not (eq (sub $n 1) $i) }}
+				<span> • </span>
+				{{ end }}
+				{{ end }}
+			</ul>
+		</nav>
 	</div>
 </header>
 {{ end }}

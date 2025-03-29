@@ -1,12 +1,13 @@
 .grid-index {
 	display: grid;
 	grid-template-areas:
-		"hero-wrapper hero-wrapper ."
+		"hero-wrapper hero-wrapper hero-wrapper"
 		"blog-wrapper blog-wrapper til-wrapper"
 		"projects-wrapper projects-wrapper projects-wrapper";
 	gap: var(--gap-xl);
 
 	.hero-wrapper {
+		text-align: center;
 		grid-area: hero-wrapper;
 	}
 
