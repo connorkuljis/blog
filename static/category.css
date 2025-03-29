@@ -1,5 +1,14 @@
 /* category.css */
 
+.category {
+	padding-top: var(--gap-xl);
+	padding-bottom: var(--gap-xxl);
+
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap-xl);
+}
+
 .category-entries {
 	margin-top: var(--gap-xl);
 }
