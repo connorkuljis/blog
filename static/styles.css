@@ -2,69 +2,53 @@
 @import url("/styles/variables.css");
 @import url("/styles/global.css");
 
+/* main layout takes the full height of the viewport and is a single column */
 .grid-layout {
 	display: grid;
 	min-height: 100dvh;
 	grid-template-columns: minmax(0, 1fr);
-	grid-template-rows: auto auto 1fr;
-	background-image: url("/images/bg.jpg");
+	grid-template-rows: auto auto 1fr auto;
 }
 
-.main>.wrapper {
-	height: 100%;
-	padding-top: var(--gap-l);
-}
-
+/* wrapper is a fixed width container */
 .wrapper {
-	max-width: 64rem;
+	max-width: 1000px;
 	margin: 0 auto;
 }
 
+/* container is a fluid width container */
 .container {
 	padding-left: 3%;
 	padding-right: 3%;
 }
 
-.splash {
-	background-image: linear-gradient(to bottom, black 0%, #3c5e6d 20%);
-	background-attachment: fixed;
-	background-size: cover;
-	color: white;
-}
-
-.header .grid {
-	height: 225px;
-	padding-top: var(--gap-l);
-	padding-bottom: var(--gap-l);
-
+.full-bleed-wrapper {
 	display: grid;
-	grid-template-rows: auto 1fr auto;
-	gap: var(--gap-m);
-}
+	grid-template-columns: 1fr min(42rem, calc(100% - 6%)) 1fr;
 
-.header .socials-wrapper {
-	grid-row: -1;
-	display: flex;
-	flex-direction: row-reverse;
-}
+	>* {
+		grid-column: 2;
+	}
 
-.header .socials-wrapper .socials-list {
-	display: flex;
-	gap: var(--gap-s);
-}
-
-.header .nav-bar {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: var(--gap-m);
-
-	.nav-site-categories {
-		flex: 1;
+	>p:has(img),
+	.full-bleed {
+		width: 100%;
+		grid-column: 1 / -1;
 	}
 }
 
-.site-categories-list {
+.site-header .top-bar {
+	padding-top: var(--gap-l);
+	padding-bottom: var(--gap-l);
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: var(--gap-m);
+	flex-wrap: wrap;
+}
+
+.site-header .site-nav ul[role="navigation"] {
 	list-style: none;
 	margin: 0;
 	padding: 0;
@@ -76,10 +60,10 @@
 
 .nav-breadcrumbs-list {
 	list-style-type: none;
+
 	padding-top: var(--gap-s);
 	padding-bottom: var(--gap-s);
-	border-top: 1px solid var(--clr-neutral-300);
-	border-bottom: 1px solid var(--clr-neutral-300);
+
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;

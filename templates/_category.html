@@ -10,13 +10,11 @@
 
 	<!-- nav-breadcrumbs -->
 	<nav class="nav-breadcrumbs">
-		<div class="wrapper">
-			<ul class="container nav-breadcrumbs-list bg">
-				<li><a href="/">Home</a></li>
-				<span>&#8594;</span>
-				<li><a href="/{{ .Category.Slug }}">{{ .Category.Title }}</a></li>
-			</ul>
-		</div>
+		<ul class="container wrapper nav-breadcrumbs-list">
+			<li><a href="/">Home</a></li>
+			<span>&#8594;</span>
+			<li><a href="/{{ .Category.Slug }}">{{ .Category.Title }}</a></li>
+		</ul>
 	</nav>
 
 	<!-- main -->
@@ -48,6 +46,8 @@
 		</div>
 		<link rel="stylesheet" href="/category.css" />
 	</main>
+
+	{{ template "footer" . }}
 </body>
 
 </html>
