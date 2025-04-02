@@ -1,41 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Fira+Code:wght@300..700&display=swap');
 
 :root {
 	/* font family */
-	--ff-base: "Inter", sans-serif;
-	--ff-heading: "Inter", serif;
+	--ff-base: "Atkinson Hyperlegible", sans-serif;
+	--ff-heading: "Atkinson Hyperlegible", serif;
 	--ff-mono: "Fira Code", monospaced;
-
-	/* font weight */
-	--fw-light: 200;
-	--fw-normal: 400;
-	--fw-semi-bold: 600;
-	--fw-bold: 700;
-
-	/* colors */
-	--clr-neutral-900: hsl(0, 0%, 0%);
-	--clr-neutral-800: hsl(0, 0%, 10%);
-	--clr-neutral-700: hsl(0, 0%, 25%);
-	--clr-neutral-600: hsl(0, 0%, 40%);
-	--clr-neutral-500: hsl(0, 0%, 50%);
-	--clr-neutral-400: hsl(0, 0%, 60%);
-	--clr-neutral-300: hsl(0, 0%, 75%);
-	--clr-neutral-200: hsl(0, 0%, 90%);
-	--clr-neutral-100: hsl(0, 0%, 100%);
-
-	--clr-blue-100: hsl(200, 100%, 90%);
-	--clr-blue-200: hsl(200, 100%, 80%);
-
-	/* color layers */
-	--clr-bg: var(--clr-neutral-100);
-	--clr-body: var(--clr-neutral-800);
-	--clr-heading: var(--clr-neutral-900);
-	--clr-accent: var(--clr-blue-300);
+	--line-height: 1.4;
 
 	/* font size */
-	--fs: 1rem;
-	--line-height: 1.5;
-
+	--fs: 1.2rem;
 	--fs-200: calc(var(--fs) * 0.75);
 	--fs-300: calc(var(--fs) * 0.825);
 	--fs-400: var(--fs);
@@ -45,6 +18,12 @@
 	--fs-800: calc(var(--fs) * 2.5);
 	--fs-900: calc(var(--fs) * 3);
 
+	/* font weight */
+	--fw-light: 200;
+	--fw-normal: 399;
+	--fw-semi-bold: 600;
+	--fw-bold: 700;
+
 	/* spacing */
 	--gap: 1rem;
 	--gap-s: calc(var(--gap) * 0.618);
@@ -52,16 +31,10 @@
 	--gap-l: calc(var(--gap) * 1.618);
 	--gap-xl: calc(var(--gap-l) * 1.618);
 	--gap-xxl: calc(var(--gap-xl) * 1.618);
-}
 
-/* Dark Mode Theme */
-@media (prefers-color-scheme: dark) {
-	:root {
-		/* color layers */
-		--clr-bg: var(--clr-neutral-900);
-		--clr-body: var(--clr-neutral-300);
-		--clr-heading: var(--clr-neutral-100);
-		--clr-accent: var(--clr-blue-200);
-		/* Slightly different brighter blue for dark mode */
-	}
+	/* color layers */
+	--clr-bg: var(--clr-neutral-100);
+	--clr-body: var(--clr-neutral-800);
+	--clr-heading: var(--clr-neutral-900);
+	--clr-accent: var(--clr-blue-300);
 }
