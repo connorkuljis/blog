@@ -4,7 +4,7 @@
 <!-- head -->
 {{ template "head" . }}
 
-<body class="grid-layout">
+<body class="layout">
 	<!-- header -->
 	{{ template "header" . }}
 
@@ -18,36 +18,31 @@
 	</nav>
 
 	<!-- main -->
-	<main class="main">
-		<!-- wrapper -->
-		<div class="wrapper container bg">
-			<div class="category">
-				<!-- hgroup -->
-				<hgroup class="hgroup">
-					<h1>{{ .Category.Title }}</h1>
-					<h2>{{ .Category.Description }}</h2>
-				</hgroup>
-
+	<main id="category">
+		<div class="content wrapper container">
+			<div class="entries-wrapper">
 				<!-- entries list -->
-				<div class="category-entries">
-					<ul class="category-entries-list" role="list">
-						{{ range $entry := .Category.Entries }}
-						<li>
-							<a href="/{{ $entry.Slug }}">
-								<h2>{{ $entry.Title }}</h2>
-								<p>{{ $entry.Description.String }}</p>
-								<p>{{ $entry.CreatedAt.Format "2006 Jan 2" }}</p>
-							</a>
-						</li>
-						{{ end }}
-					</ul>
-				</div>
+				{{ template "category-entries-list" . }}
 			</div>
 		</div>
-		<link rel="stylesheet" href="/category.css" />
 	</main>
 
 	{{ template "footer" . }}
 </body>
 
 </html>
+
+{{ define "category-entries-list" }}
+<ul class="entries-list" role="list">
+	{{ range $entry := .Category.Entries }}
+	<li class="entry-item">
+		<a href="/{{ $entry.Slug }}">
+			{{ $entry.Title }}
+		</a>
+		<span>
+			{{ $entry.CreatedAt.Format "2006 Jan 2" }}
+		</span>
+	</li>
+	{{ end }}
+</ul>
+{{ end }}

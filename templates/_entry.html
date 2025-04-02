@@ -3,7 +3,7 @@
 <html lang="en">
 {{ template "head" . }}
 
-<body class="grid-layout">
+<body class="layout">
 	{{ template "header" . }}
 
 	<!-- nav-breadcrumbs -->
@@ -17,10 +17,10 @@
 		</ul>
 	</nav>
 
-	<main class="main">
-		<div class="wrapper bg">
+	<main id="entry">
+		<div class="wrapper content">
 			<article>
-				<header class="full-bleed-wrapper">
+				<header class="centered heading full-bleed-wrapper">
 					<hgroup>
 						<h1>{{ .Entry.Title }}</h1>
 						<h2>{{ .Entry.CreatedAt.Format "Jan 02, 2006"}}</h2>
@@ -28,21 +28,20 @@
 					</hgroup>
 
 					{{ if .Entry.FeaturedImageURL.Valid }}
-					<div class="full-bleed">
+					<div class="featured-image-wrapper full-bleed">
 						<img src="{{ .Entry.FeaturedImageURL.String }}" />
 					</div>
 					{{ end }}
 				</header>
 
-				<div class="content full-bleed-wrapper">
+				<div class="markdown full-bleed-wrapper">
 					{{ .Entry.Markdown }}
 				</div>
 			</article>
+		</div>
 	</main>
 
 	{{ template "footer" . }}
-	<!-- entry css -->
-	<link rel="stylesheet" href="/entry.css" />
 </body>
 
 </html>

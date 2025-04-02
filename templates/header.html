@@ -3,11 +3,11 @@
 <header class="site-header">
 	<div class="container wrapper top-bar">
 		<div class="site-title">
-			<a href="/">{{ .Site.Title }}</a>
+			<a href="/">Oaku's Weblog</a>
 		</div>
 
 		<nav class="site-nav">
-			<ul role="navigation">
+			<ul class="site-nav-list" role="navigation">
 				{{ $n := len .Site.Categories }}
 				{{ range $i, $category := .Site.Categories }}
 				<li>
