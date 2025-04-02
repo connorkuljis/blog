@@ -4,10 +4,12 @@ import (
 	"bufio"
 	"context"
 	_ "embed"
+	"errors"
 	"fmt"
 	"log"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 
@@ -19,6 +21,9 @@ import (
 )
 
 const sqlxKey = "db"
+
+// ErrSelectionCancelled is a specific error returned when the user quits.
+var ErrSelectionCancelled = errors.New("selection cancelled by user")
 
 func main() {
 	cmd := &cli.Command{
@@ -46,9 +51,9 @@ func main() {
 						Action: createEntry,
 					},
 					{
-						Name:   "edit",
-						Usage:  "Edit an entry by id.",
-						Action: editEntry,
+						Name:   "update",
+						Usage:  "Update existing entries.",
+						Action: updateEntry,
 					},
 					{
 						Name:   "delete",
@@ -163,39 +168,72 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 	return nil
 }
 
-func editEntry(ctx context.Context, c *cli.Command) error {
+func updateEntry(ctx context.Context, c *cli.Command) error {
 	db := ctx.Value(sqlxKey).(*sqlx.DB)
-
 	entryRepo := store.NewEntryRepository(db)
-	entries, err := entryRepo.ReadAllEntries()
-	if err != nil {
-		return err
+	reader := bufio.NewReader(os.Stdin)
+
+	for {
+		entries, err := entryRepo.ReadAllEntries()
+		if err != nil {
+			return err
+		}
+
+		fmt.Println("\nPlease select an item from the list")
+		for i, entry := range entries {
+			fmt.Printf("%d. %s\n", i+1, entry.Title)
+		}
+
+		fmt.Printf("Enter the number (1-%d) or 'q' to quit: ", len(entries))
+
+		// Read input until newline
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			// Handle potential I/O errors during reading
+			return fmt.Errorf("failed to read input: %w", err)
+		}
+
+		// Clean up the input string (remove newline, spaces)
+		input = strings.TrimSpace(input)
+
+		// 5. Check for quit command (case-insensitive)
+		if strings.ToLower(input) == "q" {
+			fmt.Println("\nSelection cancelled.")
+			return ErrSelectionCancelled // Return specific error for cancellation
+		}
+
+		// 6. Attempt to convert input to an integer
+		choiceNum, err := strconv.Atoi(input)
+		if err != nil {
+			// Input was not a valid integer (and not 'q')
+			fmt.Println("Invalid input. Please enter a number or 'q'.")
+			continue // Ask the user again
+		}
+
+		// 7. Validate the number is within the allowed range (1 to len(data))
+		if choiceNum >= 1 && choiceNum <= len(entries) {
+			// Calculate the 0-based index
+			selectedIndex := choiceNum - 1
+			// Get the selected item
+			selectedItem := entries[selectedIndex]
+
+			err = editEntryContent(&selectedItem)
+			if err != nil {
+				return err
+			}
+
+			err = entryRepo.UpdateEntry(&selectedItem)
+			if err != nil {
+				return err
+			}
+
+			fmt.Println("Updated entry:", selectedItem.Title)
+		} else {
+			// Number was outside the valid range
+			fmt.Printf("Invalid choice. Please enter a number between 1 and %d or 'q'.\n", len(entries))
+			// Loop continues, asking the user again
+		}
 	}
-	printEntries(entries)
-
-	var index int
-	fmt.Printf("index: ")
-	fmt.Scanf("%d", &index)
-
-	if index < 0 || index > len(entries)-1 {
-		return fmt.Errorf("Invalid index")
-	}
-
-	entry := &entries[index]
-
-	err = editEntryContent(entry)
-	if err != nil {
-		return err
-	}
-
-	err = entryRepo.UpdateEntry(entry)
-	if err != nil {
-		return err
-	}
-
-	fmt.Println("Updated entry:", entry.Title)
-
-	return nil
 }
 
 // deleteEntry deletes an entry by id.
