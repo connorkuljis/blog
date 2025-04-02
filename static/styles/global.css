@@ -32,14 +32,10 @@ h3 {
 	font-size: var(--fs-500);
 }
 
-p,
-li {
-	max-width: 120ch;
-}
-
 a {
 	text-decoration: none;
-	color: inherit;
+	/* color: inherit; */
+	color: royalblue;
 }
 
 a:hover {
@@ -51,14 +47,14 @@ b {
 }
 
 pre {
+	font-size: var(--fs-300);
+	padding: var(--gap-l);
+	margin-top: var(--gap-xl) !important;
+	margin-bottom: var(--gap-xl) !important;
+	margin-left: var(--gap-m);
+	margin-right: var(--gap-m);
+	border: 1px solid #ccc;
 	overflow-x: auto;
-
-	padding: 0.825rem;
-	border-radius: 0.125rem;
-
-	background-color: var(--clr-neutral-100);
-
-	border: 1px solid var(--clr-neutral-600);
 }
 
 code {
