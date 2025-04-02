@@ -1,3 +1,5 @@
+all: site cms
+
 site:
 	go run -v ./cmd/site
 
@@ -6,3 +8,6 @@ cms: clean
 
 clean:
 	rm -f ./cms
+
+serve:
+	./scripts/serve.sh
