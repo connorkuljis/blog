@@ -3,52 +3,92 @@
 <html lang="en">
 
 
-
 <head>
 	<title>kuljis.xyz</title>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="stylesheet" href="/index.css" />
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap"
-		rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
+	<link rel="icon" href="/icon.png" />
+	<link rel="stylesheet" href="/styles.css" />
 </head>
 
 
-<body>
+<body class="layout">
 	
-<header class="header">
-	<div class="wrapper">
-		<h1 class="title"><a href="/">kuljis.xyz</a></h1>
+<header class="site-header container wrapper">
+	<div class="site-title">
+		<a href="/">Oaku's Weblog</a>
 	</div>
+
+	<nav class="site-nav">
+		<ul role="navigation">
+			
+			
+			<li>
+				<a href="/blog">Blog</a>
+			</li>
+			
+			
+			
+			
+			
+			<li>
+				<a href="/til">TIL</a>
+			</li>
+			
+			
+			
+			
+			
+			<li>
+				<a href="/projects">Projects</a>
+			</li>
+			
+			
+			
+		</ul>
+	</nav>
 </header>
 
 
-	<main class="entry-page">
-		<section class="wrapper">
-			<nav>
-				<ul class="breadcrumbs" role="list">
-					<li><a href="/">Home</a></li>
-					<span>&#8594;</span>
-					<li><a href="/til">TIL</a></li>
-					<span>&#8594;</span>
-					<li><a href="/til/nvme-health-self-asessment-apple-m1">NVMe Health Self Asessment (Apple M1)</a></li>
-				</ul>
-			</nav>
+	
+	<nav id="breadcrumbs" class="breadcrumbs container wrapper ">
+		<ul role="navigation">
+			<li>
+				<a href="/">Home</a>
+			</li>
 
-			<div>
-				<h1 class="heading">NVMe Health Self Asessment (Apple M1)</h1>
-				<h2 class="subheading">Dec 25, 2024</h2>
-				<p>632 words</p>
-			</div>
+			<span>/</span>
 
-			
-		</section>
+			<li>
+				<a href="/til">
+					TIL
+				</a>
+			</li>
 
-		<section class="wrapper content">
-			<p><code>brew install smartmontools</code></p>
+			<span>/</span>
+
+			<li>
+				<a href="/til/how-to-check-the-health-of-a-ssd-with-smartmontools">
+					How to check the health of a SSD with smartmontools
+				</a>
+			</li>
+		</ul>
+	</nav>
+
+	<main id="entry" class="main wrapper">
+		<article class="article">
+			<header class="header full-bleed-wrapper">
+				<hgroup class="hgroup centered">
+					<h1>How to check the health of a SSD with smartmontools</h1>
+					<h2>Dec 25, 2024</h2>
+					<p>632 words</p>
+				</hgroup>
+
+				
+			</header>
+
+			<main class="markdown full-bleed-wrapper">
+				<p><code>brew install smartmontools</code></p>
 <pre><code>sudo smartctl -a /dev/disk0
 
 smartctl 7.4 2023-08-01 r5530 [Darwin 23.4.0 arm64] (local build)
@@ -94,8 +134,34 @@ Media and Data Integrity Errors:    0
 Error Information Log Entries:      0
 </code></pre>
 
-		</section>
+			</main>
+
+			<footer class="full-bleed-wrapper">
+				<div>
+					<a href="/til">
+						⏎ back to til
+					</a>
+				</div>
+			</footer>
+		</article>
 	</main>
+
+	
+<footer class="footer wrapper container">
+	<div class="socials-wrapper">
+		
+<ul role="list">
+	<li>
+		<a href="https://github.com/connorkuljis">Github</a>
+	</li>
+	<li>
+		<a href="https://linkedin.com/in/connor-kuljis">Linkedin</a>
+	</li>
+</ul>
+
+	</div>
+</footer>
+
 </body>
 
 </html>

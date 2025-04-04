@@ -1,25 +1,23 @@
 <!-- header -->
 {{ define "header" }}
-<header class="site-header">
-	<div class="container wrapper top-bar">
-		<div class="site-title">
-			<a href="/">Oaku's Weblog</a>
-		</div>
-
-		<nav class="site-nav">
-			<ul class="site-nav-list" role="navigation">
-				{{ $n := len .Site.Categories }}
-				{{ range $i, $category := .Site.Categories }}
-				<li>
-					<a href="/{{ $category.Slug }}">{{ $category.Title }}</a>
-				</li>
-				<!-- add a separator if not the last item -->
-				{{ if not (eq (sub $n 1) $i) }}
-				<span> • </span>
-				{{ end }}
-				{{ end }}
-			</ul>
-		</nav>
+<header class="site-header container wrapper">
+	<div class="site-title">
+		<a href="/">Oaku's Weblog</a>
 	</div>
+
+	<nav class="site-nav">
+		<ul role="navigation">
+			{{ $n := len .Site.Categories }}
+			{{ range $i, $category := .Site.Categories }}
+			<li>
+				<a href="/{{ $category.Slug }}">{{ $category.Title }}</a>
+			</li>
+			<!-- add a separator if not the last item -->
+			{{ if not (eq (sub $n 1) $i) }}
+			<!-- <span> • </span> -->
+			{{ end }}
+			{{ end }}
+		</ul>
+	</nav>
 </header>
 {{ end }}

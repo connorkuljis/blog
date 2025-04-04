@@ -4,70 +4,154 @@
 
 
 
-
 <head>
 	<title>kuljis.xyz</title>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="stylesheet" href="/index.css" />
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap"
-		rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
+	<link rel="icon" href="/icon.png" />
+	<link rel="stylesheet" href="/styles.css" />
 </head>
 
 
-<body>
+<body class="layout">
 	
 	
-<header class="header">
-	<div class="wrapper">
-		<h1 class="title"><a href="/">kuljis.xyz</a></h1>
+<header class="site-header container wrapper">
+	<div class="site-title">
+		<a href="/">Oaku's Weblog</a>
 	</div>
+
+	<nav class="site-nav">
+		<ul role="navigation">
+			
+			
+			<li>
+				<a href="/blog">Blog</a>
+			</li>
+			
+			
+			
+			
+			
+			<li>
+				<a href="/til">TIL</a>
+			</li>
+			
+			
+			
+			
+			
+			<li>
+				<a href="/projects">Projects</a>
+			</li>
+			
+			
+			
+		</ul>
+	</nav>
 </header>
 
 
 	
-	<main class="category-page">
-		<div class="wrapper">
-			<section>
-				<nav>
-					<ul class="breadcrumbs" role="list">
-						<li><a href="/">Home</a></li>
-						<span>&#8594;</span>
-						<li><a href="/til">TIL</a></li>
-					</ul>
-				</nav>
+	<nav id="breadcrumbs" class=" breadcrumbs container wrapper">
+		<ul role="navigation">
+			<li>
+				<a href="/">Home</a>
+			</li>
 
-				<div>
-					<h1 class="heading">TIL</h1>
-					<h2 class="subheading">Things i&#39;ve learned / collected</h2>
-				</div>
-			</section>
+			<span>/</span>
 
+			<li>
+				<a href="/til">
+					TIL
+				</a>
+			</li>
+		</ul>
+	</nav>
 
-			<section>
-				<ul class="categories-entries-list" role="list">
-					
-					<li>
-						<a href="/til/measuring-execution-time-in-sqlite">
-							<h2>Measuring execution time in SQLite</h2>
-							<p>2025 Feb 12</p>
-						</a>
-					</li>
-					
-					<li>
-						<a href="/til/nvme-health-self-asessment-apple-m1">
-							<h2>NVMe Health Self Asessment (Apple M1)</h2>
-							<p>2024 Dec 25</p>
-						</a>
-					</li>
-					
-				</ul>
-			</section>
+	
+	<main class="main wrapper container" id="til-entries">
+		<div>
+			<h1>TIL</h1>
+			<p>Today I learned</p>
 		</div>
+		
+
+
+
+
+<section id="til-entries-2025" class="category-year-entries">
+	<h2>2025</h2>
+	<div>
+		<ul role="list">
+			
+			<li class="grid-entry-preview">
+				<a href="/til/one-day-this-blog-will-die">
+					<h3>One Day This Blog Will Die</h3>
+					<p></p>
+				</a>
+				<time>2025 Apr 02</time>
+			</li>
+			
+			<li class="grid-entry-preview">
+				<a href="/til/the-price-of-gold-is-up-bigly-aud">
+					<h3>The Price of Gold is Up Bigly (AUD)</h3>
+					<p></p>
+				</a>
+				<time>2025 Apr 01</time>
+			</li>
+			
+			<li class="grid-entry-preview">
+				<a href="/til/how-to-measure-how-long-a-query-takes-in-sqlite">
+					<h3>How to measure how long a query takes in SQLite</h3>
+					<p></p>
+				</a>
+				<time>2025 Feb 12</time>
+			</li>
+			
+		</ul>
+	</div>
+</section>
+
+
+<section id="til-entries-2024" class="category-year-entries">
+	<h2>2024</h2>
+	<div>
+		<ul role="list">
+			
+			<li class="grid-entry-preview">
+				<a href="/til/how-to-check-the-health-of-a-ssd-with-smartmontools">
+					<h3>How to check the health of a SSD with smartmontools</h3>
+					<p></p>
+				</a>
+				<time>2024 Dec 25</time>
+			</li>
+			
+		</ul>
+	</div>
+</section>
+
+
 	</main>
+
+	
+<footer class="footer wrapper container">
+	<div class="socials-wrapper">
+		
+<ul role="list">
+	<li>
+		<a href="https://github.com/connorkuljis">Github</a>
+	</li>
+	<li>
+		<a href="https://linkedin.com/in/connor-kuljis">Linkedin</a>
+	</li>
+</ul>
+
+	</div>
+</footer>
+
 </body>
 
 </html>
+
+

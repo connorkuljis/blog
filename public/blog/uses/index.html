@@ -3,52 +3,92 @@
 <html lang="en">
 
 
-
 <head>
 	<title>kuljis.xyz</title>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="stylesheet" href="/index.css" />
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap"
-		rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
+	<link rel="icon" href="/icon.png" />
+	<link rel="stylesheet" href="/styles.css" />
 </head>
 
 
-<body>
+<body class="layout">
 	
-<header class="header">
-	<div class="wrapper">
-		<h1 class="title"><a href="/">kuljis.xyz</a></h1>
+<header class="site-header container wrapper">
+	<div class="site-title">
+		<a href="/">Oaku's Weblog</a>
 	</div>
+
+	<nav class="site-nav">
+		<ul role="navigation">
+			
+			
+			<li>
+				<a href="/blog">Blog</a>
+			</li>
+			
+			
+			
+			
+			
+			<li>
+				<a href="/til">TIL</a>
+			</li>
+			
+			
+			
+			
+			
+			<li>
+				<a href="/projects">Projects</a>
+			</li>
+			
+			
+			
+		</ul>
+	</nav>
 </header>
 
 
-	<main class="entry-page">
-		<section class="wrapper">
-			<nav>
-				<ul class="breadcrumbs" role="list">
-					<li><a href="/">Home</a></li>
-					<span>&#8594;</span>
-					<li><a href="/blog">Blog</a></li>
-					<span>&#8594;</span>
-					<li><a href="/blog/uses">Uses</a></li>
-				</ul>
-			</nav>
+	
+	<nav id="breadcrumbs" class="breadcrumbs container wrapper ">
+		<ul role="navigation">
+			<li>
+				<a href="/">Home</a>
+			</li>
 
-			<div>
-				<h1 class="heading">Uses</h1>
-				<h2 class="subheading">Dec 31, 2024</h2>
-				<p>158 words</p>
-			</div>
+			<span>/</span>
 
-			
-		</section>
+			<li>
+				<a href="/blog">
+					Blog
+				</a>
+			</li>
 
-		<section class="wrapper content">
-			<p>The programs I install on my machine(s).</p>
+			<span>/</span>
+
+			<li>
+				<a href="/blog/uses">
+					Uses
+				</a>
+			</li>
+		</ul>
+	</nav>
+
+	<main id="entry" class="main wrapper">
+		<article class="article">
+			<header class="header full-bleed-wrapper">
+				<hgroup class="hgroup centered">
+					<h1>Uses</h1>
+					<h2>Dec 31, 2024</h2>
+					<p>158 words</p>
+				</hgroup>
+
+				
+			</header>
+
+			<main class="markdown full-bleed-wrapper">
+				<p>The programs I install on my machine(s).</p>
 <h2 id="for-the-terminal-">For the Terminal 👾</h2>
 <ul>
 <li>
@@ -125,8 +165,34 @@
 </li>
 </ul>
 
-		</section>
+			</main>
+
+			<footer class="full-bleed-wrapper">
+				<div>
+					<a href="/blog">
+						⏎ back to blog
+					</a>
+				</div>
+			</footer>
+		</article>
 	</main>
+
+	
+<footer class="footer wrapper container">
+	<div class="socials-wrapper">
+		
+<ul role="list">
+	<li>
+		<a href="https://github.com/connorkuljis">Github</a>
+	</li>
+	<li>
+		<a href="https://linkedin.com/in/connor-kuljis">Linkedin</a>
+	</li>
+</ul>
+
+	</div>
+</footer>
+
 </body>
 
 </html>

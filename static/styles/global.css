@@ -1,12 +1,13 @@
 /* styles/global.css */
 
 body {
-	font-family: var(--ff-base);
+	font-family: var(--ff-base), -apple-system, -system-ui, sans-serif;
 	font-style: normal;
 	font-size: var(--fs-400);
+	line-height: var(--line-height);
+
 	color: var(--clr-body);
 	background-color: var(--clr-bg);
-	line-height: var(--line-height);
 }
 
 h1,
@@ -33,26 +34,18 @@ h3 {
 }
 
 a {
-	text-decoration: none;
-	/* color: inherit; */
-	color: royalblue;
+	text-decoration-style: dotted;
+	color: var(--clr-accent);
 }
 
-a:hover {
-	text-decoration: underline;
-}
+a:hover {}
 
 b {
 	font-weight: var(--fw-semi-bold);
 }
 
 pre {
-	font-size: var(--fs-300);
 	padding: var(--gap-l);
-	margin-top: var(--gap-xl) !important;
-	margin-bottom: var(--gap-xl) !important;
-	margin-left: var(--gap-m);
-	margin-right: var(--gap-m);
 	border: 1px solid #ccc;
 	overflow-x: auto;
 }
@@ -64,4 +57,11 @@ code {
 
 hr {
 	width: 100%;
+}
+
+[role="list"],
+[role="navigation"] {
+	list-style: none;
+	margin: 0;
+	padding: 0;
 }

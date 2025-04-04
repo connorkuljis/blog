@@ -9,20 +9,17 @@
 	<!-- header -->
 	{{ template "header" . }}
 
-	<!-- nav-breadcrumbs -->
-	<nav class="nav-breadcrumbs">
-		<ul class="container wrapper nav-breadcrumbs-list">
+	<!-- breadcrumbs -->
+	<nav id="breadcrumbs" class="breadcrumbs container wrapper">
+		<ul role="list">
 			<li><a href="/">Home</a></li>
 		</ul>
 	</nav>
 
 	<!-- main -->
-	<main id="index">
-		<!-- wrapper -->
-		<div class="content wrapper container">
-			<div>
-				{{ template "bio" . }}
-			</div>
+	<main id="index" class="main wrapper container">
+		<div>
+			{{ template "bio" . }}
 		</div>
 	</main>
 

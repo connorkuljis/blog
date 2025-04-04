@@ -8,23 +8,30 @@
 	<!-- header -->
 	{{ template "header" . }}
 
-	<!-- nav-breadcrumbs -->
-	<nav class="nav-breadcrumbs">
-		<ul class="container wrapper nav-breadcrumbs-list">
-			<li><a href="/">Home</a></li>
-			<span>&#8594;</span>
-			<li><a href="/{{ .Category.Slug }}">{{ .Category.Title }}</a></li>
+	<!-- breadcrumbs -->
+	<nav id="breadcrumbs" class=" breadcrumbs container wrapper">
+		<ul role="navigation">
+			<li>
+				<a href="/">Home</a>
+			</li>
+
+			<span>/</span>
+
+			<li>
+				<a href="/{{ .Category.Slug }}">
+					{{ .Category.Title }}
+				</a>
+			</li>
 		</ul>
 	</nav>
 
 	<!-- main -->
-	<main id="category">
-		<div class="content wrapper container">
-			<div class="entries-wrapper">
-				<!-- entries list -->
-				{{ template "category-entries-list" . }}
-			</div>
+	<main class="main wrapper container" id="{{ slugify .Category.Title }}-entries">
+		<div>
+			<h1>{{ .Category.Title }}</h1>
+			<p>{{ .Category.Description }}</p>
 		</div>
+		{{ template "category-entries-list" . }}
 	</main>
 
 	{{ template "footer" . }}
@@ -33,16 +40,25 @@
 </html>
 
 {{ define "category-entries-list" }}
-<ul class="entries-list" role="list">
-	{{ range $entry := .Category.Entries }}
-	<li class="entry-item">
-		<a href="/{{ $entry.Slug }}">
-			{{ $entry.Title }}
-		</a>
-		<span>
-			{{ $entry.CreatedAt.Format "2006 Jan 2" }}
-		</span>
-	</li>
-	{{ end }}
-</ul>
+{{ $title := slugify .Category.Title }}
+{{ $groupedEntries := groupByYear .Category.Entries }}
+{{ range $yearEntries := $groupedEntries }}
+{{ $year := (index $yearEntries 0).CreatedAt.Year }}
+<section id="{{ $title }}-entries-{{ $year }}" class="category-year-entries">
+	<h2>{{ $year }}</h2>
+	<div>
+		<ul role="list">
+			{{ range $entry := $yearEntries }}
+			<li class="grid-entry-preview">
+				<a href="/{{ $entry.Slug }}">
+					<h3>{{ $entry.Title }}</h3>
+					<p>{{ $entry.Description.String }}</p>
+				</a>
+				<time>{{ $entry.CreatedAt.Format "2006 Jan 02" }}</time>
+			</li>
+			{{ end }}
+		</ul>
+	</div>
+</section>
+{{ end }}
 {{ end }}
