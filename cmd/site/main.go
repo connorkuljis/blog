@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"sort"
 	"time"
 
 	"github.com/connorkuljis/blog/internal/model"
@@ -28,6 +29,44 @@ var funcMap = template.FuncMap{
 	"truncate": util.Truncate,
 	"sub": func(a, b int) int {
 		return a - b
+	},
+	"groupByYear": func(entries []model.Entry) [][]model.Entry {
+		// Handle empty or nil input slice gracefully
+		if len(entries) == 0 {
+			return [][]model.Entry{} // Return an empty slice, not nil
+		}
+
+		// 1. Use a map to group entries by year.
+		//    Key: Year (int)
+		//    Value: Slice of entries for that year ([]model.Entry)
+		groups := make(map[int][]model.Entry)
+
+		for _, entry := range entries {
+			year := entry.CreatedAt.Year()
+			// Append the entry to the slice associated with its year.
+			// If the key (year) doesn't exist yet, it will be created with a new slice.
+			groups[year] = append(groups[year], entry)
+		}
+
+		// 2. Get the years (keys) from the map to sort them.
+		years := make([]int, 0, len(groups))
+		for year := range groups {
+			years = append(years, year)
+		}
+
+		// 3. Sort the years chronologically.
+		sort.Sort(sort.Reverse(sort.IntSlice(years)))
+
+		// 4. Build the final result slice, ordered by the sorted years.
+		//    Pre-allocate capacity for efficiency.
+		result := make([][]model.Entry, 0, len(years))
+		for _, year := range years {
+			// Append the slice of entries for the current year (from the map)
+			// to the result slice.
+			result = append(result, groups[year])
+		}
+
+		return result
 	},
 }
 

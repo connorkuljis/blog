@@ -6,39 +6,59 @@
 <body class="layout">
 	{{ template "header" . }}
 
-	<!-- nav-breadcrumbs -->
-	<nav class="nav-breadcrumbs">
-		<ul class="container wrapper nav-breadcrumbs-list">
-			<li><a href="/">Home</a></li>
-			<span>&#8594;</span>
-			<li><a href="/{{ .Entry.Category.Slug }}">{{ .Entry.Category.Title }}</a></li>
-			<span>&#8594;</span>
-			<li><a href="/{{ .Entry.Slug }}">{{ .Entry.Title }}</a></li>
+	<!-- breadcrumbs -->
+	<nav id="breadcrumbs" class="breadcrumbs container wrapper ">
+		<ul role="navigation">
+			<li>
+				<a href="/">Home</a>
+			</li>
+
+			<span>/</span>
+
+			<li>
+				<a href="/{{ .Entry.Category.Slug }}">
+					{{ .Entry.Category.Title }}
+				</a>
+			</li>
+
+			<span>/</span>
+
+			<li>
+				<a href="/{{ .Entry.Slug }}">
+					{{ .Entry.Title }}
+				</a>
+			</li>
 		</ul>
 	</nav>
 
-	<main id="entry">
-		<div class="wrapper content">
-			<article>
-				<header class="centered heading full-bleed-wrapper">
-					<hgroup>
-						<h1>{{ .Entry.Title }}</h1>
-						<h2>{{ .Entry.CreatedAt.Format "Jan 02, 2006"}}</h2>
-						<p>{{ .Entry.WordCount }} words</p>
-					</hgroup>
+	<main id="entry" class="main wrapper">
+		<article class="article">
+			<header class="header full-bleed-wrapper">
+				<hgroup class="hgroup centered">
+					<h1>{{ .Entry.Title }}</h1>
+					<h2>{{ .Entry.CreatedAt.Format "Jan 02, 2006"}}</h2>
+					<p>{{ .Entry.WordCount }} words</p>
+				</hgroup>
 
-					{{ if .Entry.FeaturedImageURL.Valid }}
-					<div class="featured-image-wrapper full-bleed">
-						<img src="{{ .Entry.FeaturedImageURL.String }}" />
-					</div>
-					{{ end }}
-				</header>
+				{{ if .Entry.FeaturedImageURL.Valid }}
+				<picture class="featured-image-wrapper full-bleed">
+					<img src="{{ .Entry.FeaturedImageURL.String }}" />
+				</picture>
+				{{ end }}
+			</header>
 
-				<div class="markdown full-bleed-wrapper">
-					{{ .Entry.Markdown }}
+			<main class="markdown full-bleed-wrapper">
+				{{ .Entry.Markdown }}
+			</main>
+
+			<footer class="full-bleed-wrapper">
+				<div>
+					<a href="/{{ .Entry.Category.Slug }}">
+						⏎ back to {{ slugify .Entry.Category.Title }}
+					</a>
 				</div>
-			</article>
-		</div>
+			</footer>
+		</article>
 	</main>
 
 	{{ template "footer" . }}

@@ -1,14 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Fira+Code:wght@300..700&display=swap');
-
 :root {
 	/* font family */
-	--ff-base: "Atkinson Hyperlegible", sans-serif;
-	--ff-heading: "Atkinson Hyperlegible", serif;
-	--ff-mono: "Fira Code", monospaced;
-	--line-height: 1.4;
+	--ff-base: "Atkinson Hyperlegible";
+	--ff-heading: "Alegreya";
+	--ff-mono: "Fira Code";
+	--line-height: 1.35;
 
 	/* font size */
-	--fs: 1.2rem;
+	--fs: 1.125rem;
 	--fs-200: calc(var(--fs) * 0.75);
 	--fs-300: calc(var(--fs) * 0.825);
 	--fs-400: var(--fs);
@@ -20,7 +18,7 @@
 
 	/* font weight */
 	--fw-light: 200;
-	--fw-normal: 399;
+	--fw-normal: 400;
 	--fw-semi-bold: 600;
 	--fw-bold: 700;
 
@@ -32,9 +30,24 @@
 	--gap-xl: calc(var(--gap-l) * 1.618);
 	--gap-xxl: calc(var(--gap-xl) * 1.618);
 
+	/* crimson red */
+	/* --clr-primary: oklch(0.0 0.37 10); */
+	/* --clr-secondary: oklch(0.3 0.37 10); */
+	/* --clr-accent: oklch(0.6 0.37 10); */
+
+	--dyn-blue: 87;
+
+	--clr-primary:
+		oklch(99% 0.01 var(--dyn-blue));
+
+	--clr-secondary:
+		oklch(0% 0.2 var(--dyn-blue) / 0.97);
+
+	--clr-accent:
+		oklch(0% 0.2 var(--dyn-blue));
+
 	/* color layers */
-	--clr-bg: var(--clr-neutral-100);
-	--clr-body: var(--clr-neutral-800);
-	--clr-heading: var(--clr-neutral-900);
-	--clr-accent: var(--clr-blue-300);
+	--clr-bg: var(--clr-primary);
+	--clr-body: var(--clr-secondary);
+	/* --clr-accent: var(--clr-accent); */
 }
