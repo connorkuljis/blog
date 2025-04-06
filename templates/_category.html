@@ -5,11 +5,13 @@
 {{ template "head" . }}
 
 <body class="layout">
+	{{ template "page-hue-styles" . }}
+
 	<!-- header -->
 	{{ template "header" . }}
 
 	<!-- breadcrumbs -->
-	<nav id="breadcrumbs" class=" breadcrumbs container wrapper">
+	<nav id="breadcrumbs" class="breadcrumbs container">
 		<ul role="navigation">
 			<li>
 				<a href="/">Home</a>
@@ -27,10 +29,11 @@
 
 	<!-- main -->
 	<main class="main wrapper container" id="{{ slugify .Category.Title }}-entries">
-		<div>
+		<hgroup>
 			<h1>{{ .Category.Title }}</h1>
 			<p>{{ .Category.Description }}</p>
-		</div>
+		</hgroup>
+
 		{{ template "category-entries-list" . }}
 	</main>
 
@@ -46,19 +49,28 @@
 {{ $year := (index $yearEntries 0).CreatedAt.Year }}
 <section id="{{ $title }}-entries-{{ $year }}" class="category-year-entries">
 	<h2>{{ $year }}</h2>
-	<div>
-		<ul role="list">
-			{{ range $entry := $yearEntries }}
-			<li class="grid-entry-preview">
-				<a href="/{{ $entry.Slug }}">
-					<h3>{{ $entry.Title }}</h3>
-					<p>{{ $entry.Description.String }}</p>
-				</a>
-				<time>{{ $entry.CreatedAt.Format "2006 Jan 02" }}</time>
-			</li>
-			{{ end }}
-		</ul>
-	</div>
+
+	<ul role="list">
+		{{ range $entry := $yearEntries }}
+		<li class="entry-preview">
+			<div>
+				{{ if $entry.FeaturedImageURL.Valid }}
+				<img src="{{ .FeaturedImageURL.String }}" />
+				{{ end }}
+			</div>
+
+			<div>
+				<span>
+					<a href="/{{ $entry.Slug }}">
+						<h3>{{ $entry.Title }}</h3>
+					</a>
+					<time>{{ $entry.CreatedAt.Format "2006 Jan 02" }}</time>
+					<div>{{ $entry.Description.String }}</div>
+				</span>
+			</div>
+		</li>
+		{{ end }}
+	</ul>
 </section>
 {{ end }}
 {{ end }}

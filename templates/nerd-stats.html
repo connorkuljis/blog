@@ -1,0 +1,6 @@
+{{ define "nerd-stats" }}
+<div>
+	{{ $stats := .Site.NerdStats }}
+	Built {{ $stats.NumPages }} pages using {{ $stats.Version }} {{ $stats.Platform }}/{{ $stats.Arch }}
+</div>
+{{ end }}
