@@ -4,10 +4,12 @@
 {{ template "head" . }}
 
 <body class="layout">
+	{{ template "page-hue-styles" . }}
+
 	{{ template "header" . }}
 
 	<!-- breadcrumbs -->
-	<nav id="breadcrumbs" class="breadcrumbs container wrapper ">
+	<nav id="breadcrumbs" class="breadcrumbs container">
 		<ul role="navigation">
 			<li>
 				<a href="/">Home</a>

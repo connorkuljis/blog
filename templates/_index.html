@@ -10,7 +10,7 @@
 	{{ template "header" . }}
 
 	<!-- breadcrumbs -->
-	<nav id="breadcrumbs" class="breadcrumbs container wrapper">
+	<nav id="breadcrumbs" class="breadcrumbs container">
 		<ul role="list">
 			<li><a href="/">Home</a></li>
 		</ul>
@@ -18,6 +18,11 @@
 
 	<!-- main -->
 	<main id="index" class="main wrapper container">
+		<h1>Connor Kuljis' Website</h1>
+		<details open>
+			<summary>Nerd Statistics</summary>
+			{{ template "nerd-stats" . }}
+		</details>
 		<div>
 			{{ template "bio" . }}
 		</div>

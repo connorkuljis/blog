@@ -3,10 +3,12 @@
 	--ff-base: "Atkinson Hyperlegible";
 	--ff-heading: "Alegreya";
 	--ff-mono: "Fira Code";
-	--line-height: 1.35;
+	--line-height: 1.4;
+	--max-width: 64rem;
+	--spacer-amount: var(--gap-l);
 
 	/* font size */
-	--fs: 1.125rem;
+	--fs: 1rem;
 	--fs-200: calc(var(--fs) * 0.75);
 	--fs-300: calc(var(--fs) * 0.825);
 	--fs-400: var(--fs);
@@ -35,16 +37,16 @@
 	/* --clr-secondary: oklch(0.3 0.37 10); */
 	/* --clr-accent: oklch(0.6 0.37 10); */
 
-	--dyn-blue: 87;
+	/* --page-hue: 87; */
 
 	--clr-primary:
-		oklch(99% 0.01 var(--dyn-blue));
+		oklch(99% 0.01 var(--page-hue, 260));
 
 	--clr-secondary:
-		oklch(0% 0.2 var(--dyn-blue) / 0.97);
+		oklch(0% 0.2 var(--page-hue, 260) / 0.97);
 
 	--clr-accent:
-		oklch(0% 0.2 var(--dyn-blue));
+		oklch(0% 0.2 var(--page-hue, 260));
 
 	/* color layers */
 	--clr-bg: var(--clr-primary);
