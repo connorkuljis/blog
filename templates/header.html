@@ -10,11 +10,11 @@
 			{{ $n := len .Site.Categories }}
 			{{ range $i, $category := .Site.Categories }}
 			<li>
-				<a href="/{{ $category.Slug }}">{{ $category.Title }}</a>
+				<a href="{{ $category.Slug }}">{{ $category.Title }}</a>
 			</li>
 			<!-- add a separator if not the last item -->
 			{{ if not (eq (sub $n 1) $i) }}
-			<!-- <span> • </span> -->
+			<span> • </span>
 			{{ end }}
 			{{ end }}
 		</ul>

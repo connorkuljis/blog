@@ -13,14 +13,19 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cheynewallace/tabby"
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/jmoiron/sqlx"
 	"github.com/urfave/cli/v3"
 )
 
-const sqlxKey = "db"
+type App struct {
+	DB           *sqlx.DB
+	EntryRepo    *store.EntryRepo
+	CategoryRepo *store.CategoryRepo
+}
+
+const appKey = "app"
 
 // ErrSelectionCancelled is a specific error returned when the user quits.
 var ErrSelectionCancelled = errors.New("selection cancelled by user")
@@ -35,19 +40,26 @@ func main() {
 				log.Fatal(err)
 			}
 
-			ctx = context.WithValue(ctx, sqlxKey, db)
+			app := &App{
+				DB:           db,
+				EntryRepo:    store.NewEntryRepo(db),
+				CategoryRepo: store.NewCategoryRepo(db),
+			}
+
+			ctx = context.WithValue(ctx, appKey, app)
 
 			return ctx, nil
 		},
 		Commands: []*cli.Command{
 			{
-				Name:   "entries",
-				Usage:  "Operations for creating, editing, deleting and listing entries.",
-				Action: listEntriesCommand,
+				Name:    "entries",
+				Aliases: []string{"e"},
+				Usage:   "Operations for creating, editing, deleting and listing entries.",
+				Action:  listEntries,
 				Commands: []*cli.Command{
 					{
 						Name:   "create",
-						Usage:  "Create a new entry.",
+						Usage:  "Create entry.",
 						Action: createEntry,
 					},
 					{
@@ -56,16 +68,22 @@ func main() {
 						Action: updateEntry,
 					},
 					{
+						Name:   "list",
+						Usage:  "List entries.",
+						Action: updateEntry,
+					},
+					{
 						Name:   "delete",
-						Usage:  "Delete an entry by id.",
+						Usage:  "Delete entry",
 						Action: deleteEntry,
 					},
 				},
 			},
 			{
-				Name:   "categories",
-				Usage:  "operations on categories",
-				Action: listCategories,
+				Name:    "categories",
+				Aliases: []string{"c"},
+				Usage:   "operations on categories",
+				Action:  listCategories,
 				Commands: []*cli.Command{
 					{
 						Name:   "create",
@@ -87,33 +105,42 @@ func main() {
 	}
 }
 
-// listEntriesCommand lists all entries.
-func listEntriesCommand(ctx context.Context, c *cli.Command) error {
-	db := ctx.Value(sqlxKey).(*sqlx.DB)
+// listEntries lists all entries.
+func listEntries(ctx context.Context, c *cli.Command) error {
+	app := ctx.Value(appKey).(*App)
 
-	entryRepo := store.NewEntryRepository(db)
-
-	entries, err := entryRepo.ReadAllEntries()
+	categories, err := app.CategoryRepo.ReadAllCategories()
 	if err != nil {
 		return err
 	}
 
-	printEntries(entries)
+	for _, category := range categories {
+		fmt.Printf("[%s]\n", category.Title)
+
+		entries, err := app.EntryRepo.ReadAllByCategoryID(category.ID)
+		if err != nil {
+			return err
+		}
+
+		for _, entry := range entries {
+			fmt.Printf("\t%s\n", entry.Title)
+		}
+	}
 
 	return nil
 }
 
 func createEntry(ctx context.Context, c *cli.Command) error {
-	db := ctx.Value(sqlxKey).(*sqlx.DB)
+	app := ctx.Value(appKey).(*App)
 
-	entryRepo := store.NewEntryRepository(db)
-
-	categories, err := store.NewCategoryRepository(db).ReadAllCategories()
-
+	categories, err := app.CategoryRepo.ReadAllCategories()
 	if err != nil {
 		return err
 	}
-	printCategories(categories)
+
+	for i, category := range categories {
+		fmt.Printf("\n")
+	}
 
 	var index int
 	fmt.Printf("category index: ")
@@ -138,7 +165,7 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 	}
 
 	entry := model.NewEntry(category.ID, title)
-	err = entryRepo.CreateEntry(entry)
+	err = app.EntryRepo.CreateEntry(entry)
 	if err != nil {
 		return fmt.Errorf("error creating entry: %w", err)
 	}
@@ -155,7 +182,7 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 		if err != nil {
 			return err
 		}
-		err = entryRepo.UpdateEntry(entry)
+		err = app.EntryRepo.UpdateEntry(entry)
 		if err != nil {
 			return err
 		}
@@ -169,12 +196,13 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 }
 
 func updateEntry(ctx context.Context, c *cli.Command) error {
-	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	entryRepo := store.NewEntryRepository(db)
+	app := ctx.Value(appKey).(*App)
+
 	reader := bufio.NewReader(os.Stdin)
+	var selectedItem model.Entry
 
 	for {
-		entries, err := entryRepo.ReadAllEntries()
+		entries, err := app.EntryRepo.ReadAllEntries()
 		if err != nil {
 			return err
 		}
@@ -186,66 +214,54 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 
 		fmt.Printf("Enter the number (1-%d) or 'q' to quit: ", len(entries))
 
-		// Read input until newline
 		input, err := reader.ReadString('\n')
 		if err != nil {
-			// Handle potential I/O errors during reading
 			return fmt.Errorf("failed to read input: %w", err)
 		}
 
-		// Clean up the input string (remove newline, spaces)
 		input = strings.TrimSpace(input)
 
-		// 5. Check for quit command (case-insensitive)
 		if strings.ToLower(input) == "q" {
 			fmt.Println("\nSelection cancelled.")
 			return ErrSelectionCancelled // Return specific error for cancellation
 		}
 
-		// 6. Attempt to convert input to an integer
 		choiceNum, err := strconv.Atoi(input)
 		if err != nil {
-			// Input was not a valid integer (and not 'q')
 			fmt.Println("Invalid input. Please enter a number or 'q'.")
 			continue // Ask the user again
 		}
 
-		// 7. Validate the number is within the allowed range (1 to len(data))
-		if choiceNum >= 1 && choiceNum <= len(entries) {
-			// Calculate the 0-based index
-			selectedIndex := choiceNum - 1
-			// Get the selected item
-			selectedItem := entries[selectedIndex]
-
-			err = editEntryContent(&selectedItem)
-			if err != nil {
-				return err
-			}
-
-			err = entryRepo.UpdateEntry(&selectedItem)
-			if err != nil {
-				return err
-			}
-
-			fmt.Println("Updated entry:", selectedItem.Title)
-		} else {
-			// Number was outside the valid range
+		if choiceNum < 1 && choiceNum > len(entries) {
 			fmt.Printf("Invalid choice. Please enter a number between 1 and %d or 'q'.\n", len(entries))
-			// Loop continues, asking the user again
+			continue
 		}
+
+		selectedIndex := choiceNum - 1
+		selectedItem = entries[selectedIndex]
+
+		err = editEntryContent(&selectedItem)
+		if err != nil {
+			return err
+		}
+
+		err = app.EntryRepo.UpdateEntry(&selectedItem)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println("Updated entry:", selectedItem.Title)
 	}
 }
 
 // deleteEntry deletes an entry by id.
 func deleteEntry(ctx context.Context, c *cli.Command) error {
-	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	entryRepo := store.NewEntryRepository(db)
+	app := ctx.Value(appKey).(*App)
 
-	entries, err := entryRepo.ReadAllEntries()
+	entries, err := app.EntryRepo.ReadAllEntries()
 	if err != nil {
 		return err
 	}
-	printEntries(entries)
 
 	// handle user input
 	var index int
@@ -268,7 +284,7 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 
 	switch choice {
 	case "y":
-		err := entryRepo.DeleteEntryByID(entry.ID)
+		err := app.EntryRepo.DeleteEntryByID(entry.ID)
 		if err != nil {
 			return err
 		}
@@ -285,49 +301,40 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 
 // listCategories lists all categories.
 func listCategories(ctx context.Context, c *cli.Command) error {
-	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	categoryRepo := store.NewCategoryRepository(db)
-
-	categories, err := categoryRepo.ReadAllCategories()
-	if err != nil {
-		return err
-	}
-	printCategories(categories)
+	// app := ctx.Value(appKey).(*App)
 
 	return nil
 }
 
 // createCategory creates a new category.
 func createCategory(ctx context.Context, c *cli.Command) error {
-	db := ctx.Value(sqlxKey).(*sqlx.DB)
-	categoryRepo := store.NewCategoryRepository(db)
-
-	reader := bufio.NewReader(os.Stdin)
-
-	var title string
-	fmt.Println("Please enter a category title: (Must be unique)")
-	fmt.Printf("title: ")
-	title, _ = reader.ReadString('\n')
-	title = strings.TrimSpace(title)
-
-	var description string
-	fmt.Printf("Please enter a short description for '%s'\n", title)
-	fmt.Printf("description: ")
-	description, _ = reader.ReadString('\n')
-	description = strings.TrimSpace(description)
-
-	category := model.NewCategory(title, description)
-	err := categoryRepo.CreateCategory(category)
-	if err != nil {
-		return err
-	}
-
-	categories, err := categoryRepo.ReadAllCategories()
-	if err != nil {
-		return err
-	}
-	printCategories(categories)
-
+	// app := ctx.Value(appKey).(*App)
+	//
+	// reader := bufio.NewReader(os.Stdin)
+	//
+	// var title string
+	// fmt.Println("Please enter a category title: (Must be unique)")
+	// fmt.Printf("title: ")
+	// title, _ = reader.ReadString('\n')
+	// title = strings.TrimSpace(title)
+	//
+	// var description string
+	// fmt.Printf("Please enter a short description for '%s'\n", title)
+	// fmt.Printf("description: ")
+	// description, _ = reader.ReadString('\n')
+	// description = strings.TrimSpace(description)
+	//
+	// category := model.NewCategory(title, description)
+	// err := app.CategoryRepo.CreateCategory(category)
+	// if err != nil {
+	// 	return err
+	// }
+	//
+	// categories, err := app.CategoryRepo.ReadAllCategories()
+	// if err != nil {
+	// 	return err
+	// }
+	//
 	return nil
 }
 
@@ -381,24 +388,6 @@ func GetInputWithPrompt(prompt string) (string, error) {
 	return input, nil // Return the string without the newline character
 }
 
-func printEntries(entries []model.Entry) {
-	t := tabby.New()
-	t.AddHeader("ID", "TITLE", "CREATED", "CHARS")
-	for _, entry := range entries {
-		t.AddLine(entry.ID, entry.Title, entry.CreatedAt.Format("2006-01-02"), len(entry.Content))
-	}
-	t.Print()
-}
-
-func printCategories(categories []model.Category) {
-	t := tabby.New()
-	t.AddHeader("INDEX", "TITLE", "DESCRIPTION")
-	for i, category := range categories {
-		t.AddLine(i, category.Title, category.Description)
-	}
-	t.Print()
-}
-
 func editEntryContent(entry *model.Entry) error {
 	f, err := os.CreateTemp("/tmp", entry.Title+"*.md")
 	if err != nil {
@@ -432,6 +421,3 @@ func editEntryContent(entry *model.Entry) error {
 
 	return nil
 }
-
-// - common functions:
-// - select a valid entry from list

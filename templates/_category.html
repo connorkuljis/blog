@@ -20,7 +20,7 @@
 			<span>/</span>
 
 			<li>
-				<a href="/{{ .Category.Slug }}">
+				<a href="{{ .Category.Slug }}">
 					{{ .Category.Title }}
 				</a>
 			</li>
@@ -44,8 +44,7 @@
 
 {{ define "category-entries-list" }}
 {{ $title := slugify .Category.Title }}
-{{ $groupedEntries := groupByYear .Category.Entries }}
-{{ range $yearEntries := $groupedEntries }}
+{{ range $yearEntries := .GroupedEntries }}
 {{ $year := (index $yearEntries 0).CreatedAt.Year }}
 <section id="{{ $title }}-entries-{{ $year }}" class="category-year-entries">
 	<h2>{{ $year }}</h2>
@@ -61,7 +60,7 @@
 
 			<div>
 				<span>
-					<a href="/{{ $entry.Slug }}">
+					<a href="{{ $entry.Slug }}">
 						<h3>{{ $entry.Title }}</h3>
 					</a>
 					<time>{{ $entry.CreatedAt.Format "2006 Jan 02" }}</time>
