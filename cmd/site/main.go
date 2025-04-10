@@ -15,7 +15,8 @@ import (
 )
 
 const (
-	title = "kuljis.xyz"
+	title        = "kuljis.xyz"
+	enableDrafts = false
 )
 
 func main() {
@@ -46,7 +47,7 @@ func main() {
 	entryRepo := store.NewEntryRepo(db)
 
 	for i := range categories {
-		entries, err := entryRepo.ReadAllByCategoryID(categories[i].ID)
+		entries, err := entryRepo.ReadAllByCategoryID(categories[i].ID, enableDrafts)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -59,8 +60,6 @@ func main() {
 			categories[i].AddEntry(entries[j])
 		}
 	}
-
-	start := time.Now()
 
 	site := &site.MySite{
 		Title:      title,
@@ -75,11 +74,13 @@ func main() {
 
 	pages := site.Build()
 
+	start := time.Now()
+
 	err = site.Render(pages)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("built %d pages for %s in: %d ms\n", site.NerdStats.PageCount,
+	fmt.Printf("Rendered %d pages for %s in: %d ms\n", site.NerdStats.PageCount,
 		site.Title, time.Since(start).Milliseconds())
 }
