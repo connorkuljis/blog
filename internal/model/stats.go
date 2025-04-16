@@ -7,9 +7,17 @@ import (
 
 type NerdStats struct {
 	PageCount int
+	StartTime time.Time
+}
 
-	StartTime  time.Time
-	FinishTime time.Time
+func NewNerdStats() *NerdStats {
+	return &NerdStats{
+		StartTime: time.Now(),
+	}
+}
+
+func (n *NerdStats) SetPageCount(count int) {
+	n.PageCount = count
 }
 
 func (n *NerdStats) Platform() string {
@@ -22,8 +30,4 @@ func (n *NerdStats) Arch() string {
 
 func (n *NerdStats) Version() string {
 	return runtime.Version()
-}
-
-func (n *NerdStats) CalculateDuration() time.Duration {
-	return n.FinishTime.Sub(n.StartTime)
 }

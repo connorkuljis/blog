@@ -8,12 +8,20 @@ import (
 
 type EntryPage struct {
 	Site     *MySite
-	Category model.Category
-	Entry    model.Entry
+	Category *model.Category
+	Entry    *model.Entry
+}
+
+func NewEntryPage(site *MySite, category *model.Category, entry *model.Entry) EntryPage {
+	return EntryPage{
+		Site:     site,
+		Category: category,
+		Entry:    entry,
+	}
 }
 
 func (p EntryPage) Filepath() string {
-	return filepath.Join("public", p.Entry.Slug(), "index.html")
+	return filepath.Join("public", p.Entry.Permalink(), "index.html")
 }
 
 func (p EntryPage) TemplateName() string {

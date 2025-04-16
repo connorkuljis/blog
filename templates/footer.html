@@ -1,8 +1,16 @@
 {{ define "footer" }}
 <footer class="footer container">
+	<div>
+		{{ .Site.Title }}
+	</div>
+	<div>
+		{{ template "bio" . }}
+	</div>
 	<div class="socials-wrapper">
 		{{ template "socials" . }}
 	</div>
-	{{ template "nerd-stats" . }}
+	<div>
+		{{ template "nerd-stats" . }}
+	</div>
 </footer>
 {{ end }}

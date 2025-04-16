@@ -4,6 +4,10 @@ type HomePage struct {
 	Site *MySite
 }
 
+func NewHomePage(site *MySite) HomePage {
+	return HomePage{Site: site}
+}
+
 func (p HomePage) Filepath() string {
 	return "public/index.html"
 }

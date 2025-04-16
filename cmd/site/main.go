@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"time"
 
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/site"
 	"github.com/connorkuljis/blog/internal/store"
+	"github.com/connorkuljis/blog/internal/util"
+	"github.com/jmoiron/sqlx"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
@@ -15,9 +18,18 @@ import (
 )
 
 const (
-	title        = "kuljis.xyz"
-	enableDrafts = false
+	Title        = "kuljis.xyz"
+	RootDir      = "public"
+	EnableDrafts = false
 )
+
+var funcMap = template.FuncMap{
+	"slugify":  util.Slugify,
+	"truncate": util.Truncate,
+	"sub": func(a, b int) int {
+		return a - b
+	},
+}
 
 func main() {
 	md := goldmark.New(
@@ -39,33 +51,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	categories, err := store.NewCategoryRepo(db).ReadAllCategories()
-	if err != nil {
-		log.Fatal(err)
-	}
+	t := template.Must(template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html"))
 
-	entryRepo := store.NewEntryRepo(db)
-
-	for i := range categories {
-		entries, err := entryRepo.ReadAllByCategoryID(categories[i].ID, enableDrafts)
-		if err != nil {
-			log.Fatal(err)
-		}
-		for j := range entries {
-			err := entries[j].ToHTML(md) // side-effect: updates markdown field.
-			if err != nil {
-				log.Fatal(err)
-			}
-			entries[j].AddCategory(categories[i])
-			categories[i].AddEntry(entries[j])
-		}
-	}
-
-	site := &site.MySite{
-		Title:      title,
-		Categories: categories,
-		NerdStats:  &model.NerdStats{},
-	}
+	// inject dependencies and use interface type, rather than concrete type
+	var site model.Site = setupSiteData(md, db, t)
 
 	err = site.Init()
 	if err != nil {
@@ -81,6 +70,44 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Rendered %d pages for %s in: %d ms\n", site.NerdStats.PageCount,
-		site.Title, time.Since(start).Milliseconds())
+	fmt.Println(time.Since(start))
+}
+
+func setupSiteData(md goldmark.Markdown, db *sqlx.DB, t *template.Template) *site.MySite {
+	var (
+		categories = store.NewCategoryRepo(db)
+		entries    = store.NewEntryRepo(db)
+	)
+
+	allCategories, err := categories.ReadAllCategories()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, c := range allCategories {
+		categoryEntries, err := entries.ReadAllByCategoryID(c.ID, EnableDrafts)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		c.AddEntry(categoryEntries...)
+
+		for _, e := range categoryEntries {
+			err := e.ToHTML(md)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			e.AddCategory(c)
+		}
+	}
+
+	categoriesMap := make(map[string]*model.Category, len(allCategories))
+	for _, category := range allCategories {
+		categoriesMap[category.Title] = category
+	}
+
+	nerdStats := model.NewNerdStats()
+
+	return site.NewSite(Title, RootDir, allCategories, []*model.Entry{}, categoriesMap, nerdStats, t)
 }

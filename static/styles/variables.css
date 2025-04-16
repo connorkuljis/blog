@@ -1,8 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Fira+Code:wght@300..700&display=swap');
+
+@font-face {
+	font-family: 'FontWithASyntaxHighlighter';
+	src:
+		url('/FontWithASyntaxHighlighter-Regular.woff2') format('woff2');
+}
+
 :root {
 	/* font family */
 	--ff-base: "Atkinson Hyperlegible";
 	--ff-heading: "Alegreya";
-	--ff-mono: "Fira Code";
+	--ff-mono: "FontWithASyntaxHighlighter", "Fira Code";
 	--line-height: 1.4;
 	--max-width: 64rem;
 	--spacer-amount: var(--gap-l);

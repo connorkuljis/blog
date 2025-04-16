@@ -1,4 +1,4 @@
 #!/bin/bash
 
-find static/ templates/ | entr make site
+find static/ templates/ cmd/ internal/ | entr make site
 

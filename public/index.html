@@ -17,75 +17,232 @@
 <body class="layout">
 	
 	
-<header class="site-header container wrapper">
-	<div class="site-title">
-		<a href="/">Oaku's Weblog</a>
-	</div>
-
-	<nav class="site-nav">
-		<ul role="navigation">
-			
-			
-			<li>
-				<a href="/blog">Blog</a>
-			</li>
-			
-			
-			
-			
-			
-			<li>
-				<a href="/til">TIL</a>
-			</li>
-			
-			
-			
-			
-			
-			<li>
-				<a href="/projects">Projects</a>
-			</li>
-			
-			
-			
-		</ul>
-	</nav>
-</header>
-
 
 	
-	<nav id="breadcrumbs" class="breadcrumbs container wrapper">
-		<ul role="list">
-			<li><a href="/">Home</a></li>
-		</ul>
-	</nav>
+	
+	
+	
+	
+	
 
 	
 	<main id="index" class="main wrapper container">
-		<div>
+		let the work do the talking.
+
+		<ul>
 			
-// todo
+			
+			<li><a href="/blog/2025-03-23-how-i-learned-recursion">How I Learned Recursion</a><p>The exercise I used to understand recursion was printing the sequence of <code>n</code> triangular numbers.</p>
+<p>Triangular numbers are the sum of all natural numbers up to a certain number.<br />
+For example, the 5th triangular number is 1 + 2 + 3 + 4 + 5 = 15.</p>
+<p>Here is the code I used to calculate the nth triangular number using recursion:</p>
+<pre><code class="language-java">public class TriangularNumber {
+    public static int calculateTriangularNumber(int n) {
+        if (n == 1) {
+            return 1;
+        } else {
+            return n + calculateTriangularNumber(n - 1);
+        }
+    }
 
-		</div>
-	</main>
-
-	
-	
-<footer class="footer wrapper container">
-	<div class="socials-wrapper">
-		
-<ul role="list">
-	<li>
-		<a href="https://github.com/connorkuljis">Github</a>
-	</li>
-	<li>
-		<a href="https://linkedin.com/in/connor-kuljis">Linkedin</a>
-	</li>
+    public static void main(String[] args) {
+        int n = 5;
+        int result = calculateTriangularNumber(n);
+        System.out.println(&quot;The &quot; + n + &quot;th triangular number is: &quot; + result);
+    }
+}
+</code></pre>
+<p>When you run this code with <code>n = 5</code>, it will output:</p>
+<pre><code class="language-plaintext">The 5th triangular number is: 15
+</code></pre>
+</li>
+			
+			<li><a href="/blog/2025-03-23-bloat-is-the-universal-enemy">Bloat is the Universal Enemy</a><p>Bloat occurs when the ability to say <em>no</em> is lost.</p>
+<p>Here is an example:</p>
+<ul>
+<li>When a user navigates to a web page in search of a simple cooking recipie,<br />
+the website makes additional requests for worldly ills; ads, trackers,<br />
+javascript pop-ups and the like. None of the things listed prior are<br />
+functional to the purpose of a web page (content and images), nor are they minimal.</li>
 </ul>
+</li>
+			
+			<li><a href="/blog/2024-12-31-uses">Uses</a><p>The programs I install on my machine(s).</p>
+<h2 id="for-the-terminal-">For the Terminal 👾</h2>
+<ul>
+<li>
+<p><a href="https://github.com/ghostty-org/ghostty">ghostty</a></p>
+<ul>
+<li><em>👻 Ghostty is a fast, feature-rich, and cross-platform terminal emulator that uses platform-native UI and GPU acceleration.</em></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/sxyazi/yazi">yazi</a></p>
+<ul>
+<li><em>💥 Blazing fast terminal file manager written in Rust, based on async I/O.</em></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/zellij-org/zellij">zellij</a></p>
+<ul>
+<li><em>A terminal workspace with batteries included</em>.</li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/helix-editor/helix">helix</a></p>
+<ul>
+<li><em>A post-modern modal text editor.</em></li>
+</ul>
+</li>
+</ul>
+<h2 id="command-line-utilities">Command Line Utilities</h2>
+<ul>
+<li>
+<p><a href="https://github.com/FFmpeg/FFmpeg">ffmpeg</a></p>
+<ul>
+<li><em>A complete, cross-platform solution to record, convert and stream audio and video.</em></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/mpv-player/mpv">mpv</a></p>
+<ul>
+<li><em>🎥 Command line video player.</em></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/RsyncProject/rsync">rsync</a></p>
+<ul>
+<li><em>An open source utility that provides fast incremental file transfer...</em></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a></p>
+<ul>
+<li><em>A feature-rich command-line audio/video downloader.</em></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/ajeetdsouza/zoxide">zoxide</a></p>
+<ul>
+<li><em>A smarter cd command for your terminal.</em></li>
+</ul>
+</li>
+</ul>
+<h2 id="deployment">Deployment</h2>
+<ul>
+<li>
+<p><a href="https://www.docker.com/">docker</a></p>
+<ul>
+<li><em>Open-source software for deploying and running of containerized applications,</em></li>
+</ul>
+</li>
+<li>
+<p><a href="https://github.com/caddyserver/caddy">caddy</a></p>
+<ul>
+<li><em>Fast and extensible multi-platform HTTP/1-2-3 web server with automatic HTTPS.</em></li>
+</ul>
+</li>
+</ul>
+</li>
+			
+			
+			
+			<li><a href="/til/2025-04-09-how-to-list-users-on-a-linux-machine">How to list users on a Linux machine</a><h2 id="users">Users</h2>
+<blockquote>
+<p>The <code>/etc/passwd</code> file is a text-based database of information about users that may log into the system or other operating system user identities that own running processes. <a href="https://en.wikipedia.org/wiki/Passwd#Password_file">wikipedia</a></p>
+</blockquote>
+<pre><code class="language-bash">cat /etc/passwd
+</code></pre>
+<p>An example output below running <code>cat /etc/passwd</code>:</p>
+<pre><code>root:x:0:0:Super User:/root:/bin/bash
+bin:x:1:1:bin:/bin:/usr/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/usr/sbin/nologin
+adm:x:3:4:adm:/var/adm:/usr/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/usr/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/usr/sbin/nologin
+operator:x:11:0:operator:/root:/usr/sbin/nologin
+games:x:12:100:games:/usr/games:/usr/sbin/nologin
+ftp:x:14:50:FTP User:/var/ftp:/usr/sbin/nologin
+nobody:x:65534:65534:Kernel Overflow User:/:/usr/sbin/nologin
+dbus:x:81:81:System Message Bus:/:/usr/sbin/nologin
+tss:x:59:59:Account used for TPM access:/:/usr/sbin/nologin
+avahi:x:70:70:Avahi mDNS/DNS-SD Stack:/var/run/avahi-daemon:/sbin/nologin
+geoclue:x:999:999:User for geoclue:/var/lib/geoclue:/sbin/nologin
+systemd-oom:x:998:998:systemd Userspace OOM Killer:/:/usr/sbin/nologin
+polkitd:x:114:114:User for polkitd:/:/sbin/nologin
+rtkit:x:172:172:RealtimeKit:/:/sbin/nologin
+chrony:x:997:995:chrony system user:/var/lib/chrony:/sbin/nologin
+rpc:x:32:32:Rpcbind Daemon:/var/lib/rpcbind:/sbin/nologin
+pipewire:x:996:994:PipeWire System Daemon:/run/pipewire:/usr/sbin/nologin
+sssd:x:995:993:User for sssd:/run/sssd:/sbin/nologin
+unbound:x:994:992:Unbound DNS resolver:/var/lib/unbound:/sbin/nologin
+nm-openconnect:x:993:991:NetworkManager user for OpenConnect:/:/sbin/nologin
+openvpn:x:992:990:OpenVPN:/etc/openvpn:/sbin/nologin
+nm-openvpn:x:991:989:Default user for running openvpn spawned by NetworkManager:/:/sbin/nologin
+sddm:x:990:988:SDDM Greeter Account:/var/lib/sddm:/usr/sbin/nologin
+mysql:x:27:27:MySQL Server:/var/lib/mysql:/sbin/nologin
+colord:x:989:987:User for colord:/var/lib/colord:/sbin/nologin
+abrt:x:173:173::/etc/abrt:/sbin/nologin
+flatpak:x:988:986:Flatpak system helper:/:/usr/sbin/nologin
+rpcuser:x:29:29:RPC Service User:/var/lib/nfs:/sbin/nologin
+vboxadd:x:987:1::/var/run/vboxadd:/sbin/nologin
+sshd:x:74:74:Privilege-separated SSH:/usr/share/empty.sshd:/usr/sbin/nologin
+dnsmasq:x:986:983:Dnsmasq DHCP and DNS server:/var/lib/dnsmasq:/usr/sbin/nologin
+usbmuxd:x:113:113:usbmuxd user:/:/sbin/nologin
+tcpdump:x:72:72:tcpdump:/:/usr/sbin/nologin
+passim:x:981:981:Local Caching Server:/usr/share/empty:/usr/sbin/nologin
+systemd-coredump:x:980:980:systemd Core Dumper:/:/usr/sbin/nologin
+systemd-network:x:192:192:systemd Network Management:/:/usr/sbin/nologin
+systemd-resolve:x:193:193:systemd Resolver:/:/usr/sbin/nologin
+systemd-timesync:x:979:979:systemd Time Synchronization:/:/usr/sbin/nologin
+connor:x:1000:1000:connor:/home/connor:/bin/bash
+ollama:x:978:978::/usr/share/ollama:/bin/false
+</code></pre>
+<h2 id="groups">Groups</h2>
+<p>An example of <code>groups</code> and <code>groups $USER</code></p>
+<pre><code class="language-bash">$ groups
 
-	</div>
-</footer>
+connor adm dialout cdrom sudo audio video plugdev games users input render netdev docker gpio i2c spi
+</code></pre>
+<pre><code class="language-bash">groups $USER
 
+connor : connor adm dialout cdrom sudo audio video plugdev games users input render netdev spii2c gpio docker
+</code></pre>
+</li>
+			
+			<li><a href="/til/2025-04-02-one-day-this-blog-will-die">One Day This Blog Will Die</a><p>One day this blog will die. Posts will abrubtly stop. Links will rot.</p>
+</li>
+			
+			<li><a href="/til/2025-04-01-the-price-of-gold-is-up-bigly-aud">The Price of Gold is Up Bigly (AUD)</a><p>The price of gold per ounce in AUD Australian Dollars has increased 43.76% in 12 months to over $5000/oz. <a href="https://goldprice.org/gold-price-australia.html">via</a></p>
+<p>I should really stack precious metals.</p>
+<p><img src="/images/gold_price_table.png" alt="price of gold increase" /></p>
+</li>
+			
+			
+			
+			<li><a href="/projects/2025-02-05-ausfinder-fyi">ausfinder.fyi</a><p><a href="https://ausfinder.fyi">ausfinder.fyi</a> is the fastest way to look up <a href="#what-is-an-abn">Australian Business Numbers</a> (ABNs) by business name.</p>
+<p>When searching for jobs online, you might come across listings from unfamiliar companies. Or maybe you’re researching businesses in your industry and want to verify their details.</p>
+<p>That’s where ausfinder comes in. Over a weekend, I imported ASIC’s business name dataset into SQLite and built a REST API (with a simple UI) on top of it.</p>
+<p>Just type a keyword into <a href="https://ausfinder.fyi">ausfinder.fyi</a>, and it’ll return matching business names.</p>
+<p>Thanks to full-text search, queries support logical operators like <em>AND, OR, and NOT</em>, as well as wildcards like <code>hair*</code> to find variations (e.g., &quot;hairdresser&quot; or &quot;haircare&quot;).</p>
+<p>The API is minimalist by design:</p>
+<pre><code>GET /search  
+GET /search/business/:id  
+</code></pre>
+<p>With only two endpoints, the server logic stayed lean—under 120 lines of code. Being a stateless, server-rendered app kept things simple.</p>
+<p>I originally imagined using a business’ ABN to uncover details like director emails (maybe even automate outreach?), but it turns out ABNs are mostly for accounting and tax purposes. Still, they’re handy for verifying legitimate businesses!</p>
+<h2 id="what-is-an-abn">What is an ABN?</h2>
+<p>An ABN is a unique 11-digit identifier issued by the Australian Tax Office (ATO) to businesses. It’s publicly available and used for invoicing, tax filings, and other official transactions.</p>
+<hr />
+<p>Try it out: <a href="https://ausfinder.fyi">ausfinder.fyi</a></p>
+</li>
+			
+			
+		</ul>
+	</main>
 </body>
 
 </html>

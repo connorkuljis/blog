@@ -4,8 +4,6 @@
 {{ template "head" . }}
 
 <body class="layout">
-	{{ template "page-hue-styles" . }}
-
 	{{ template "header" . }}
 
 	<!-- breadcrumbs -->
@@ -18,7 +16,7 @@
 			<span>/</span>
 
 			<li>
-				<a href="{{ .Entry.Category.Slug }}">
+				<a href="{{ .Entry.Category.Permalink }}">
 					{{ .Entry.Category.Title }}
 				</a>
 			</li>
@@ -26,7 +24,7 @@
 			<span>/</span>
 
 			<li>
-				<a href="{{ .Entry.Slug }}">
+				<a href="{{ .Entry.Permalink }}">
 					{{ .Entry.Title }}
 				</a>
 			</li>
@@ -55,7 +53,7 @@
 
 			<footer class="full-bleed-wrapper">
 				<div>
-					<a href="{{ .Entry.Category.Slug }}">
+					<a href="{{ .Entry.Category.Permalink }}">
 						⏎ back to {{ slugify .Entry.Category.Title }}
 					</a>
 				</div>
