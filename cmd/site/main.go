@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/connorkuljis/blog/internal/kuljis"
 	"github.com/connorkuljis/blog/internal/model"
-	"github.com/connorkuljis/blog/internal/site"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/connorkuljis/blog/internal/util"
 	"github.com/jmoiron/sqlx"
@@ -20,7 +20,7 @@ import (
 const (
 	Title        = "kuljis.xyz"
 	RootDir      = "public"
-	EnableDrafts = false
+	EnableDrafts = true
 )
 
 var funcMap = template.FuncMap{
@@ -54,7 +54,7 @@ func main() {
 	t := template.Must(template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html"))
 
 	// inject dependencies and use interface type, rather than concrete type
-	var site model.Site = setupSiteData(md, db, t)
+	var site model.Site = initialiseKuljisSite(md, db, t)
 
 	err = site.Init()
 	if err != nil {
@@ -73,7 +73,7 @@ func main() {
 	fmt.Println(time.Since(start))
 }
 
-func setupSiteData(md goldmark.Markdown, db *sqlx.DB, t *template.Template) *site.MySite {
+func initialiseKuljisSite(md goldmark.Markdown, db *sqlx.DB, t *template.Template) *kuljis.MySite {
 	var (
 		categories = store.NewCategoryRepo(db)
 		entries    = store.NewEntryRepo(db)
@@ -109,5 +109,5 @@ func setupSiteData(md goldmark.Markdown, db *sqlx.DB, t *template.Template) *sit
 
 	nerdStats := model.NewNerdStats()
 
-	return site.NewSite(Title, RootDir, allCategories, []*model.Entry{}, categoriesMap, nerdStats, t)
+	return kuljis.NewSite(Title, RootDir, allCategories, categoriesMap, nerdStats, t)
 }
