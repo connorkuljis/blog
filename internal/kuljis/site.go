@@ -1,4 +1,4 @@
-package site
+package kuljis
 
 import (
 	"fmt"
@@ -14,7 +14,6 @@ type MySite struct {
 	RootDir       string
 	Template      *template.Template
 	Categories    []*model.Category
-	RecentEntries []*model.Entry
 	CategoriesMap map[string]*model.Category
 	NerdStats     *model.NerdStats
 }
@@ -23,7 +22,6 @@ func NewSite(
 	title string,
 	rootDir string,
 	categories []*model.Category,
-	recentEntries []*model.Entry,
 	categoriesMap map[string]*model.Category,
 	nerdStats *model.NerdStats,
 	t *template.Template,
@@ -32,7 +30,6 @@ func NewSite(
 		Title:         title,
 		RootDir:       rootDir,
 		Categories:    categories,
-		RecentEntries: recentEntries,
 		CategoriesMap: categoriesMap,
 		NerdStats:     nerdStats,
 		Template:      t,

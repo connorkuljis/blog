@@ -68,10 +68,10 @@ func (r *EntryRepo) ReadRecentEntries(limit int) ([]model.Entry, error) {
 func (r *EntryRepo) ReadAllByCategoryID(categoryID int64, includeDrafts bool) ([]*model.Entry, error) {
 	var entries []*model.Entry
 
-	q := "SELECT * FROM entries WHERE category_id = ? AND is_draft = 0"
+	q := "SELECT * FROM entries WHERE category_id = ?"
 
-	if includeDrafts {
-		q = "SELECT * FROM entries WHERE category_id ?"
+	if !includeDrafts {
+		q += "AND is_draft = 0"
 	}
 
 	q += " ORDER BY created_at DESC"
