@@ -25,7 +25,7 @@ type App struct {
 	CategoryRepo *store.CategoryRepo
 }
 
-const appKey = "app"
+const KeyApp = "app"
 
 // ErrSelectionCancelled is a specific error returned when the user quits.
 var ErrSelectionCancelled = errors.New("selection cancelled by user")
@@ -46,7 +46,7 @@ func main() {
 				CategoryRepo: store.NewCategoryRepo(db),
 			}
 
-			ctx = context.WithValue(ctx, appKey, app)
+			ctx = context.WithValue(ctx, KeyApp, app)
 
 			return ctx, nil
 		},
@@ -107,23 +107,23 @@ func main() {
 
 // listEntries lists all entries.
 func listEntries(ctx context.Context, c *cli.Command) error {
-	app := ctx.Value(appKey).(*App)
+	app := ctx.Value(KeyApp).(*App)
 
 	categories, err := app.CategoryRepo.ReadAllCategories()
 	if err != nil {
 		return err
 	}
 
-	for _, category := range categories {
-		fmt.Printf("[%s]\n", category.Title)
+	for _, c := range categories {
+		fmt.Printf("[%s]\n", c.Title)
 
-		entries, err := app.EntryRepo.ReadAllByCategoryID(category.ID)
+		entries, err := app.EntryRepo.ReadAllByCategoryID(c.ID, true)
 		if err != nil {
 			return err
 		}
 
-		for _, entry := range entries {
-			fmt.Printf("\t%s\n", entry.Title)
+		for _, e := range entries {
+			fmt.Printf("\t%s\n", e.Title)
 		}
 	}
 
@@ -131,15 +131,11 @@ func listEntries(ctx context.Context, c *cli.Command) error {
 }
 
 func createEntry(ctx context.Context, c *cli.Command) error {
-	app := ctx.Value(appKey).(*App)
+	app := ctx.Value(KeyApp).(*App)
 
 	categories, err := app.CategoryRepo.ReadAllCategories()
 	if err != nil {
 		return err
-	}
-
-	for i, category := range categories {
-		fmt.Printf("\n")
 	}
 
 	var index int
@@ -196,13 +192,13 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 }
 
 func updateEntry(ctx context.Context, c *cli.Command) error {
-	app := ctx.Value(appKey).(*App)
+	app := ctx.Value(KeyApp).(*App)
 
 	reader := bufio.NewReader(os.Stdin)
 	var selectedItem model.Entry
 
 	for {
-		entries, err := app.EntryRepo.ReadAllEntries()
+		entries, err := app.EntryRepo.ReadAllEntries(true)
 		if err != nil {
 			return err
 		}
@@ -256,9 +252,9 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 
 // deleteEntry deletes an entry by id.
 func deleteEntry(ctx context.Context, c *cli.Command) error {
-	app := ctx.Value(appKey).(*App)
+	app := ctx.Value(KeyApp).(*App)
 
-	entries, err := app.EntryRepo.ReadAllEntries()
+	entries, err := app.EntryRepo.ReadAllEntries(true)
 	if err != nil {
 		return err
 	}

@@ -7,29 +7,27 @@
 
 <body class="layout">
 	<!-- header -->
-	{{ template "header" . }}
+	<!-- {{ template "header" . }} -->
 
 	<!-- breadcrumbs -->
-	<nav id="breadcrumbs" class="breadcrumbs container">
-		<ul role="list">
-			<li><a href="/">Home</a></li>
-		</ul>
-	</nav>
+	<!-- <nav id="breadcrumbs" class="breadcrumbs container"> -->
+	<!-- 	<ul role="navigation"> -->
+	<!-- 		<li><a href="/">Home</a></li> -->
+	<!-- 	</ul> -->
+	<!-- </nav> -->
 
 	<!-- main -->
 	<main id="index" class="main wrapper container">
-		<h1>Connor Kuljis' Website</h1>
-		<details open>
-			<summary>Nerd Statistics</summary>
-			{{ template "nerd-stats" . }}
-		</details>
-		<div>
-			{{ template "bio" . }}
-		</div>
-	</main>
+		let the work do the talking.
 
-	<!-- footer -->
-	{{ template "footer" . }}
+		<ul>
+			{{ range .Site.Categories }}
+			{{ range .Entries }}
+			<li><a href="{{ .Permalink }}">{{ .Title }}</a>{{ .Markdown }}</li>
+			{{ end }}
+			{{ end }}
+		</ul>
+	</main>
 </body>
 
 </html>

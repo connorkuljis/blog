@@ -38,8 +38,6 @@ a {
 	color: var(--clr-accent);
 }
 
-a:hover {}
-
 b {
 	font-weight: var(--fw-semi-bold);
 }
@@ -47,6 +45,11 @@ b {
 pre {
 	padding: var(--gap-l);
 	border: 1px solid #ccc;
+
+	/* https://github.com/joshdick/onedark.vim */
+	background-color: #282c34;
+	color: #ABB2BF;
+
 	overflow-x: auto;
 }
 

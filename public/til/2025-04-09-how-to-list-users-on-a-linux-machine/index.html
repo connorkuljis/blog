@@ -1,0 +1,203 @@
+
+<!doctype html>
+<html lang="en">
+
+
+<head>
+	<title>kuljis.xyz</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="icon" href="/icon.png" />
+	<link rel="stylesheet" href="/styles.css" />
+</head>
+
+
+<body class="layout">
+	
+<header class="site-header container">
+	<div class="site-title">
+		<a href="/">Oaku's Weblog</a>
+	</div>
+
+	<nav class="site-nav">
+		
+<ul role="navigation">
+	
+	
+	<li>
+		<a href="/blog">
+			Blog
+		</a>
+	</li>
+	
+	<li>
+		<a href="/til">
+			TIL
+		</a>
+	</li>
+	
+	<li>
+		<a href="/projects">
+			Projects
+		</a>
+	</li>
+	
+</ul>
+
+	</nav>
+</header>
+
+
+	
+	<nav id="breadcrumbs" class="breadcrumbs container">
+		<ul role="navigation">
+			<li>
+				<a href="/">Home</a>
+			</li>
+
+			<span>/</span>
+
+			<li>
+				<a href="/til">
+					TIL
+				</a>
+			</li>
+
+			<span>/</span>
+
+			<li>
+				<a href="/til/2025-04-09-how-to-list-users-on-a-linux-machine">
+					How to list users on a Linux machine
+				</a>
+			</li>
+		</ul>
+	</nav>
+
+	<main id="entry" class="main wrapper">
+		<article class="article">
+			<header class="header full-bleed-wrapper">
+				<hgroup class="hgroup centered">
+					<h1>How to list users on a Linux machine</h1>
+					<h2>Apr 09, 2025</h2>
+					<p>141 words</p>
+				</hgroup>
+
+				
+			</header>
+
+			<main class="markdown full-bleed-wrapper">
+				<h2 id="users">Users</h2>
+<blockquote>
+<p>The <code>/etc/passwd</code> file is a text-based database of information about users that may log into the system or other operating system user identities that own running processes. <a href="https://en.wikipedia.org/wiki/Passwd#Password_file">wikipedia</a></p>
+</blockquote>
+<pre><code class="language-bash">cat /etc/passwd
+</code></pre>
+<p>An example output below running <code>cat /etc/passwd</code>:</p>
+<pre><code>root:x:0:0:Super User:/root:/bin/bash
+bin:x:1:1:bin:/bin:/usr/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/usr/sbin/nologin
+adm:x:3:4:adm:/var/adm:/usr/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/usr/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/usr/sbin/nologin
+operator:x:11:0:operator:/root:/usr/sbin/nologin
+games:x:12:100:games:/usr/games:/usr/sbin/nologin
+ftp:x:14:50:FTP User:/var/ftp:/usr/sbin/nologin
+nobody:x:65534:65534:Kernel Overflow User:/:/usr/sbin/nologin
+dbus:x:81:81:System Message Bus:/:/usr/sbin/nologin
+tss:x:59:59:Account used for TPM access:/:/usr/sbin/nologin
+avahi:x:70:70:Avahi mDNS/DNS-SD Stack:/var/run/avahi-daemon:/sbin/nologin
+geoclue:x:999:999:User for geoclue:/var/lib/geoclue:/sbin/nologin
+systemd-oom:x:998:998:systemd Userspace OOM Killer:/:/usr/sbin/nologin
+polkitd:x:114:114:User for polkitd:/:/sbin/nologin
+rtkit:x:172:172:RealtimeKit:/:/sbin/nologin
+chrony:x:997:995:chrony system user:/var/lib/chrony:/sbin/nologin
+rpc:x:32:32:Rpcbind Daemon:/var/lib/rpcbind:/sbin/nologin
+pipewire:x:996:994:PipeWire System Daemon:/run/pipewire:/usr/sbin/nologin
+sssd:x:995:993:User for sssd:/run/sssd:/sbin/nologin
+unbound:x:994:992:Unbound DNS resolver:/var/lib/unbound:/sbin/nologin
+nm-openconnect:x:993:991:NetworkManager user for OpenConnect:/:/sbin/nologin
+openvpn:x:992:990:OpenVPN:/etc/openvpn:/sbin/nologin
+nm-openvpn:x:991:989:Default user for running openvpn spawned by NetworkManager:/:/sbin/nologin
+sddm:x:990:988:SDDM Greeter Account:/var/lib/sddm:/usr/sbin/nologin
+mysql:x:27:27:MySQL Server:/var/lib/mysql:/sbin/nologin
+colord:x:989:987:User for colord:/var/lib/colord:/sbin/nologin
+abrt:x:173:173::/etc/abrt:/sbin/nologin
+flatpak:x:988:986:Flatpak system helper:/:/usr/sbin/nologin
+rpcuser:x:29:29:RPC Service User:/var/lib/nfs:/sbin/nologin
+vboxadd:x:987:1::/var/run/vboxadd:/sbin/nologin
+sshd:x:74:74:Privilege-separated SSH:/usr/share/empty.sshd:/usr/sbin/nologin
+dnsmasq:x:986:983:Dnsmasq DHCP and DNS server:/var/lib/dnsmasq:/usr/sbin/nologin
+usbmuxd:x:113:113:usbmuxd user:/:/sbin/nologin
+tcpdump:x:72:72:tcpdump:/:/usr/sbin/nologin
+passim:x:981:981:Local Caching Server:/usr/share/empty:/usr/sbin/nologin
+systemd-coredump:x:980:980:systemd Core Dumper:/:/usr/sbin/nologin
+systemd-network:x:192:192:systemd Network Management:/:/usr/sbin/nologin
+systemd-resolve:x:193:193:systemd Resolver:/:/usr/sbin/nologin
+systemd-timesync:x:979:979:systemd Time Synchronization:/:/usr/sbin/nologin
+connor:x:1000:1000:connor:/home/connor:/bin/bash
+ollama:x:978:978::/usr/share/ollama:/bin/false
+</code></pre>
+<h2 id="groups">Groups</h2>
+<p>An example of <code>groups</code> and <code>groups $USER</code></p>
+<pre><code class="language-bash">$ groups
+
+connor adm dialout cdrom sudo audio video plugdev games users input render netdev docker gpio i2c spi
+</code></pre>
+<pre><code class="language-bash">groups $USER
+
+connor : connor adm dialout cdrom sudo audio video plugdev games users input render netdev spii2c gpio docker
+</code></pre>
+
+			</main>
+
+			<footer class="full-bleed-wrapper">
+				<div>
+					<a href="/til">
+						⏎ back to til
+					</a>
+				</div>
+			</footer>
+		</article>
+	</main>
+
+	
+<footer class="footer container">
+	<div>
+		kuljis.xyz
+	</div>
+	<div>
+		
+bio todo
+
+	</div>
+	<div class="socials-wrapper">
+		
+<ul role="list">
+	<li>
+		<a href="https://github.com/connorkuljis">Github</a>
+	</li>
+	<li>
+		<a href="https://linkedin.com/in/connor-kuljis">Linkedin</a>
+	</li>
+</ul>
+
+	</div>
+	<div>
+		
+<div>
+	
+	<span>
+		<code>go1.23.5 linux/amd64</code>
+		<time>2025-04-16 18:02:04.218949326 &#43;0000 UTC</time>
+	</span>
+</div>
+
+	</div>
+</footer>
+
+</body>
+
+</html>

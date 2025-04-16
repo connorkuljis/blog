@@ -1,36 +1,57 @@
 package site
 
 import (
+	"fmt"
 	"html/template"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/connorkuljis/blog/internal/model"
-	"github.com/connorkuljis/blog/internal/util"
 )
 
 type MySite struct {
-	Title      string
-	Categories []model.Category
-	NerdStats  *model.NerdStats
+	Title         string
+	RootDir       string
+	Template      *template.Template
+	Categories    []*model.Category
+	RecentEntries []*model.Entry
+	CategoriesMap map[string]*model.Category
+	NerdStats     *model.NerdStats
+}
+
+func NewSite(
+	title string,
+	rootDir string,
+	categories []*model.Category,
+	recentEntries []*model.Entry,
+	categoriesMap map[string]*model.Category,
+	nerdStats *model.NerdStats,
+	t *template.Template,
+) *MySite {
+	return &MySite{
+		Title:         title,
+		RootDir:       rootDir,
+		Categories:    categories,
+		RecentEntries: recentEntries,
+		CategoriesMap: categoriesMap,
+		NerdStats:     nerdStats,
+		Template:      t,
+	}
 }
 
 func (s *MySite) Init() error {
-	s.NerdStats.StartTime = time.Now()
-
-	err := os.RemoveAll(s.RootDir())
+	err := os.RemoveAll(s.RootDir)
 	if err != nil {
 		return err
 	}
 
-	err = os.MkdirAll(s.RootDir(), os.ModePerm)
+	err = os.MkdirAll(s.RootDir, os.ModePerm)
 	if err != nil {
 		return err
 	}
 
 	staticAssets := os.DirFS("static")
-	err = os.CopyFS(s.RootDir(), staticAssets)
+	err = os.CopyFS(s.RootDir, staticAssets)
 	if err != nil {
 		return err
 	}
@@ -39,27 +60,19 @@ func (s *MySite) Init() error {
 }
 
 func (s *MySite) Build() []model.Page {
-	pages := []model.Page{
-		HomePage{Site: s},
-	}
+	var pages = []model.Page{}
+
+	pages = append(pages, NewHomePage(s))
+
 	for _, category := range s.Categories {
-		entries := category.Entries
-		pages = append(pages, CategoryPage{
-			Site:           s,
-			Category:       category,
-			GroupedEntries: model.GroupByYear(entries),
-		})
-		for _, entry := range entries {
-			pages = append(pages, EntryPage{
-				Site:     s,
-				Category: category,
-				Entry:    entry,
-			})
+		pages = append(pages, NewCategoryPage(s, category))
+
+		for _, entry := range category.Entries {
+			pages = append(pages, NewEntryPage(s, category, entry))
 		}
 	}
 
-	s.NerdStats.PageCount = len(pages)
-	s.NerdStats.FinishTime = time.Now()
+	s.NerdStats.SetPageCount(len(pages))
 
 	return pages
 }
@@ -67,7 +80,10 @@ func (s *MySite) Build() []model.Page {
 func (s *MySite) Render(pages []model.Page) error {
 	for _, page := range pages {
 		dir := filepath.Dir(page.Filepath())
-		os.MkdirAll(dir, os.ModePerm)
+		err := os.MkdirAll(dir, os.ModePerm)
+		if err != nil {
+			return err
+		}
 
 		f, err := os.Create(page.Filepath())
 		if err != nil {
@@ -75,27 +91,12 @@ func (s *MySite) Render(pages []model.Page) error {
 		}
 		defer f.Close()
 
-		err = s.Template().ExecuteTemplate(f, page.TemplateName(), page)
+		err = s.Template.ExecuteTemplate(f, page.TemplateName(), page)
 		if err != nil {
 			return err
 		}
+		fmt.Println("-->", page.Filepath())
 	}
 
 	return nil
-}
-
-func (s *MySite) RootDir() string {
-	return "public"
-}
-
-func (s *MySite) Template() *template.Template {
-	var funcMap = template.FuncMap{
-		"slugify":  util.Slugify,
-		"truncate": util.Truncate,
-		"sub": func(a, b int) int {
-			return a - b
-		},
-	}
-
-	return template.Must(template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html"))
 }

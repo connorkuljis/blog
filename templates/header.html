@@ -6,18 +6,20 @@
 	</div>
 
 	<nav class="site-nav">
-		<ul role="navigation">
-			{{ $n := len .Site.Categories }}
-			{{ range $i, $category := .Site.Categories }}
-			<li>
-				<a href="{{ $category.Slug }}">{{ $category.Title }}</a>
-			</li>
-			<!-- add a separator if not the last item -->
-			{{ if not (eq (sub $n 1) $i) }}
-			<span> • </span>
-			{{ end }}
-			{{ end }}
-		</ul>
+		{{ template "nav-items" . }}
 	</nav>
 </header>
+{{ end }}
+
+{{ define "nav-items" }}
+<ul role="navigation">
+	{{ $n := len .Site.Categories }}
+	{{ range $i, $category := .Site.Categories }}
+	<li>
+		<a href="{{ $category.Permalink }}">
+			{{ $category.Title }}
+		</a>
+	</li>
+	{{ end }}
+</ul>
 {{ end }}

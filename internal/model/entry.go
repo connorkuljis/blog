@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"database/sql"
 	"fmt"
-	"sort"
 	"strings"
 	"time"
 
@@ -26,9 +25,8 @@ type Entry struct {
 	IsDraft          int            `db:"is_draft"`
 
 	// below fields are computed values, that may or may not be populated.
-	Category  Category
-	Markdown  template.HTML
-	WordCount int
+	Category *Category
+	Markdown template.HTML
 }
 
 func NewEntry(categoryID int64, title string) *Entry {
@@ -60,7 +58,7 @@ func (e Entry) String() string {
 	return sb.String()
 }
 
-func (e *Entry) AddCategory(category Category) {
+func (e *Entry) AddCategory(category *Category) {
 	e.Category = category
 }
 
@@ -73,54 +71,19 @@ func (e *Entry) ToHTML(parser goldmark.Markdown) error {
 
 	e.Markdown = template.HTML(buf.String())
 
-	e.CalculateWordCount()
+	e.WordCount()
 
 	return nil
 }
 
-func (e Entry) Slug() string {
-	return e.Category.Slug() + "/" + util.Slugify(e.Title)
+func (e Entry) Permalink() string {
+	if e.Category.Permalink() == "" {
+		return "/"
+	}
+
+	return e.Category.Permalink() + "/" + e.CreatedAt.Format("2006-01-02") + "-" + util.Slugify(e.Title)
 }
 
-func (e *Entry) CalculateWordCount() {
-	e.WordCount = len(strings.Split(e.Content, " "))
-}
-
-func GroupByYear(entries []Entry) [][]Entry {
-	// Handle empty or nil input slice gracefully
-	if len(entries) == 0 {
-		return [][]Entry{} // Return an empty slice, not nil
-	}
-
-	// 1. Use a map to group entries by year.
-	//    Key: Year (int)
-	//    Value: Slice of entries for that year ([]Entry)
-	groups := make(map[int][]Entry)
-
-	for _, entry := range entries {
-		year := entry.CreatedAt.Year()
-		// Append the entry to the slice associated with its year.
-		// If the key (year) doesn't exist yet, it will be created with a new slice.
-		groups[year] = append(groups[year], entry)
-	}
-
-	// 2. Get the years (keys) from the map to sort them.
-	years := make([]int, 0, len(groups))
-	for year := range groups {
-		years = append(years, year)
-	}
-
-	// 3. Sort the years chronologically.
-	sort.Sort(sort.Reverse(sort.IntSlice(years)))
-
-	// 4. Build the final result slice, ordered by the sorted years.
-	//    Pre-allocate capacity for efficiency.
-	result := make([][]Entry, 0, len(years))
-	for _, year := range years {
-		// Append the slice of entries for the current year (from the map)
-		// to the result slice.
-		result = append(result, groups[year])
-	}
-
-	return result
+func (e *Entry) WordCount() int {
+	return len(strings.Split(e.Content, " "))
 }

@@ -32,8 +32,18 @@ func (r *CategoryRepo) ReadCategoryByID(id int64) (model.Category, error) {
 	return category, nil
 }
 
-func (r *CategoryRepo) ReadAllCategories() ([]model.Category, error) {
-	var categories []model.Category
+func (r *CategoryRepo) ReadCategoryByTitle(title string) (model.Category, error) {
+	var category model.Category
+	err := r.db.Get(&category, "SELECT * FROM categories WHERE title LIKE ?", title)
+	if err != nil {
+		return category, err
+	}
+
+	return category, nil
+}
+
+func (r *CategoryRepo) ReadAllCategories() ([]*model.Category, error) {
+	var categories []*model.Category
 	err := r.db.Select(&categories, "SELECT * FROM categories")
 	if err != nil {
 		return categories, err

@@ -11,3 +11,6 @@ clean:
 
 serve:
 	./scripts/serve.sh
+
+watch:
+	./scripts/watcher.sh

@@ -5,9 +5,28 @@
 .layout {
 	display: grid;
 	min-height: 100dvh;
+	padding-top: 1rem;
+	width: 100%;
 	grid-template-columns: 1fr;
 	grid-template-rows:
-		auto auto 1fr auto;
+		[header] auto [breadcrumbs] auto [main] 1fr [footer] auto;
+	row-gap: 1rem;
+
+	&>header {
+		grid-row: header;
+	}
+
+	&>#breadcrumbs {
+		grid-row: breadcrumbs;
+	}
+
+	&>main {
+		grid-row: main;
+	}
+
+	&>footer {
+		grid-row: footer;
+	}
 }
 
 .wrapper {
@@ -43,12 +62,15 @@
 
 .site-header {
 	display: flex;
-	justify-content: space-between;
+	flex-direction: row;
 	align-items: center;
-	gap: var(--gap-m);
+	justify-content: space-between;
 	flex-wrap: wrap;
+	gap: var(--gap-l);
 
-	padding-top: var(--spacer-amount);
+	a {
+		text-decoration: none;
+	}
 }
 
 .site-header .site-nav ul {
@@ -58,14 +80,14 @@
 }
 
 
-.breadcrumbs {
-	padding-top: var(--spacer-amount);
+.breadcrumbs [role="navigation"] {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--gap-s);
 
-	& ul {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: var(--gap-s);
+	a {
+		text-decoration: none;
 	}
 }
 
@@ -75,8 +97,6 @@
 
 .main {
 	min-height: 100%;
-	padding-top: var(--gap-xxl);
-	padding-bottom: var(--gap-xxl);
 
 	&>*+* {
 		margin-top: var(--gap-xl);
@@ -100,7 +120,6 @@
 
 .markdown {
 	min-height: 100%;
-	line-height: 1.6;
 
 	&>* {
 		margin-top: var(--gap-l);

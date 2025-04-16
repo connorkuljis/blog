@@ -12,22 +12,22 @@ type Category struct {
 	Title       string `db:"title"`
 	Description string `db:"description"`
 
-	Entries []Entry
+	Entries []*Entry
 }
 
 func NewCategory(title, description string) *Category {
 	return &Category{
 		Title:       title,
 		Description: description,
-		Entries:     []Entry{},
+		Entries:     []*Entry{},
 	}
 }
 
-func (c *Category) AddEntry(e Entry) {
-	c.Entries = append(c.Entries, e)
+func (c *Category) AddEntry(e ...*Entry) {
+	c.Entries = append(c.Entries, e...)
 }
 
-func (c Category) Slug() string {
+func (c Category) Permalink() string {
 	return "/" + util.Slugify(c.Title)
 }
 
