@@ -1,25 +1,16 @@
 <!-- header -->
 {{ define "header" }}
-<header class="site-header container">
-	<div class="site-title">
-		<a href="/">Oaku's Weblog</a>
+<header class="header" id="kuljis-header">
+	<div class="wrapper">
+		<nav class="nav" id="kuljis-nav">
+			<div><a href="/">Home</a></div>
+
+			<ul class="categories-list">
+				{{- range $_, $category := .Site.Categories }}
+				<li><a href="{{ $category.Permalink }}">{{ $category.Title }}</a></li>
+				{{- end }}
+			</ul>
+		</nav>
 	</div>
-
-	<nav class="site-nav">
-		{{ template "nav-items" . }}
-	</nav>
 </header>
-{{ end }}
-
-{{ define "nav-items" }}
-<ul role="navigation">
-	{{ $n := len .Site.Categories }}
-	{{ range $i, $category := .Site.Categories }}
-	<li>
-		<a href="{{ $category.Permalink }}">
-			{{ $category.Title }}
-		</a>
-	</li>
-	{{ end }}
-</ul>
 {{ end }}

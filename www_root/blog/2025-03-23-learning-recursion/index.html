@@ -1,0 +1,124 @@
+
+<!doctype html>
+<html lang="en">
+
+
+<head>
+	<meta charset="utf-8" />
+	<title>kuljis.xyz | Learning Recursion</title>
+
+	<link rel="icon" href="/images/icon.png" />
+	<link rel="stylesheet" href="/css/styles.css" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+
+<body>
+	
+<header class="header" id="kuljis-header">
+	<div class="wrapper">
+		<nav class="nav" id="kuljis-nav">
+			<div><a href="/">Home</a></div>
+
+			<ul class="categories-list">
+				<li><a href="/blog">Blog</a></li>
+				<li><a href="/til">TIL</a></li>
+				<li><a href="/projects">Projects</a></li>
+			</ul>
+		</nav>
+	</div>
+</header>
+
+
+	<main id="entry">
+		<div class="wrapper">
+			<article class="article">
+				<header>
+					<hgroup>
+
+						<h1>Learning Recursion</h1>
+
+						<div>
+							<time>March 23, 2025</time>
+							<span>
+								<a href="/blog">Blog</a>
+							</span>
+						</div>
+
+						
+						<figure>
+							<img src="/images/six_triangular_numbers.png" />
+						</figure>
+						
+					</hgroup>
+				</header>
+
+				<main class="main markdown">
+					<p>I learned recursion using triangular numbers as an exercise.</p>
+<p>Triangular numbers are the sum of all natural numbers up to a certain number.<br />
+For example, the 5th triangular number is 1 + 2 + 3 + 4 + 5 = 15.</p>
+<p>Here is the code I used to calculate the nth triangular number using recursion:</p>
+<pre><code class="language-java">public class TriangularNumber {
+    public static int calculateTriangularNumber(int n) {
+        if (n == 1) {
+            return 1;
+        }
+
+        return n + calculateTriangularNumber(n - 1);
+    }
+
+    public static void main(String[] args) {
+        int n = 5;
+        int result = calculateTriangularNumber(n);
+        System.out.println(&quot;The &quot; + n + &quot;th triangular number is: &quot; + result);
+    }
+}
+</code></pre>
+<p>When you run this code with <code>n = 5</code>, it will output:</p>
+<pre><code class="language-plaintext">The 5th triangular number is: 15
+</code></pre>
+
+				</main>
+
+				<footer>
+					<h4>Read More</h4>
+
+					<nav>
+						<div class="grid">
+							<div class="grid-item prev">
+								
+								<span>Previous</span>
+								<a href="/blog/2025-05-24-software-geeks-move-differently">Software Geeks Move Differently</a>
+								
+							</div>
+
+							<div class="grid-item next">
+								
+								<span>Next</span>
+								<a href="/blog/2025-03-23-bloat-is-the-universal-enemy">Bloat is the Universal Enemy</a>
+								
+							</div>
+						</div>
+					</nav>
+				</footer>
+			</article>
+		</div>
+	</main>
+
+	
+<footer id="footer">
+	
+	<div class="wrapper">
+		<div>
+			kuljis.xyz
+		</div>
+		<div class="nerd-stats">
+			linux
+		</div>
+	</div>
+</footer>
+
+</body>
+
+</html>

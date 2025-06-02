@@ -35,13 +35,15 @@ func (r *EntryRepo) CreateEntry(entry *model.Entry) error {
 	return nil
 }
 
-func (r *EntryRepo) ReadAllEntries(includeDrafts bool) ([]model.Entry, error) {
-	var entries []model.Entry
+func (r *EntryRepo) ReadAllEntries(includeDrafts bool) ([]*model.Entry, error) {
+	var entries []*model.Entry
 
-	q := "SELECT * FROM entries WHERE is_draft = 0"
+	q := "SELECT * FROM entries"
 
-	if includeDrafts {
-		q = "SELECT * FROM entries"
+	// if includeDrafts is false (release mode), get only non-draft (released) entries.
+	// note: sqlite does not have bools, so we use integers.
+	if !includeDrafts {
+		q += " WHERE is_draft = 0"
 	}
 
 	q += " ORDER BY created_at DESC"
@@ -65,12 +67,12 @@ func (r *EntryRepo) ReadRecentEntries(limit int) ([]model.Entry, error) {
 	return entries, nil
 }
 
-func (r *EntryRepo) ReadAllByCategoryID(categoryID int64, includeDrafts bool) ([]*model.Entry, error) {
+func (r *EntryRepo) ReadAllByCategoryID(categoryID int64, enableDrafts bool) ([]*model.Entry, error) {
 	var entries []*model.Entry
 
 	q := "SELECT * FROM entries WHERE category_id = ?"
 
-	if !includeDrafts {
+	if !enableDrafts {
 		q += "AND is_draft = 0"
 	}
 

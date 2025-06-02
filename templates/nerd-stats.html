@@ -1,9 +1,0 @@
-{{ define "nerd-stats" }}
-<div>
-	{{ $nerdStats := .Site.NerdStats }}
-	<span>
-		<code>{{ $nerdStats.Version }} {{ $nerdStats.Platform }}/{{ $nerdStats.Arch }}</code>
-		<time>{{ $nerdStats.StartTime.UTC }}</time>
-	</span>
-</div>
-{{ end }}

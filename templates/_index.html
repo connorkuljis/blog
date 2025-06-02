@@ -5,29 +5,25 @@
 
 {{ template "head" . }}
 
-<body class="layout">
-	<!-- header -->
-	<!-- {{ template "header" . }} -->
+<body id="index">
+	{{ template "header" . }}
 
-	<!-- breadcrumbs -->
-	<!-- <nav id="breadcrumbs" class="breadcrumbs container"> -->
-	<!-- 	<ul role="navigation"> -->
-	<!-- 		<li><a href="/">Home</a></li> -->
-	<!-- 	</ul> -->
-	<!-- </nav> -->
+	<main class="main">
+		<div class="wrapper">
+			<section class="intro">
+				<h1>Connor Kuljis</h1>
+			</section>
 
-	<!-- main -->
-	<main id="index" class="main wrapper container">
-		let the work do the talking.
+			{{- template "about" . }}
 
-		<ul>
-			{{ range .Site.Categories }}
-			{{ range .Entries }}
-			<li><a href="{{ .Permalink }}">{{ .Title }}</a>{{ .Markdown }}</li>
-			{{ end }}
-			{{ end }}
-		</ul>
+			{{- template "education" . }}
+
+			{{- template "contact" . }}
+
+		</div>
 	</main>
+
+	{{ template "footer" . }}
 </body>
 
 </html>

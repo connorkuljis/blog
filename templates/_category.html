@@ -4,70 +4,38 @@
 <!-- head -->
 {{ template "head" . }}
 
-<body class="layout">
-	<!-- header -->
+<body id="category">
 	{{ template "header" . }}
 
-	<!-- breadcrumbs -->
-	<nav id="breadcrumbs" class="breadcrumbs container">
-		<ul role="navigation">
-			<li>
-				<a href="/">Home</a>
-			</li>
+	<main class="main">
+		<div class="wrapper">
+			<article class="article">
+				<header class="article-header">
+					<h1>{{ .Category.Title }}</h1>
+					<h2>{{ .Category.Description }}</h2>
+				</header>
 
-			<span>/</span>
+				<table>
+					{{ range $i, $e := .Category.Entries }}
+					<tr>
+						<td>
+							<time class="datetime">{{ $e.CreatedAt.Format "2006-01-02" }}</time>
+						</td>
+						<td>
+							<a href="{{ $e.Permalink }}">
+								{{ $e.Title }}
+							</a>
+						</td>
+					</tr>
+					{{ end }}
+				</table>
 
-			<li>
-				<a href="{{ .Category.Permalink }}">
-					{{ .Category.Title }}
-				</a>
-			</li>
-		</ul>
-	</nav>
-
-	<!-- main -->
-	<main class="main wrapper container" id="{{ slugify .Category.Title }}-entries">
-		<hgroup class="centered">
-			<h1>{{ .Category.Title }}</h1>
-			<p>{{ .Category.Description }}</p>
-		</hgroup>
-
-		{{ template "category-entries-list" . }}
+			</article>
+		</div>
+		<!-- ./wrapper -->
 	</main>
 
 	{{ template "footer" . }}
 </body>
 
 </html>
-
-{{ define "category-entries-list" }}
-{{ $title := slugify .Category.Title }}
-{{ range $yearEntries := .GroupedEntries }}
-{{ $year := (index $yearEntries 0).CreatedAt.Year }}
-<section id="{{ $title }}-entries-{{ $year }}" class="category-year-entries">
-	<h2>{{ $year }}</h2>
-
-	<ul role="list">
-		{{ range $entry := $yearEntries }}
-		<li class="entry-preview">
-			<div>
-				{{ if $entry.FeaturedImageURL.Valid }}
-				<img src="{{ .FeaturedImageURL.String }}" />
-				{{ end }}
-			</div>
-
-			<div>
-				<span>
-					<a href="{{ $entry.Permalink }}">
-						<h3>{{ $entry.Title }}</h3>
-					</a>
-					<time>{{ $entry.CreatedAt.Format "2006 Jan 02" }}</time>
-					<div>{{ $entry.Description.String }}</div>
-				</span>
-			</div>
-		</li>
-		{{ end }}
-	</ul>
-</section>
-{{ end }}
-{{ end }}

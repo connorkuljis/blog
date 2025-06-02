@@ -1,6 +1,6 @@
 package model
 
 type Page interface {
-	Filepath() string
+	FileName() string
 	TemplateName() string
 }

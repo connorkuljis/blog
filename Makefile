@@ -13,4 +13,5 @@ serve:
 	./scripts/serve.sh
 
 watch:
-	./scripts/watcher.sh
+	./scripts/watch.sh
+

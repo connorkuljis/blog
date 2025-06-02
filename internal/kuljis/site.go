@@ -11,8 +11,9 @@ import (
 
 type MySite struct {
 	Title         string
-	RootDir       string
-	Template      *template.Template
+	DirWWWRoot    string
+	DirAssets     string
+	T             *template.Template
 	Categories    []*model.Category
 	CategoriesMap map[string]*model.Category
 	NerdStats     *model.NerdStats
@@ -20,7 +21,8 @@ type MySite struct {
 
 func NewSite(
 	title string,
-	rootDir string,
+	dirWWWRoot string,
+	dirAssets string,
 	categories []*model.Category,
 	categoriesMap map[string]*model.Category,
 	nerdStats *model.NerdStats,
@@ -28,27 +30,28 @@ func NewSite(
 ) *MySite {
 	return &MySite{
 		Title:         title,
-		RootDir:       rootDir,
+		DirWWWRoot:    dirWWWRoot,
+		DirAssets:     dirAssets,
 		Categories:    categories,
 		CategoriesMap: categoriesMap,
 		NerdStats:     nerdStats,
-		Template:      t,
+		T:             t,
 	}
 }
 
 func (s *MySite) Init() error {
-	err := os.RemoveAll(s.RootDir)
+	err := os.RemoveAll(s.DirWWWRoot)
 	if err != nil {
 		return err
 	}
 
-	err = os.MkdirAll(s.RootDir, os.ModePerm)
+	err = os.MkdirAll(s.DirWWWRoot, os.ModePerm)
 	if err != nil {
 		return err
 	}
 
-	staticAssets := os.DirFS("static")
-	err = os.CopyFS(s.RootDir, staticAssets)
+	staticAssets := os.DirFS(s.DirAssets)
+	err = os.CopyFS(s.DirWWWRoot, staticAssets)
 	if err != nil {
 		return err
 	}
@@ -59,13 +62,26 @@ func (s *MySite) Init() error {
 func (s *MySite) Build() []model.Page {
 	var pages = []model.Page{}
 
-	pages = append(pages, NewHomePage(s))
+	pages = append(pages, NewHomePage(s, "Home"))
 
 	for _, category := range s.Categories {
-		pages = append(pages, NewCategoryPage(s, category))
+		pages = append(pages, NewCategoryPage(s, category, category.Title))
 
-		for _, entry := range category.Entries {
-			pages = append(pages, NewEntryPage(s, category, entry))
+		for i, entry := range category.Entries {
+			var next *model.Entry
+			var prev *model.Entry
+
+			// Get previous entry if exists
+			if i > 0 {
+				prev = category.Entries[i-1]
+			}
+
+			// Get next entry if exists
+			if i < len(category.Entries)-1 {
+				next = category.Entries[i+1]
+			}
+
+			pages = append(pages, NewEntryPage(s, category, entry, next, prev, entry.Title))
 		}
 	}
 
@@ -76,23 +92,25 @@ func (s *MySite) Build() []model.Page {
 
 func (s *MySite) Render(pages []model.Page) error {
 	for _, page := range pages {
-		dir := filepath.Dir(page.Filepath())
+		filename := filepath.Join(s.DirWWWRoot, page.FileName())
+
+		dir := filepath.Dir(filename)
 		err := os.MkdirAll(dir, os.ModePerm)
 		if err != nil {
 			return err
 		}
 
-		f, err := os.Create(page.Filepath())
+		f, err := os.Create(filename)
 		if err != nil {
 			return err
 		}
 		defer f.Close()
 
-		err = s.Template.ExecuteTemplate(f, page.TemplateName(), page)
+		err = s.T.ExecuteTemplate(f, page.TemplateName(), page)
 		if err != nil {
 			return err
 		}
-		fmt.Println("-->", page.Filepath())
+		fmt.Println("-->", filename)
 	}
 
 	return nil
