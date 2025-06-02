@@ -5,7 +5,7 @@ set -e  # Exit immediately if a command exits with non-zero status
 REMOTE_HOST="${SSH_USER}@${SERVER_IP}"
 STAGING_DIR="~/public/"
 DOCUMENT_ROOT="/var/www/html/kuljis.xyz"
-LOCAL_DIR="public/"
+LOCAL_DIR="www_root/"
 
 # Copy local assets to remote staging directory
 echo "Syncing local assets to staging directory..."

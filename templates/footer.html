@@ -1,16 +1,13 @@
 {{ define "footer" }}
-<footer class="footer container">
-	<div>
-		{{ .Site.Title }}
-	</div>
-	<div>
-		{{ template "bio" . }}
-	</div>
-	<div class="socials-wrapper">
-		{{ template "socials" . }}
-	</div>
-	<div>
-		{{ template "nerd-stats" . }}
+<footer id="footer">
+	<!-- wrapper -->
+	<div class="wrapper">
+		<div>
+			{{ .Site.Title }}
+		</div>
+		<div class="nerd-stats">
+			{{ .Site.NerdStats.Platform }}
+		</div>
 	</div>
 </footer>
 {{ end }}

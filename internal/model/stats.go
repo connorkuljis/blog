@@ -10,9 +10,9 @@ type NerdStats struct {
 	StartTime time.Time
 }
 
-func NewNerdStats() *NerdStats {
+func NewNerdStats(startTime time.Time) *NerdStats {
 	return &NerdStats{
-		StartTime: time.Now(),
+		StartTime: startTime,
 	}
 }
 

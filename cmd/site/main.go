@@ -19,7 +19,8 @@ import (
 
 const (
 	Title        = "kuljis.xyz"
-	RootDir      = "public"
+	DirRoot      = "www_root"
+	DirAssets    = "assets"
 	EnableDrafts = true
 )
 
@@ -40,7 +41,6 @@ func main() {
 			parser.WithAutoHeadingID(),
 		),
 		goldmark.WithRendererOptions(
-			// html.WithUnsafe(),
 			html.WithHardWraps(),
 			html.WithXHTML(),
 		),
@@ -107,7 +107,7 @@ func initialiseKuljisSite(md goldmark.Markdown, db *sqlx.DB, t *template.Templat
 		categoriesMap[category.Title] = category
 	}
 
-	nerdStats := model.NewNerdStats()
+	nerdStats := model.NewNerdStats(time.Now())
 
-	return kuljis.NewSite(Title, RootDir, allCategories, categoriesMap, nerdStats, t)
+	return kuljis.NewSite(Title, DirRoot, DirAssets, allCategories, categoriesMap, nerdStats, t)
 }

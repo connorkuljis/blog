@@ -1,0 +1,36 @@
+<!-- templates/components.html -->
+{{ define "about" }}
+<article class="about" id="kuljis-about">
+	<h2>About Me</h2>
+	<p>You know I think it's cooler to not have a personal website, but I made one anyway. </p>
+	<p>You know what is cool? Having a wikipedia page, or a defunct home page of an internet company you torched the
+		investors on.</p>
+	<p>If I have to tell you some embarrasing information about me - so you can hire me then I have lost.</p>
+</article>
+{{ end }}
+
+{{ define "education" }}
+<article class="education" id="kuljis-education">
+	<h2>Education</h2>
+	<p>Here is some incredibly embarrasing information about me.</p>
+	<p>Please hire me.</p>
+</article>
+{{ end }}
+
+{{ define "contact" }}
+<article class="contact" id="kuljis-contact">
+	<h2>Contact</h2>
+	{{- template "socials" . }}
+</article>
+{{ end }}
+
+{{ define "socials" }}
+<ul class="socials" id="kuljis-socials" role="list">
+	<li>
+		<a class="github" href="https://github.com/connorkuljis">Github</a>
+	</li>
+	<li>
+		<a class="linkedin" href="https://linkedin.com/in/connor-kuljis">Linkedin</a>
+	</li>
+</ul>
+{{ end }}

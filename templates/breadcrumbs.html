@@ -1,0 +1,49 @@
+<!-- breadcrumbs -->
+{{ define "breadcrumbs" }}
+<nav class="breadcrumbs">
+	<ul role="navigation">
+		<li><a href="/">Home</a></li>
+	</ul>
+</nav>
+{{ end }}
+
+{{ define "breadcrumbs-category" }}
+<!-- breadcrumbs -->
+<nav id="breadcrumbs">
+	<div class="wrapper">
+		<ul class="flex-centered-items" role="navigation">
+			<li>
+				<a href="/">Home</a>
+			</li>
+			<li>
+				<a href="{{ .Category.Permalink }}">
+					{{ .Category.Title }}
+				</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+{{ end }}
+
+{{ define "breadcrumbs-entry" }}
+<!-- breadcrumbs -->
+<nav id="breadcrumbs">
+	<div class="wrapper">
+		<ul role="navigation">
+			<li>
+				<a href="/">Home</a>
+			</li>
+			<li>
+				<a href="{{ .Entry.Category.Permalink }}">
+					{{ .Entry.Category.Title }}
+				</a>
+			</li>
+			<li>
+				<a href="{{ .Entry.Permalink }}">
+					{{ .Entry.Title }}
+				</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+{{ end }}

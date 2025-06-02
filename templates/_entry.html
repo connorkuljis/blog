@@ -3,62 +3,59 @@
 <html lang="en">
 {{ template "head" . }}
 
-<body class="layout">
+<body>
 	{{ template "header" . }}
 
-	<!-- breadcrumbs -->
-	<nav id="breadcrumbs" class="breadcrumbs container">
-		<ul role="navigation">
-			<li>
-				<a href="/">Home</a>
-			</li>
+	<main id="entry">
+		<div class="wrapper">
+			<article class="article">
+				<header>
+					<hgroup>
 
-			<span>/</span>
+						<h1>{{ .Entry.Title }}</h1>
 
-			<li>
-				<a href="{{ .Entry.Category.Permalink }}">
-					{{ .Entry.Category.Title }}
-				</a>
-			</li>
+						<div>
+							<time>{{ .Entry.CreatedAt.Format "January 02, 2006"}}</time>
+							<span>
+								<a href="{{ .Entry.Category.Permalink }}">{{ .Entry.Category.Title }}</a>
+							</span>
+						</div>
 
-			<span>/</span>
+						{{ if .Entry.FeaturedImageURL.Valid }}
+						<figure>
+							<img src="{{ .Entry.FeaturedImageURL.String }}" />
+						</figure>
+						{{ end }}
+					</hgroup>
+				</header>
 
-			<li>
-				<a href="{{ .Entry.Permalink }}">
-					{{ .Entry.Title }}
-				</a>
-			</li>
-		</ul>
-	</nav>
+				<main class="main markdown">
+					{{ .Entry.Markdown }}
+				</main>
 
-	<main id="entry" class="main wrapper">
-		<article class="article">
-			<header class="header full-bleed-wrapper">
-				<hgroup class="hgroup centered">
-					<h1>{{ .Entry.Title }}</h1>
-					<h2>{{ .Entry.CreatedAt.Format "Jan 02, 2006"}}</h2>
-					<p>{{ .Entry.WordCount }} words</p>
-				</hgroup>
+				<footer>
+					<h4>Read More</h4>
 
-				{{ if .Entry.FeaturedImageURL.Valid }}
-				<picture class="featured-image-wrapper full-bleed">
-					<img src="{{ .Entry.FeaturedImageURL.String }}" />
-				</picture>
-				{{ end }}
-			</header>
+					<nav>
+						<div class="grid">
+							<div class="grid-item prev">
+								{{ if .Prev }}
+								<span>Previous</span>
+								<a href="{{ .Prev.Permalink }}">{{ .Prev.Title }}</a>
+								{{ end }}
+							</div>
 
-			<main class="markdown full-bleed-wrapper">
-				{{ .Entry.Markdown }}
-			</main>
-
-			<footer class="full-bleed-wrapper">
-				<div>
-					<a href="{{ .Entry.Category.Permalink }}">
-						⏎ back to {{ slugify .Entry.Category.Title }}
-					</a>
-				</div>
-			</footer>
-		</article>
+							<div class="grid-item next">
+								{{ if .Next }}
+								<span>Next</span>
+								<a href="{{ .Next.Permalink }}">{{ .Next.Title }}</a>
+								{{ end }}
+							</div>
+						</div>
+					</nav>
+				</footer>
+			</article>
+		</div>
 	</main>
 
 	{{ template "footer" . }}

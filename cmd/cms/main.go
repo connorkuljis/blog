@@ -11,7 +11,6 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/store"
@@ -20,9 +19,9 @@ import (
 )
 
 type App struct {
-	DB           *sqlx.DB
-	EntryRepo    *store.EntryRepo
-	CategoryRepo *store.CategoryRepo
+	DB         *sqlx.DB
+	Entries    *store.EntryRepo
+	Categories *store.CategoryRepo
 }
 
 const KeyApp = "app"
@@ -41,9 +40,9 @@ func main() {
 			}
 
 			app := &App{
-				DB:           db,
-				EntryRepo:    store.NewEntryRepo(db),
-				CategoryRepo: store.NewCategoryRepo(db),
+				DB:         db,
+				Entries:    store.NewEntryRepo(db),
+				Categories: store.NewCategoryRepo(db),
 			}
 
 			ctx = context.WithValue(ctx, KeyApp, app)
@@ -70,7 +69,7 @@ func main() {
 					{
 						Name:   "list",
 						Usage:  "List entries.",
-						Action: updateEntry,
+						Action: listEntries,
 					},
 					{
 						Name:   "delete",
@@ -91,6 +90,11 @@ func main() {
 						Action: createCategory,
 					},
 					{
+						Name:   "update",
+						Usage:  "Update an existing category.",
+						Action: updateCategory,
+					},
+					{
 						Name:   "delete",
 						Usage:  "Delete a category.",
 						Action: deleteCategory,
@@ -109,22 +113,13 @@ func main() {
 func listEntries(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	categories, err := app.CategoryRepo.ReadAllCategories()
+	entries, err := app.Entries.ReadAllEntries(true)
 	if err != nil {
 		return err
 	}
 
-	for _, c := range categories {
-		fmt.Printf("[%s]\n", c.Title)
-
-		entries, err := app.EntryRepo.ReadAllByCategoryID(c.ID, true)
-		if err != nil {
-			return err
-		}
-
-		for _, e := range entries {
-			fmt.Printf("\t%s\n", e.Title)
-		}
+	for i, e := range entries {
+		fmt.Printf("%d. %s - %s\n", i+1, e.Title, e.Description.String)
 	}
 
 	return nil
@@ -133,60 +128,34 @@ func listEntries(ctx context.Context, c *cli.Command) error {
 func createEntry(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	categories, err := app.CategoryRepo.ReadAllCategories()
+	categories, err := app.Categories.ReadAllCategories()
 	if err != nil {
 		return err
 	}
 
-	var index int
-	fmt.Printf("category index: ")
-	fmt.Scanf("%d", &index)
+	reader := bufio.NewReader(os.Stdin)
+	category, err := selectCategory(reader, categories)
+	if err != nil {
+		return err
+	}
+	fmt.Println(category)
 
-	if index < 0 || index > len(categories)-1 {
-		return fmt.Errorf("invalid input")
+	fmt.Println("Please enter entry title: ")
+	title, err := reader.ReadString('\n')
+	if err != nil {
+		return err
 	}
 
-	category := categories[index]
-
-	reader := bufio.NewReader(os.Stdin)
-
-	var title string
-	fmt.Println("Please enter entry title, or leave blank for current timestamp")
-	fmt.Printf("title: ")
-	title, _ = reader.ReadString('\n')
 	title = strings.TrimSpace(title)
 
-	if title == "" {
-		title = time.Now().Format(time.RFC3339)
-	}
-
 	entry := model.NewEntry(category.ID, title)
-	err = app.EntryRepo.CreateEntry(entry)
+
+	err = app.Entries.CreateEntry(entry)
 	if err != nil {
 		return fmt.Errorf("error creating entry: %w", err)
 	}
 
-	var choice string
-	fmt.Printf("Open '%s' in editor? [y/N]", entry.Title)
-	choice, _ = reader.ReadString('\n')
-	choice = strings.TrimSpace(choice)
-	choice = strings.ToLower(choice)
-
-	switch choice {
-	case "y":
-		err := editEntryContent(entry)
-		if err != nil {
-			return err
-		}
-		err = app.EntryRepo.UpdateEntry(entry)
-		if err != nil {
-			return err
-		}
-	case "n", "":
-		fmt.Println("Done.")
-	default:
-		return fmt.Errorf("bad input")
-	}
+	fmt.Printf("Created entry: %s\n", entry.Title)
 
 	return nil
 }
@@ -194,102 +163,125 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 func updateEntry(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
+	entries, err := app.Entries.ReadAllEntries(true)
+	if err != nil {
+		return err
+	}
+
 	reader := bufio.NewReader(os.Stdin)
-	var selectedItem model.Entry
+	entry, err := selectEntry(reader, entries)
+	if err != nil {
+		return err
+	}
 
 	for {
-		entries, err := app.EntryRepo.ReadAllEntries(true)
+		fmt.Println("Select a field to update.")
+		fmt.Println("1. Title")
+		fmt.Println("2. Description")
+		fmt.Println("3. Content")
+		fmt.Println("4. Featured Image Url")
+
+		fmt.Printf("Enter the number (%d-%d) or 'q' to quit: ", 1, 4)
+		choice, err := reader.ReadString('\n')
 		if err != nil {
 			return err
 		}
 
-		fmt.Println("\nPlease select an item from the list")
-		for i, entry := range entries {
-			fmt.Printf("%d. %s\n", i+1, entry.Title)
+		choice = strings.TrimSpace(choice)
+
+		if choice == "q" {
+			return ErrSelectionCancelled
 		}
 
-		fmt.Printf("Enter the number (1-%d) or 'q' to quit: ", len(entries))
-
-		input, err := reader.ReadString('\n')
+		choiceNum, err := strconv.Atoi(choice)
 		if err != nil {
-			return fmt.Errorf("failed to read input: %w", err)
+			return err
 		}
 
-		input = strings.TrimSpace(input)
-
-		if strings.ToLower(input) == "q" {
-			fmt.Println("\nSelection cancelled.")
-			return ErrSelectionCancelled // Return specific error for cancellation
-		}
-
-		choiceNum, err := strconv.Atoi(input)
-		if err != nil {
-			fmt.Println("Invalid input. Please enter a number or 'q'.")
-			continue // Ask the user again
-		}
-
-		if choiceNum < 1 && choiceNum > len(entries) {
-			fmt.Printf("Invalid choice. Please enter a number between 1 and %d or 'q'.\n", len(entries))
+		switch choiceNum {
+		case 1:
+			title, err := readContentFromEditor(entry.Title)
+			if err != nil {
+				return err
+			}
+			entry.Title = title
+		case 2:
+			description, err := readContentFromEditor(entry.Description.String)
+			if err != nil {
+				return err
+			}
+			entry.Description.String = description
+			if !entry.Description.Valid && len(description) > 0 {
+				entry.Description.Valid = true
+			}
+		case 3:
+			content, err := readContentFromEditor(entry.Content.String)
+			if err != nil {
+				return err
+			}
+			entry.Content.String = content
+			entry.Content.String = content
+			if !entry.Content.Valid && len(content) > 0 {
+				entry.Content.Valid = true
+			}
+		case 4:
+			featuredImageUrl, err := readContentFromEditor(entry.FeaturedImageURL.String)
+			if err != nil {
+				return err
+			}
+			entry.FeaturedImageURL.String = featuredImageUrl
+			entry.FeaturedImageURL.String = featuredImageUrl
+			if !entry.FeaturedImageURL.Valid && len(featuredImageUrl) > 0 {
+				entry.FeaturedImageURL.Valid = true
+			}
+		default:
+			fmt.Println("Bad input, must be between 1 and 4: got:", choiceNum)
 			continue
 		}
 
-		selectedIndex := choiceNum - 1
-		selectedItem = entries[selectedIndex]
-
-		err = editEntryContent(&selectedItem)
+		err = app.Entries.UpdateEntry(entry)
 		if err != nil {
 			return err
 		}
 
-		err = app.EntryRepo.UpdateEntry(&selectedItem)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println("Updated entry:", selectedItem.Title)
+		fmt.Println("Updated entry:", entry.Title)
 	}
 }
 
 // deleteEntry deletes an entry by id.
 func deleteEntry(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
+	reader := bufio.NewReader(os.Stdin)
 
-	entries, err := app.EntryRepo.ReadAllEntries(true)
+	entries, err := app.Entries.ReadAllEntries(true)
 	if err != nil {
 		return err
 	}
 
-	// handle user input
-	var index int
-	fmt.Printf("index: ")
-	fmt.Scanf("%d", &index)
-
-	if index < 0 || index > len(entries)-1 {
-		return fmt.Errorf("Invalid index")
+	entry, err := selectEntry(reader, entries)
+	if err != nil {
+		return err
 	}
 
-	entry := &entries[index]
+	fmt.Printf("Confirm delete '%s' [y/N]: ", entry.Title)
+	choice, err := reader.ReadString('\n')
+	if err != nil {
+		return fmt.Errorf("error reading input: %w", err) // Wrap for context
+	}
 
-	reader := bufio.NewReader(os.Stdin)
-
-	var choice string
-	fmt.Printf("Are you sure you want to delete '%s' [y/N]", entry.Title)
-	choice, _ = reader.ReadString('\n')
-	choice = strings.TrimSpace(choice)
-	choice = strings.ToLower(choice)
+	choice = strings.TrimSpace(strings.ToLower(choice))
 
 	switch choice {
 	case "y":
-		err := app.EntryRepo.DeleteEntryByID(entry.ID)
-		if err != nil {
-			return err
+		if err := app.Entries.DeleteEntryByID(entry.ID); err != nil {
+			return fmt.Errorf("failed to delete entry: %w", err)
 		}
-		fmt.Printf("deleted: '%s'\n", entry.Title)
+		fmt.Printf("Deleted: '%s'\n", entry.Title)
 	case "n", "":
-		fmt.Println("exiting...")
+		fmt.Println("Exiting...")
 		return nil
 	default:
-		return fmt.Errorf("bad input")
+		return fmt.Errorf("invalid input: '%s', expected 'y' or 'n'", choice)
 	}
 
 	return nil
@@ -297,7 +289,16 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 
 // listCategories lists all categories.
 func listCategories(ctx context.Context, c *cli.Command) error {
-	// app := ctx.Value(appKey).(*App)
+	app := ctx.Value(KeyApp).(*App)
+
+	categories, err := app.Categories.ReadAllCategories()
+	if err != nil {
+		return err
+	}
+
+	for i, c := range categories {
+		fmt.Printf("%d. %s\n", i, c.Title)
+	}
 
 	return nil
 }
@@ -334,6 +335,69 @@ func createCategory(ctx context.Context, c *cli.Command) error {
 	return nil
 }
 
+func updateCategory(ctx context.Context, c *cli.Command) error {
+	app := ctx.Value(KeyApp).(*App)
+
+	categories, err := app.Categories.ReadAllCategories()
+	if err != nil {
+		return err
+	}
+
+	reader := bufio.NewReader(os.Stdin)
+	selectedCategory, err := selectCategory(reader, categories)
+	if err != nil {
+		return err
+	}
+
+	for {
+		fmt.Println("Select a field to update.")
+		fmt.Println("1. Title")
+		fmt.Println("2. Description")
+
+		fmt.Printf("Enter the number (%d-%d) or 'q' to quit: ", 1, 2)
+		choice, err := reader.ReadString('\n')
+		if err != nil {
+			return err
+		}
+
+		choice = strings.TrimSpace(choice)
+
+		if choice == "q" {
+			return ErrSelectionCancelled
+		}
+
+		choiceNum, err := strconv.Atoi(choice)
+		if err != nil {
+			return err
+		}
+
+		switch choiceNum {
+		case 1:
+			title, err := readContentFromEditor(selectedCategory.Title)
+			if err != nil {
+				return err
+			}
+			selectedCategory.Title = title
+		case 2:
+			description, err := readContentFromEditor(selectedCategory.Description)
+			if err != nil {
+				return err
+			}
+			selectedCategory.Description = description
+		default:
+			fmt.Println("Bad input, must be between 1 and 4: got:", choiceNum)
+			continue
+		}
+
+		err = app.Categories.UpdateCategory(selectedCategory)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println("Updated category:", selectedCategory.Title)
+	}
+}
+
 // deleteCategory deletes a category.
 func deleteCategory(ctx context.Context, c *cli.Command) error {
 	// db := ctx.Value(sqlxKey).(*sqlx.DB)
@@ -364,38 +428,18 @@ func deleteCategory(ctx context.Context, c *cli.Command) error {
 	return nil
 }
 
-// GetInputWithPrompt prints a prompt to the user and returns the input string from the keyboard
-func GetInputWithPrompt(prompt string) (string, error) {
-	// Print the prompt
-	fmt.Print(prompt)
-
-	// Create a new reader from standard input (keyboard)
-	reader := bufio.NewReader(os.Stdin)
-
-	// Read the input line (until newline)
-	input, err := reader.ReadString('\n')
+func readContentFromEditor(content string) (string, error) {
+	f, err := os.CreateTemp("/tmp", "*.md")
 	if err != nil {
-		return "", fmt.Errorf("error reading input: %w", err) // Wrap for context
+		return "", err
 	}
+	defer os.Remove(f.Name())
 
-	// Trim the newline character and any leading/trailing spaces
-	input = strings.TrimSpace(input)
-
-	return input, nil // Return the string without the newline character
-}
-
-func editEntryContent(entry *model.Entry) error {
-	f, err := os.CreateTemp("/tmp", entry.Title+"*.md")
+	_, err = f.WriteString(content)
 	if err != nil {
-		return err
+		return "", err
 	}
-	fmt.Println("Created temporary file:", f.Name())
-
-	_, err = f.WriteString(entry.Content)
-	if err != nil {
-		return err
-	}
-	f.Close() // close the file
+	f.Close() // close the file because we are going to read from it again.
 
 	cmd := exec.Command(os.Getenv("EDITOR"), f.Name())
 	cmd.Stdout = os.Stdout
@@ -404,16 +448,76 @@ func editEntryContent(entry *model.Entry) error {
 
 	err = cmd.Run()
 	if err != nil {
-		return fmt.Errorf("Error: unable to execute command '%s': %w", cmd.String(), err)
+		return "", fmt.Errorf("Error: unable to execute command '%s': %w", cmd.String(), err)
 	}
 
-	// returned from editing, open the file again.
-	b, err := os.ReadFile(f.Name())
+	b, err := os.ReadFile(f.Name()) // re-read the file again
 	if err != nil {
-		return fmt.Errorf("Error: unable to read from '%s': %w", f.Name(), err)
+		return "", fmt.Errorf("Error: unable to read from '%s': %w", f.Name(), err)
 	}
 
-	entry.Content = string(b)
+	result := strings.TrimSuffix(string(b), "\n")
 
-	return nil
+	return result, nil
+}
+
+func selectEntry(reader *bufio.Reader, entries []*model.Entry) (*model.Entry, error) {
+	for i, e := range entries {
+		fmt.Printf("%d. %s - %s\n", i+1, e.Title, e.Description.String)
+	}
+
+	idx, err := getInputBetween(reader, 1, len(entries))
+	if err != nil {
+		return nil, err
+	}
+
+	return entries[idx-1], nil
+}
+
+func selectCategory(reader *bufio.Reader, categories []*model.Category) (*model.Category, error) {
+	for i, c := range categories {
+		fmt.Printf("%d. %s - %s\n", i+1, c.Title, c.Description)
+	}
+
+	idx, err := getInputBetween(reader, 1, len(categories))
+	if err != nil {
+		return nil, err
+	}
+
+	return categories[idx-1], nil
+}
+
+func getInputBetween(reader *bufio.Reader, min int, max int) (int, error) {
+	var choiceNum int
+
+	for {
+		fmt.Printf("Enter the number (%d-%d) or 'q' to quit: ", min, max)
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("failed to read input: %w", err)
+			continue
+		}
+
+		input = strings.TrimSpace(input)
+
+		if strings.ToLower(input) == "q" {
+			fmt.Println("\nSelection cancelled.")
+			return 0, ErrSelectionCancelled // Return specific error for cancellation
+		}
+
+		choiceNum, err = strconv.Atoi(input)
+		if err != nil {
+			fmt.Println("Invalid input. Please enter a number or 'q'.")
+			continue // Ask the user again
+		}
+
+		if choiceNum < min || choiceNum > max {
+			fmt.Printf("Invalid choice. Please enter a number between %d and %d or 'q'.\n", min, max)
+			continue
+		}
+
+		break
+	}
+
+	return choiceNum, nil
 }

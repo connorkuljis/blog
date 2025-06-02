@@ -1,6 +1,8 @@
 package store
 
 import (
+	"fmt"
+
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/jmoiron/sqlx"
 )
@@ -50,6 +52,25 @@ func (r *CategoryRepo) ReadAllCategories() ([]*model.Category, error) {
 	}
 
 	return categories, nil
+}
+
+func (r *CategoryRepo) UpdateCategory(category *model.Category) error {
+	q := `
+UPDATE
+	categories
+SET
+	title = ?,
+	description = ?
+WHERE
+	id = ?
+`
+
+	_, err := r.db.Exec(q, category.Title, category.Description, category.ID)
+	if err != nil {
+		return fmt.Errorf("Error updating category: %w", err)
+	}
+
+	return nil
 }
 
 func (r *CategoryRepo) DeleteCategoryByTitle(id int64) error {

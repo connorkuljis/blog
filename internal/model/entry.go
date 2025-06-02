@@ -17,7 +17,7 @@ type Entry struct {
 	ID               int64          `db:"id"`
 	CategoryID       int64          `db:"category_id"`
 	Title            string         `db:"title"`
-	Content          string         `db:"content"`
+	Content          sql.NullString `db:"content"`
 	Description      sql.NullString `db:"description"`
 	FeaturedImageURL sql.NullString `db:"featured_image_url"`
 	CreatedAt        time.Time      `db:"created_at"`
@@ -53,7 +53,7 @@ func (e Entry) String() string {
 	sb.WriteString("---\n")
 	// ./frontmatter
 
-	sb.WriteString(fmt.Sprintf("%s", e.Content))
+	sb.WriteString(fmt.Sprintf("%s", e.Content.String))
 
 	return sb.String()
 }
@@ -64,14 +64,12 @@ func (e *Entry) AddCategory(category *Category) {
 
 func (e *Entry) ToHTML(parser goldmark.Markdown) error {
 	var buf bytes.Buffer
-	err := parser.Convert([]byte(e.Content), &buf)
+	err := parser.Convert([]byte(e.Content.String), &buf)
 	if err != nil {
 		return err
 	}
 
 	e.Markdown = template.HTML(buf.String())
-
-	e.WordCount()
 
 	return nil
 }
@@ -85,5 +83,5 @@ func (e Entry) Permalink() string {
 }
 
 func (e *Entry) WordCount() int {
-	return len(strings.Split(e.Content, " "))
+	return len(strings.Split(e.Content.String, " "))
 }

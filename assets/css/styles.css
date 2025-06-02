@@ -1,0 +1,166 @@
+/* File: /css/styles.css */
+/* Author: Connor Kuljis */
+/* Date Created: 2025 */
+
+@import url("/css/reset.css");
+@import url("/css/base.css");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+@font-face {
+	font-family: "Opus One";
+	src: url("/fonts/OpusOneVF.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Papyrus";
+	src: url("/fonts/papyrus.ttf") format("truetype");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+:root {
+	--serif: "Papyrus", system-ui, serif;
+	--monospaced: "Opus One", monospace;
+
+	--font-unit: 1.375rem;
+	--line-height: 1.4;
+	--gap-unit: 1rem;
+	--max-width: 80rem;
+
+	/* font size */
+	--fs-200: calc(var(--font-unit) * 0.75);
+	--fs-300: calc(var(--font-unit) * 0.825);
+	--fs-400: var(--font-unit);
+	--fs-500: calc(var(--font-unit) * 1.25);
+	--fs-600: calc(var(--font-unit) * 1.5);
+	--fs-700: calc(var(--font-unit) * 2);
+	--fs-800: calc(var(--font-unit) * 2.5);
+	--fs-900: calc(var(--font-unit) * 3);
+
+	/* font weight */
+	--fw-light: 200;
+	--fw-normal: 400;
+	--fw-semi-bold: 600;
+	--fw-bold: 700;
+
+	/* spacing - based on the golden ratio */
+	--gap-small: calc(var(--gap-unit) * 0.618);
+	--gap-medium: var(--gap-unit);
+	--gap-large: calc(var(--gap-unit) * 1.618);
+	--gap-xlarge: calc(var(--gap-unit) * 2.618);
+	--gap-xxlarge: calc(var(--gap-unit) * 4.236);
+
+	--clr-primary: hsl(0, 0%, 100%);
+	--clr-secondary: hsla(0, 0%, 0%, 92%);
+	/* --clr-accent: oklch(0.6 0.37 10); */
+
+
+	/* color layers */
+	--surface-0: var(--clr-primary);
+	--text-0: var(--clr-secondary);
+}
+
+body {
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
+
+	&>.main {
+		flex: 1;
+	}
+}
+
+.wrapper {
+	/* centered */
+	/* margin-inline: auto; */
+	max-inline-size: var(--max-width);
+
+	/* gutters */
+	padding-inline: 3vw;
+}
+
+.header {
+	margin-block-end: var(--gap-xlarge);
+}
+
+.header .nav {
+	padding-block: 1rem;
+	display: grid;
+	grid-template-columns: auto auto;
+	justify-content: space-between;
+	gap: var(--gap-small);
+
+	& a {
+		text-decoration: none;
+	}
+
+	& .categories-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		display: flex;
+		align-items: center;
+		gap: var(--gap-small);
+		flex-wrap: wrap;
+	}
+}
+
+.markdown {
+	max-inline-size: 40rem;
+
+	&>*+* {
+		margin-block-start: var(--gap-medium);
+	}
+
+	&>h2,
+	&>h3,
+	&>h4,
+	&>h5,
+	&>h6 {
+		margin-block-start: var(--gap-large);
+	}
+
+	&>pre {
+		margin-block: var(--gap-large);
+	}
+}
+
+
+#footer {
+	padding-block: 1rem;
+}
+
+.category-entry:not(:first-child) {
+	margin-top: var(--gap-medium);
+	border-top: 1px dotted var(--text-0);
+}
+
+.article footer nav .grid {
+	display: grid;
+	margin-block: var(--gap-medium);
+	grid-template-columns: 1fr 1fr;
+
+	& .prev {
+		grid-column: 1;
+	}
+
+	& .next {
+		grid-column: 2;
+	}
+
+	& .grid-item {
+		padding: 1rem;
+		display: flex;
+		flex-direction: column;
+	}
+}
+
+
+.datetime {
+	font-family: var(--monospaced);
+}
