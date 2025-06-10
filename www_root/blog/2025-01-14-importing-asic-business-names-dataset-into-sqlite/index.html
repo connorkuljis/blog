@@ -14,44 +14,53 @@
 </head>
 
 
-<body>
+<body id="_entry" class="page-wrapper">
 	
 <header class="header" id="kuljis-header">
-	<div class="wrapper">
+	
+	<div class="header-wrapper">
+		
 		<nav class="nav" id="kuljis-nav">
+			
 			<div><a href="/">Home</a></div>
 
+			
 			<ul class="categories-list">
 				<li><a href="/blog">Blog</a></li>
 				<li><a href="/til">TIL</a></li>
 				<li><a href="/projects">Projects</a></li>
 			</ul>
 		</nav>
+
+		
+		<div class="header-splash-art"></div>
 	</div>
+
 </header>
 
 
-	<main id="entry">
+	<main class="main">
 		<div class="wrapper">
-			<article class="article">
-				<header>
-					<hgroup>
+			<div class="content-grid">
+				<article class="article">
+					<header>
+						<hgroup>
 
-						<h1>Importing ASIC Business Names Dataset into SQLite</h1>
+							<h1>Importing ASIC Business Names Dataset into SQLite</h1>
 
-						<div>
-							<time>January 14, 2025</time>
-							<span>
-								<a href="/blog">Blog</a>
-							</span>
-						</div>
+							<div>
+								<time>January 14, 2025</time>
+								<span>
+									<a href="/blog">Blog</a>
+								</span>
+							</div>
 
-						
-					</hgroup>
-				</header>
+							
+						</hgroup>
+					</header>
 
-				<main class="main markdown">
-					<p>In this article I am going to cover how I imported the <a href="https://www.data.gov.au/dataset/ds-dga-bc515135-4bb6-4d50-957a-3713709a76d3/">ASIC business names dataset</a> into SQLite. Additonally we'll implement full text search using the sqlite FTS5 extension.</p>
+					<main class="markdown">
+						<p>In this article I am going to cover how I imported the <a href="https://www.data.gov.au/dataset/ds-dga-bc515135-4bb6-4d50-957a-3713709a76d3/">ASIC business names dataset</a> into SQLite. Additonally we'll implement full text search using the sqlite FTS5 extension.</p>
 <ol>
 <li>Download the dataset.</li>
 <li>Import the datset into sqlite.</li>
@@ -143,45 +152,33 @@ Business = Nourishing Your World
 <pre><code class="language-sql">select * from businesses WHERE business_name MATCH 'software';
 </code></pre>
 
-				</main>
+					</main>
 
-				<footer>
-					<h4>Read More</h4>
+					<footer>
+						<h4>Read More</h4>
 
-					<nav>
-						<div class="grid">
-							<div class="grid-item prev">
-								
-								<span>Previous</span>
-								<a href="/blog/2025-03-23-bloat-is-the-universal-enemy">Bloat is the Universal Enemy</a>
-								
+						<nav>
+							<div class="grid">
+								<div class="grid-item prev">
+									
+									<span>Previous</span>
+									<a href="/blog/2025-03-23-bloat-is-the-universal-enemy">Bloat is the Universal Enemy</a>
+									
+								</div>
+
+								<div class="grid-item next">
+									
+									<span>Next</span>
+									<a href="/blog/2024-12-31-uses">Uses</a>
+									
+								</div>
 							</div>
-
-							<div class="grid-item next">
-								
-								<span>Next</span>
-								<a href="/blog/2024-12-31-uses">Uses</a>
-								
-							</div>
-						</div>
-					</nav>
-				</footer>
-			</article>
+						</nav>
+					</footer>
+				</article>
+			</div>
 		</div>
 	</main>
-
-	
-<footer id="footer">
-	
-	<div class="wrapper">
-		<div>
-			kuljis.xyz
-		</div>
-		<div class="nerd-stats">
-			linux
-		</div>
-	</div>
-</footer>
 
 </body>
 
