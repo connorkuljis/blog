@@ -54,7 +54,7 @@ func main() {
 	t := template.Must(template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html"))
 
 	// inject dependencies and use interface type, rather than concrete type
-	var site model.Site = initialiseKuljisSite(md, db, t)
+	var site *kuljis.MySite = initialiseKuljisSite(md, db, t)
 
 	err = site.Init()
 	if err != nil {
