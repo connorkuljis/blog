@@ -7,19 +7,20 @@ import (
 )
 
 type CategoryPage struct {
-	Title string
-
 	Site     *MySite
 	Category *model.Category
 }
 
-func NewCategoryPage(site *MySite, category *model.Category, title string) CategoryPage {
+func NewCategoryPage(site *MySite, category *model.Category) CategoryPage {
 	p := CategoryPage{
 		Site:     site,
 		Category: category,
-		Title:    title,
 	}
 	return p
+}
+
+func (p CategoryPage) Title() string {
+	return p.Category.Title
 }
 
 func (p CategoryPage) FileName() string {

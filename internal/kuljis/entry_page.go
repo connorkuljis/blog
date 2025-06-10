@@ -7,8 +7,6 @@ import (
 )
 
 type EntryPage struct {
-	Title string
-
 	Site     *MySite
 	Category *model.Category
 	Entry    *model.Entry
@@ -22,7 +20,6 @@ func NewEntryPage(
 	entry *model.Entry,
 	next *model.Entry,
 	prev *model.Entry,
-	title string,
 ) EntryPage {
 	return EntryPage{
 		Site:     site,
@@ -30,8 +27,11 @@ func NewEntryPage(
 		Entry:    entry,
 		Next:     next,
 		Prev:     prev,
-		Title:    title,
 	}
+}
+
+func (p EntryPage) Title() string {
+	return p.Entry.Title
 }
 
 func (p EntryPage) FileName() string {

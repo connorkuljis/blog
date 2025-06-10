@@ -1,12 +1,13 @@
 package kuljis
 
 import (
-	"fmt"
 	"html/template"
+	"log"
 	"os"
 	"path/filepath"
 
 	"github.com/connorkuljis/blog/internal/model"
+	"github.com/connorkuljis/blog/internal/site"
 )
 
 type MySite struct {
@@ -59,13 +60,23 @@ func (s *MySite) Init() error {
 	return nil
 }
 
-func (s *MySite) Build() []model.Page {
-	var pages = []model.Page{}
+func (s *MySite) Build() []site.Page {
+	var pages = []site.Page{}
 
-	pages = append(pages, NewHomePage(s, "Home"))
+	var latestEntry *model.Entry
+	for _, c := range s.Categories {
+		for _, e := range c.Entries {
+			if latestEntry == nil || e.CreatedAt.After(latestEntry.CreatedAt) {
+				latestEntry = e
+			}
+		}
+	}
+
+	pages = append(pages, NewHomePage(s, latestEntry))
+	pages = append(pages, NewAboutPage(s))
 
 	for _, category := range s.Categories {
-		pages = append(pages, NewCategoryPage(s, category, category.Title))
+		pages = append(pages, NewCategoryPage(s, category))
 
 		for i, entry := range category.Entries {
 			var next *model.Entry
@@ -81,7 +92,7 @@ func (s *MySite) Build() []model.Page {
 				next = category.Entries[i+1]
 			}
 
-			pages = append(pages, NewEntryPage(s, category, entry, next, prev, entry.Title))
+			pages = append(pages, NewEntryPage(s, category, entry, next, prev))
 		}
 	}
 
@@ -90,7 +101,7 @@ func (s *MySite) Build() []model.Page {
 	return pages
 }
 
-func (s *MySite) Render(pages []model.Page) error {
+func (s *MySite) Render(pages []site.Page) error {
 	for _, page := range pages {
 		filename := filepath.Join(s.DirWWWRoot, page.FileName())
 
@@ -106,11 +117,11 @@ func (s *MySite) Render(pages []model.Page) error {
 		}
 		defer f.Close()
 
-		err = s.T.ExecuteTemplate(f, page.TemplateName(), page)
+		err = s.T.ExecuteTemplate(f, page.TemplateName(), page) // note: assume each page is rendered as concrete type when accessing data in templates.
 		if err != nil {
 			return err
 		}
-		fmt.Println("-->", filename)
+		log.Println("created:", page.FileName())
 	}
 
 	return nil
