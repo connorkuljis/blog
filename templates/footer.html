@@ -1,6 +1,5 @@
 {{ define "footer" }}
-<footer id="footer">
-	<!-- wrapper -->
+<footer class="footer" id="kuljis-footer">
 	<div class="wrapper">
 		<div>
 			{{ .Site.Title }}
@@ -9,5 +8,14 @@
 			{{ .Site.NerdStats.Platform }}
 		</div>
 	</div>
+</footer>
+{{ end }}
+
+{{ define "footer-debug" }}
+<footer class="footer" id="kuljis-footer">
+	<details>
+		<summary>debug</summary>
+		<pre><code>{{ . }}</code></pre>
+	</details>
 </footer>
 {{ end }}

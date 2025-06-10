@@ -1,16 +1,24 @@
 <!-- header -->
 {{ define "header" }}
 <header class="header" id="kuljis-header">
-	<div class="wrapper">
+	<!-- header-wrapper -->
+	<div class="header-wrapper">
+		<!-- nav -->
 		<nav class="nav" id="kuljis-nav">
+			<!-- home link -->
 			<div><a href="/">Home</a></div>
 
+			<!-- categories-list -->
 			<ul class="categories-list">
 				{{- range $_, $category := .Site.Categories }}
 				<li><a href="{{ $category.Permalink }}">{{ $category.Title }}</a></li>
 				{{- end }}
 			</ul>
 		</nav>
+
+		<!-- header-splash-art -->
+		<div class="header-splash-art"></div>
 	</div>
+
 </header>
 {{ end }}

@@ -4,38 +4,37 @@
 <!-- head -->
 {{ template "head" . }}
 
-<body id="category">
+<body id="_category" class="page-wrapper">
 	{{ template "header" . }}
 
 	<main class="main">
 		<div class="wrapper">
-			<article class="article">
-				<header class="article-header">
-					<h1>{{ .Category.Title }}</h1>
-					<h2>{{ .Category.Description }}</h2>
-				</header>
+			<div class="content-grid">
+				<article class="article">
+					<header class="article-header">
+						<h1>{{ .Category.Title }}</h1>
+						<h2>{{ .Category.Description }}</h2>
+					</header>
 
-				<table>
-					{{ range $i, $e := .Category.Entries }}
-					<tr>
-						<td>
-							<time class="datetime">{{ $e.CreatedAt.Format "2006-01-02" }}</time>
-						</td>
-						<td>
-							<a href="{{ $e.Permalink }}">
-								{{ $e.Title }}
-							</a>
-						</td>
-					</tr>
-					{{ end }}
-				</table>
-
-			</article>
+					<section>
+						<ul class="category-entries-list">
+							{{ range $i, $e := .Category.Entries }}
+							<li>
+								<article>
+									<time class="datetime">{{ $e.CreatedAt.Format "2006-01-02" }}</time>
+									<a href="{{ $e.Permalink }}">
+										{{ $e.Title }}
+									</a>
+								</article>
+							</li>
+							{{ end }}
+						</ul>
+					</section>
+				</article>
+			</div>
 		</div>
-		<!-- ./wrapper -->
 	</main>
 
-	{{ template "footer" . }}
 </body>
 
 </html>

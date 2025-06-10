@@ -3,62 +3,63 @@
 <html lang="en">
 {{ template "head" . }}
 
-<body>
+<body id="_entry" class="page-wrapper">
 	{{ template "header" . }}
 
-	<main id="entry">
+	<main class="main">
 		<div class="wrapper">
-			<article class="article">
-				<header>
-					<hgroup>
+			<div class="content-grid">
+				<article class="article">
+					<header>
+						<hgroup>
 
-						<h1>{{ .Entry.Title }}</h1>
+							<h1>{{ .Entry.Title }}</h1>
 
-						<div>
-							<time>{{ .Entry.CreatedAt.Format "January 02, 2006"}}</time>
-							<span>
-								<a href="{{ .Entry.Category.Permalink }}">{{ .Entry.Category.Title }}</a>
-							</span>
-						</div>
-
-						{{ if .Entry.FeaturedImageURL.Valid }}
-						<figure>
-							<img src="{{ .Entry.FeaturedImageURL.String }}" />
-						</figure>
-						{{ end }}
-					</hgroup>
-				</header>
-
-				<main class="main markdown">
-					{{ .Entry.Markdown }}
-				</main>
-
-				<footer>
-					<h4>Read More</h4>
-
-					<nav>
-						<div class="grid">
-							<div class="grid-item prev">
-								{{ if .Prev }}
-								<span>Previous</span>
-								<a href="{{ .Prev.Permalink }}">{{ .Prev.Title }}</a>
-								{{ end }}
+							<div>
+								<time>{{ .Entry.CreatedAt.Format "January 02, 2006"}}</time>
+								<span>
+									<a href="{{ .Entry.Category.Permalink }}">{{ .Entry.Category.Title }}</a>
+								</span>
 							</div>
 
-							<div class="grid-item next">
-								{{ if .Next }}
-								<span>Next</span>
-								<a href="{{ .Next.Permalink }}">{{ .Next.Title }}</a>
-								{{ end }}
+							{{ if .Entry.FeaturedImageURL.Valid }}
+							<figure>
+								<img src="{{ .Entry.FeaturedImageURL.String }}" />
+							</figure>
+							{{ end }}
+						</hgroup>
+					</header>
+
+					<main class="markdown">
+						{{ .Entry.Markdown }}
+					</main>
+
+					<footer>
+						<h4>Read More</h4>
+
+						<nav>
+							<div class="grid">
+								<div class="grid-item prev">
+									{{ if .Prev }}
+									<span>Previous</span>
+									<a href="{{ .Prev.Permalink }}">{{ .Prev.Title }}</a>
+									{{ end }}
+								</div>
+
+								<div class="grid-item next">
+									{{ if .Next }}
+									<span>Next</span>
+									<a href="{{ .Next.Permalink }}">{{ .Next.Title }}</a>
+									{{ end }}
+								</div>
 							</div>
-						</div>
-					</nav>
-				</footer>
-			</article>
+						</nav>
+					</footer>
+				</article>
+			</div>
 		</div>
 	</main>
 
-	{{ template "footer" . }}
 </body>
 
 </html>
