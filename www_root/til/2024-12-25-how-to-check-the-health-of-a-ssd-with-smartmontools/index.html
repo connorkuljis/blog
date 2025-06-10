@@ -14,44 +14,53 @@
 </head>
 
 
-<body>
+<body id="_entry" class="page-wrapper">
 	
 <header class="header" id="kuljis-header">
-	<div class="wrapper">
+	
+	<div class="header-wrapper">
+		
 		<nav class="nav" id="kuljis-nav">
+			
 			<div><a href="/">Home</a></div>
 
+			
 			<ul class="categories-list">
 				<li><a href="/blog">Blog</a></li>
 				<li><a href="/til">TIL</a></li>
 				<li><a href="/projects">Projects</a></li>
 			</ul>
 		</nav>
+
+		
+		<div class="header-splash-art"></div>
 	</div>
+
 </header>
 
 
-	<main id="entry">
+	<main class="main">
 		<div class="wrapper">
-			<article class="article">
-				<header>
-					<hgroup>
+			<div class="content-grid">
+				<article class="article">
+					<header>
+						<hgroup>
 
-						<h1>How to check the health of a SSD with smartmontools</h1>
+							<h1>How to check the health of a SSD with smartmontools</h1>
 
-						<div>
-							<time>December 25, 2024</time>
-							<span>
-								<a href="/til">TIL</a>
-							</span>
-						</div>
+							<div>
+								<time>December 25, 2024</time>
+								<span>
+									<a href="/til">TIL</a>
+								</span>
+							</div>
 
-						
-					</hgroup>
-				</header>
+							
+						</hgroup>
+					</header>
 
-				<main class="main markdown">
-					<p><code>brew install smartmontools</code></p>
+					<main class="markdown">
+						<p><code>brew install smartmontools</code></p>
 <pre><code>sudo smartctl -a /dev/disk0
 
 smartctl 7.4 2023-08-01 r5530 [Darwin 23.4.0 arm64] (local build)
@@ -97,42 +106,30 @@ Media and Data Integrity Errors:    0
 Error Information Log Entries:      0
 </code></pre>
 
-				</main>
+					</main>
 
-				<footer>
-					<h4>Read More</h4>
+					<footer>
+						<h4>Read More</h4>
 
-					<nav>
-						<div class="grid">
-							<div class="grid-item prev">
-								
-								<span>Previous</span>
-								<a href="/til/2025-02-12-how-to-measure-how-long-a-query-takes-in-sqlite">How to measure how long a query takes in SQLite</a>
-								
+						<nav>
+							<div class="grid">
+								<div class="grid-item prev">
+									
+									<span>Previous</span>
+									<a href="/til/2025-02-12-how-to-measure-how-long-a-query-takes-in-sqlite">How to measure how long a query takes in SQLite</a>
+									
+								</div>
+
+								<div class="grid-item next">
+									
+								</div>
 							</div>
-
-							<div class="grid-item next">
-								
-							</div>
-						</div>
-					</nav>
-				</footer>
-			</article>
+						</nav>
+					</footer>
+				</article>
+			</div>
 		</div>
 	</main>
-
-	
-<footer id="footer">
-	
-	<div class="wrapper">
-		<div>
-			kuljis.xyz
-		</div>
-		<div class="nerd-stats">
-			linux
-		</div>
-	</div>
-</footer>
 
 </body>
 

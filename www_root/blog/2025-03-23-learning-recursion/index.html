@@ -14,48 +14,57 @@
 </head>
 
 
-<body>
+<body id="_entry" class="page-wrapper">
 	
 <header class="header" id="kuljis-header">
-	<div class="wrapper">
+	
+	<div class="header-wrapper">
+		
 		<nav class="nav" id="kuljis-nav">
+			
 			<div><a href="/">Home</a></div>
 
+			
 			<ul class="categories-list">
 				<li><a href="/blog">Blog</a></li>
 				<li><a href="/til">TIL</a></li>
 				<li><a href="/projects">Projects</a></li>
 			</ul>
 		</nav>
+
+		
+		<div class="header-splash-art"></div>
 	</div>
+
 </header>
 
 
-	<main id="entry">
+	<main class="main">
 		<div class="wrapper">
-			<article class="article">
-				<header>
-					<hgroup>
+			<div class="content-grid">
+				<article class="article">
+					<header>
+						<hgroup>
 
-						<h1>Learning Recursion</h1>
+							<h1>Learning Recursion</h1>
 
-						<div>
-							<time>March 23, 2025</time>
-							<span>
-								<a href="/blog">Blog</a>
-							</span>
-						</div>
+							<div>
+								<time>March 23, 2025</time>
+								<span>
+									<a href="/blog">Blog</a>
+								</span>
+							</div>
 
-						
-						<figure>
-							<img src="/images/six_triangular_numbers.png" />
-						</figure>
-						
-					</hgroup>
-				</header>
+							
+							<figure>
+								<img src="/images/six_triangular_numbers.png" />
+							</figure>
+							
+						</hgroup>
+					</header>
 
-				<main class="main markdown">
-					<p>I learned recursion using triangular numbers as an exercise.</p>
+					<main class="markdown">
+						<p>I learned recursion using triangular numbers as an exercise.</p>
 <p>Triangular numbers are the sum of all natural numbers up to a certain number.<br />
 For example, the 5th triangular number is 1 + 2 + 3 + 4 + 5 = 15.</p>
 <p>Here is the code I used to calculate the nth triangular number using recursion:</p>
@@ -79,45 +88,33 @@ For example, the 5th triangular number is 1 + 2 + 3 + 4 + 5 = 15.</p>
 <pre><code class="language-plaintext">The 5th triangular number is: 15
 </code></pre>
 
-				</main>
+					</main>
 
-				<footer>
-					<h4>Read More</h4>
+					<footer>
+						<h4>Read More</h4>
 
-					<nav>
-						<div class="grid">
-							<div class="grid-item prev">
-								
-								<span>Previous</span>
-								<a href="/blog/2025-05-24-software-geeks-move-differently">Software Geeks Move Differently</a>
-								
+						<nav>
+							<div class="grid">
+								<div class="grid-item prev">
+									
+									<span>Previous</span>
+									<a href="/blog/2025-05-24-software-geeks-move-differently">Software Geeks Move Differently</a>
+									
+								</div>
+
+								<div class="grid-item next">
+									
+									<span>Next</span>
+									<a href="/blog/2025-03-23-bloat-is-the-universal-enemy">Bloat is the Universal Enemy</a>
+									
+								</div>
 							</div>
-
-							<div class="grid-item next">
-								
-								<span>Next</span>
-								<a href="/blog/2025-03-23-bloat-is-the-universal-enemy">Bloat is the Universal Enemy</a>
-								
-							</div>
-						</div>
-					</nav>
-				</footer>
-			</article>
+						</nav>
+					</footer>
+				</article>
+			</div>
 		</div>
 	</main>
-
-	
-<footer id="footer">
-	
-	<div class="wrapper">
-		<div>
-			kuljis.xyz
-		</div>
-		<div class="nerd-stats">
-			linux
-		</div>
-	</div>
-</footer>
 
 </body>
 
