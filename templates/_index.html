@@ -13,21 +13,30 @@
 	<main class="main">
 		<!-- wrapper -->
 		<div class="wrapper">
-			<!-- content-grid -->
-			<div class="content-grid">
-				<!-- article -->
-				<article class="article">
-					{{- template "lorem-ipsum" . }}
-
-					<section>
-						<article>Latest Entry - {{ .LatestEntry.Title }}</article>
-					</section>
-				</article>
+			<div class="ascii-art">
+				{{- range $i, $row := .Banner }}
+				<div class="row">
+					{{- range $x, $ch := $row }}
+					<div class="char">{{ runeToString $ch }}</div>
+					{{- end }}
+				</div>
+				{{- end }}
 			</div>
+			<!-- article -->
+			<article class="article">
+				<h1 class="article-title">Welcome to {{ .Site.Title }}</h1>
+				{{- template "lorem-ipsum" . }}
+
+				<section>
+					{{ if .LatestEntry }}
+					<article>Latest Entry - {{ .LatestEntry.Title }}</article>
+					{{ end }}
+				</section>
+			</article>
 		</div>
 	</main>
 
-	{{ template "footer-debug" . }}
+	{{ template "footer" . }}
 </body>
 
 </html>

@@ -27,6 +27,9 @@ const (
 var funcMap = template.FuncMap{
 	"slugify":  util.Slugify,
 	"truncate": util.Truncate,
+	"runeToString": func(r rune) string {
+		return string(r)
+	},
 	"sub": func(a, b int) int {
 		return a - b
 	},
@@ -61,6 +64,7 @@ func main() {
 	} else {
 		fmt.Println("draft mode is disabled")
 	}
+
 	// inject dependencies and use interface type, rather than concrete type
 	var site *site.MySite = initialiseKuljisSite(*enableDrafts, md, db, t)
 
