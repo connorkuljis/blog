@@ -19,9 +19,8 @@ import (
 
 const (
 	Title        = "kuljis.xyz"
-	DirRoot      = "www_root"
-	DirAssets    = "assets"
-	EnableDrafts = true
+	DirBuild  = "dist"
+	DirAssets = "assets"
 )
 
 var funcMap = template.FuncMap{
@@ -53,8 +52,16 @@ func main() {
 
 	t := template.Must(template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html"))
 
+	enableDrafts := flag.Bool("d", false, "enable drafts")
+	flag.Parse()
+
+	if *enableDrafts {
+		fmt.Println("draft mode is enabled")
+	} else {
+		fmt.Println("draft mode is disabled")
+	}
 	// inject dependencies and use interface type, rather than concrete type
-	var site *kuljis.MySite = initialiseKuljisSite(md, db, t)
+	var site *site.MySite = initialiseKuljisSite(*enableDrafts, md, db, t)
 
 	err = site.Init()
 	if err != nil {
@@ -85,7 +92,7 @@ func initialiseKuljisSite(enableDrafts bool, md goldmark.Markdown, db *sqlx.DB, 
 	}
 
 	for _, c := range allCategories {
-		categoryEntries, err := entries.ReadAllByCategoryID(c.ID, EnableDrafts)
+		categoryEntries, err := entries.ReadAllByCategoryID(c.ID, enableDrafts)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -109,5 +116,5 @@ func initialiseKuljisSite(enableDrafts bool, md goldmark.Markdown, db *sqlx.DB, 
 
 	nerdStats := model.NewNerdStats(time.Now())
 
-	return kuljis.NewSite(Title, DirRoot, DirAssets, allCategories, categoriesMap, nerdStats, t)
+	return site.NewSite(Title, DirBuild, DirAssets, time.Now(), t, allCategories, categoriesMap, nerdStats)
 }
