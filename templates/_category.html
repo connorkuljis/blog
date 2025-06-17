@@ -9,29 +9,29 @@
 
 	<main class="main">
 		<div class="wrapper">
-			<div class="content-grid">
-				<article class="article">
-					<header class="article-header">
-						<h1>{{ .Category.Title }}</h1>
-						<h2>{{ .Category.Description }}</h2>
-					</header>
+			<article class="article">
+				<header class="article-header">
+					<h1>{{ .Category.Title }}</h1>
+					<h2>{{ .Category.Description }}</h2>
+				</header>
 
-					<section>
-						<ul class="category-entries-list">
-							{{ range $i, $e := .Category.Entries }}
-							<li>
-								<article>
-									<time class="datetime">{{ $e.CreatedAt.Format "2006-01-02" }}</time>
+				<section>
+					<ul class="category-entries-list">
+						{{ range $i, $e := .Category.Entries }}
+						<li>
+							<article class="entry-item">
+								<time class="entry-created-at">{{ $e.CreatedAt.Format "2006-01-02" }}</time>
+								<div class="entry-title">
 									<a href="{{ $e.Permalink }}">
 										{{ $e.Title }}
 									</a>
-								</article>
-							</li>
-							{{ end }}
-						</ul>
-					</section>
-				</article>
-			</div>
+								</div>
+							</article>
+						</li>
+						{{ end }}
+					</ul>
+				</section>
+			</article>
 		</div>
 	</main>
 
