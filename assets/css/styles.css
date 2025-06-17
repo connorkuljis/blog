@@ -19,8 +19,8 @@
 
 	--font-unit: 1rem;
 	--gap-unit: 1rem;
-	--line-height: 1.2;
 	--max-width: 60rem;
+	--line-height: 1.625rem;
 
 	/* font size */
 	--fs-200: calc(var(--font-unit) * 0.75);
