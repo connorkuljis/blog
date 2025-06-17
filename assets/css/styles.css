@@ -193,10 +193,37 @@
 }
 
 .category-entries-list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap-small);
+
 	padding: 0;
 	margin: 0;
-	list-style-position: inside;
-	list-style-type: "✪";
+	list-style: none;
+
+	& li {
+		display: inline-flex;
+	}
+
+	& .entry-item {
+		display: inline-grid;
+		grid-template-columns: [marker] min-content [time] min-content [title] 1fr;
+		gap: 0.375rem;
+	}
+
+	& .entry-item::before {
+		content: "✪";
+		grid-row: marker;
+	}
+
+	& .entry-item .entry-created-at {
+		font-family: var(--monospaced);
+		grid-row: time;
+	}
+
+	& .entry-item .entry-title {
+		grid-row: title;
+	}
 }
 
 .hero-wrapper {
