@@ -1,6 +1,6 @@
 {{ define "footer" }}
 <footer class="footer" id="kuljis-footer">
-	<div class="wrapper">
+	<div class="footer-wrapper">
 		<div>
 			{{ .Site.Title }}
 		</div>
@@ -13,6 +13,12 @@
 
 {{ define "footer-debug" }}
 <footer class="footer" id="kuljis-footer">
+	<p>
+		Copyright &copy; 2024 - {{ .Site.CreatedAt.Format "2006" }}
+		<a href="/">{{ .Site.Title }}</a>
+		- All rights reserved.
+	</p>
+
 	<details>
 		<summary>debug</summary>
 		<pre><code>{{ . }}</code></pre>
