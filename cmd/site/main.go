@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/connorkuljis/blog/internal/kuljis"
 	"github.com/connorkuljis/blog/internal/model"
+	"github.com/connorkuljis/blog/internal/site"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/connorkuljis/blog/internal/util"
 	"github.com/jmoiron/sqlx"
@@ -73,7 +73,7 @@ func main() {
 	fmt.Println(time.Since(start))
 }
 
-func initialiseKuljisSite(md goldmark.Markdown, db *sqlx.DB, t *template.Template) *kuljis.MySite {
+func initialiseKuljisSite(enableDrafts bool, md goldmark.Markdown, db *sqlx.DB, t *template.Template) *site.MySite {
 	var (
 		categories = store.NewCategoryRepo(db)
 		entries    = store.NewEntryRepo(db)
