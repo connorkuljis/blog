@@ -53,28 +53,28 @@
 	--text-0: var(--clr-secondary);
 }
 
-body {
+.page-wrapper {
 	min-block-size: 100dvh;
-	max-inline-size: var(--max-width);
 
 	display: grid;
-	grid-template-rows: auto 1fr auto;
+	grid-template-rows: [header] auto [body] 1fr [footer] auto;
+	grid-template-columns: minmax(0, 1fr);
+	padding-inline: 16px;
+	row-gap: var(--gap-large);
+
+	& .header {
+		grid-row: header;
+	}
+
+	& .main {
+		grid-row: body;
+	}
+
+	& .footer {
+		grid-row: footer;
+	}
 }
 
-.page-wrapper {
-	max-inline-size: var(--max-width);
-	margin-inline: auto;
-}
-
-.header {
-	margin-block-end: var(--gap-xlarge);
-}
-
-.header-wrapper {
-	padding-inline: 1.75cqi;
-}
-
-.header-splash-art {
 	height: 33dvh;
 	background-image: url("/images/studio-military.jpg");
 	background-size: 110%;
