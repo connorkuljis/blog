@@ -76,13 +76,6 @@
 	}
 }
 
-	height: 33dvh;
-	background-image: url("/images/studio-military.jpg");
-	background-size: 110%;
-	background-repeat: no-repeat;
-	background-position: center;
-}
-
 .wrapper {
 	max-inline-size: 48rem;
 	margin-inline: auto;
