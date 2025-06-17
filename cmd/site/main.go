@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	Title     = "connorkuljis.com"
+	Title     = "kuljis.xyz"
 	DirBuild  = "dist"
 	DirAssets = "assets"
 )
