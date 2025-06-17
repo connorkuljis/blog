@@ -19,7 +19,6 @@
 
 	--font-unit: 1rem;
 	--gap-unit: 1rem;
-	--max-width: 60rem;
 	--line-height: 1.625rem;
 
 	/* font size */
@@ -85,10 +84,15 @@ body {
 }
 
 .wrapper {
-	/* gutters */
-	padding-inline: 3cqi;
+	max-inline-size: 48rem;
+	margin-inline: auto;
 }
 
+.header-wrapper,
+.footer-wrapper {
+	max-inline-size: 64rem;
+	margin-inline: auto;
+}
 
 .header .nav {
 	display: grid;
