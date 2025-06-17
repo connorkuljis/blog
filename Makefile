@@ -1,13 +1,17 @@
 all: site cms
 
-site:
-	go run -v ./cmd/site
+release:
+	go run -v ./cmd/site/main.go
+
+draft:
+	go run -v ./cmd/site/main.go -d
 
 cms: clean
 	go build -v ./cmd/cms
 
 clean:
 	rm -f ./cms
+	rm -rf ./dist
 
 serve:
 	./scripts/serve.sh
