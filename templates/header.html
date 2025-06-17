@@ -1,7 +1,7 @@
-<!-- header -->
+!-- header -->
 {{ define "header" }}
 <header class="header" id="kuljis-header">
-	<!-- header-wrapper -->
+	<!-- wrapper -->
 	<div class="header-wrapper">
 		<!-- nav -->
 		<nav class="nav" id="kuljis-nav">
@@ -10,15 +10,12 @@
 
 			<!-- categories-list -->
 			<ul class="categories-list">
+				<li><a href="/about">About</a></li>
 				{{- range $_, $category := .Site.Categories }}
 				<li><a href="{{ $category.Permalink }}">{{ $category.Title }}</a></li>
 				{{- end }}
 			</ul>
 		</nav>
-
-		<!-- header-splash-art -->
-		<div class="header-splash-art"></div>
 	</div>
-
 </header>
 {{ end }}
