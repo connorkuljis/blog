@@ -1,0 +1,226 @@
+/* File: /css/styles.css */
+/* Author: Connor Kuljis */
+/* Date Created: 2025 */
+
+@import url("/css/reset.css");
+@import url("/css/base.css");
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+@font-face {
+	font-family: "Opus One";
+	src: url("/fonts/OpusOneVF.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+:root {
+	--serif: "Inter Tight", system-ui, serif;
+	--monospaced: "Opus One", monospace;
+
+	--font-unit: 1rem;
+	--gap-unit: 1rem;
+	--line-height: 1.625rem;
+
+	/* font size */
+	--fs-200: calc(var(--font-unit) * 0.75);
+	--fs-300: calc(var(--font-unit) * 0.825);
+	--fs-400: var(--font-unit);
+	--fs-500: calc(var(--font-unit) * 1.25);
+	--fs-600: calc(var(--font-unit) * 1.5);
+	--fs-700: calc(var(--font-unit) * 2);
+	--fs-800: calc(var(--font-unit) * 2.5);
+	--fs-900: calc(var(--font-unit) * 3);
+
+	/* font weight */
+	--fw-light: 200;
+	--fw-normal: 400;
+	--fw-semi-bold: 600;
+	--fw-bold: 700;
+
+	/* spacing - based on the golden ratio */
+	--gap-small: calc(var(--gap-unit) * 0.618);
+	--gap-medium: var(--gap-unit);
+	--gap-large: calc(var(--gap-unit) * 1.618);
+	--gap-xlarge: calc(var(--gap-unit) * 2.618);
+	--gap-xxlarge: calc(var(--gap-unit) * 4.236);
+
+	--clr-primary: hsla(210, 100%, 10%, 99%);
+	--clr-secondary: hsla(210, 100%, 50%, 82%);
+
+	/* color layers */
+	--surface-0: var(--clr-primary);
+	--text-0: var(--clr-secondary);
+}
+
+.page-wrapper {
+	min-block-size: 100dvh;
+
+	display: grid;
+	grid-template-rows: [header] auto [body] 1fr [footer] auto;
+	grid-template-columns: minmax(0, 1fr);
+	padding-inline: 16px;
+	row-gap: var(--gap-large);
+
+	& .header {
+		grid-row: header;
+	}
+
+	& .main {
+		grid-row: body;
+	}
+
+	& .footer {
+		grid-row: footer;
+	}
+}
+
+.splash-art {
+	height: 33dvh;
+	background-image: url("/images/studio-military.jpg");
+	background-size: 110%;
+	background-repeat: no-repeat;
+	background-position: center;
+	grid-column: 1 / -1;
+}
+
+.wrapper {
+	max-inline-size: 48rem;
+	margin-inline: auto;
+}
+
+.header-wrapper,
+.footer-wrapper {
+	max-inline-size: 64rem;
+	margin-inline: auto;
+}
+
+.header .nav {
+	padding-block: 1rem;
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--gap-small);
+
+	& a {
+		text-decoration: none;
+		color: var(--clr-secondary);
+	}
+
+	& .categories-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		display: flex;
+		align-items: center;
+		gap: var(--gap-small);
+		flex-wrap: wrap;
+	}
+}
+
+.article>*+* {
+	margin-top: var(--gap-medium);
+}
+
+.article>header {
+	margin-block-end: var(--gap-large);
+}
+
+.article>footer {
+	margin-block-start: var(--gap-xlarge);
+}
+
+.markdown {
+	&>*+* {
+		margin-block-start: var(--gap-medium);
+	}
+
+	&>h2,
+	&>h3,
+	&>h4,
+	&>h5,
+	&>h6 {
+		margin-block-start: var(--gap-large);
+	}
+
+	&>pre {
+		margin-block: var(--gap-large);
+	}
+}
+
+
+.article footer nav .grid {
+	display: grid;
+	margin-block: var(--gap-medium);
+	grid-template-columns: 1fr 1fr;
+
+	& .prev {
+		grid-column: 1;
+	}
+
+	& .next {
+		grid-column: 2;
+	}
+
+	& .grid-item {
+		padding: 1rem;
+		display: flex;
+		flex-direction: column;
+	}
+}
+
+.category-entries-list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--gap-small);
+
+	padding: 0;
+	margin: 0;
+	list-style: none;
+
+	& li {
+		display: inline-flex;
+	}
+
+	& .entry-item {
+		display: inline-grid;
+		grid-template-columns: [marker] min-content [time] min-content [title] 1fr;
+		gap: 0.375rem;
+	}
+
+	& .entry-item::before {
+		content: "✪";
+		grid-row: marker;
+	}
+
+	& .entry-item .entry-created-at {
+		font-family: var(--monospaced);
+		grid-row: time;
+	}
+
+	& .entry-item .entry-title {
+		grid-row: title;
+	}
+}
+
+.ascii-art {
+	display: flex;
+	flex-direction: column;
+	line-height: 1.25;
+	font-weight: var(--fw-semi-bold);
+	overflow-x: auto;
+
+	& .row {
+		display: flex;
+	}
+
+	& .row .char {
+		flex-shrink: 0;
+		width: 1ch;
+		font-family: var(--monospaced);
+	}
+
+}
