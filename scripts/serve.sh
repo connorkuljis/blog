@@ -1,2 +1,2 @@
-python3 -m http.server -d ./www_root 3000
+python3 -m http.server -d ./dist 3000
 
