@@ -1,14 +1,26 @@
 package site
 
-import "github.com/connorkuljis/blog/internal/model"
+import (
+	"github.com/common-nighthawk/go-figure"
+	"github.com/connorkuljis/blog/internal/model"
+)
 
 type HomePage struct {
 	Site        *MySite
 	LatestEntry *model.Entry
+	Banner      [][]rune
 }
 
 func NewHomePage(site *MySite, latestEntry *model.Entry) HomePage {
-	p := HomePage{Site: site, LatestEntry: latestEntry}
+	f := figure.NewFigure("connorkuljis", "doom", true)
+
+	lines := f.Slicify()
+	var banner [][]rune
+	for _, line := range lines {
+		banner = append(banner, []rune(line))
+	}
+
+	p := HomePage{Site: site, LatestEntry: latestEntry, Banner: banner}
 	return p
 }
 
