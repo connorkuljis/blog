@@ -1,4 +1,4 @@
-package kuljis
+package site
 
 import (
 	"path/filepath"
