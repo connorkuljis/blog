@@ -45,10 +45,8 @@
 	--gap-xlarge: calc(var(--gap-unit) * 2.618);
 	--gap-xxlarge: calc(var(--gap-unit) * 4.236);
 
-	--clr-primary: hsl(0, 0%, 100%);
-	--clr-secondary: hsla(0, 0%, 0%, 98%);
-	/* --clr-accent: oklch(0.6 0.37 10); */
-
+	--clr-primary: hsla(210, 100%, 10%, 99%);
+	--clr-secondary: hsla(210, 100%, 50%, 82%);
 
 	/* color layers */
 	--surface-0: var(--clr-primary);
