@@ -4,7 +4,6 @@
 
 @import url("/css/reset.css");
 @import url("/css/base.css");
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 @font-face {
 	font-family: "Opus One";
@@ -14,16 +13,8 @@
 	font-display: swap;
 }
 
-@font-face {
-	font-family: "Papyrus";
-	src: url("/fonts/papyrus.ttf") format("truetype");
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-
 :root {
-	--serif: "Inter", system-ui, serif;
+	--serif: "Inter Tight", system-ui, serif;
 	--monospaced: "Opus One", monospace;
 
 	--font-unit: 1rem;
