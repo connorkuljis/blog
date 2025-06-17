@@ -1,6 +1,8 @@
-package kuljis
+package site
 
-import "path/filepath"
+import (
+	"path/filepath"
+)
 
 type AboutPage struct {
 	Site *MySite
