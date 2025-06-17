@@ -1,6 +1,6 @@
 module github.com/connorkuljis/blog
 
-go 1.23.1
+go 1.24.4
 
 require (
 	github.com/jmoiron/sqlx v1.4.0
