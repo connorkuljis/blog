@@ -6,6 +6,7 @@
 @import url("/css/base.css");
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap');
 
+
 @font-face {
 	font-family: "Opus One";
 	src: url("/fonts/OpusOneVF.woff2") format("woff2");
@@ -202,5 +203,22 @@
 		grid-row: title;
 	}
 }
+
+.ascii-art {
+	display: flex;
+	flex-direction: column;
+	line-height: 1.25;
+	font-weight: var(--fw-semi-bold);
+	overflow-x: auto;
+
+	& .row {
+		display: flex;
+	}
+
+	& .row .char {
+		flex-shrink: 0;
+		width: 1ch;
+		font-family: var(--monospaced);
+	}
 
 }
