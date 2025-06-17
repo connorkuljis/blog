@@ -94,9 +94,10 @@
 }
 
 .header .nav {
-	display: grid;
 	padding-block: 1rem;
-	grid-template-columns: auto auto;
+
+	display: flex;
+	align-items: center;
 	justify-content: space-between;
 	gap: var(--gap-small);
 
