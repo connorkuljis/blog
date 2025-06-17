@@ -118,24 +118,6 @@
 	}
 }
 
-.content-grid {
-	display: grid;
-	grid-template-columns: 1fr minmax(60ch, 42rem) 1fr;
-
-	&>* {
-		padding-inline: 1rem;
-	}
-
-	& .article {
-		grid-column: 2;
-	}
-}
-
-.footer {
-	padding-block: 1rem;
-	margin-block-start: var(--gap-xlarge);
-}
-
 .article>*+* {
 	margin-top: var(--gap-medium);
 }
@@ -187,11 +169,6 @@
 	}
 }
 
-
-.datetime {
-	font-family: var(--monospaced);
-}
-
 .category-entries-list {
 	display: flex;
 	flex-direction: column;
@@ -226,7 +203,4 @@
 	}
 }
 
-.hero-wrapper {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
 }
