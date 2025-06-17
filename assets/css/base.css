@@ -7,7 +7,8 @@ body {
 	line-height: var(--line-height);
 
 	color: var(--text-0);
-	background-color: var(--surface-0);
+	background: linear-gradient(120deg, var(--clr-primary) 0%, hsl(from var(--clr-primary) h s 22%) 100%);
+	background-attachment: fixed;
 }
 
 h1,
