@@ -19,6 +19,7 @@ import (
 
 const (
 	Title     = "kuljis.xyz"
+	Author    = "Connor Kuljis"
 	DirBuild  = "dist"
 	DirAssets = "assets"
 )
@@ -115,5 +116,5 @@ func initialiseKuljisSite(enableDrafts bool, md goldmark.Markdown, db *sqlx.DB, 
 
 	nerdStats := model.NewNerdStats(time.Now())
 
-	return site.NewSite(Title, DirBuild, DirAssets, time.Now(), t, allCategories, categoriesMap, nerdStats)
+	return site.NewSite(Title, Author, DirBuild, DirAssets, time.Now(), t, allCategories, categoriesMap, nerdStats)
 }
