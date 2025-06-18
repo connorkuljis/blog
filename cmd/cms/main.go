@@ -26,7 +26,6 @@ type App struct {
 
 const KeyApp = "app"
 
-// ErrSelectionCancelled is a specific error returned when the user quits.
 var ErrSelectionCancelled = errors.New("selection cancelled by user")
 
 func main() {
@@ -193,10 +192,7 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 			return ErrSelectionCancelled
 		}
 
-		choiceNum, err := strconv.Atoi(choice)
-		if err != nil {
-			return err
-		}
+		choiceNum, _ := strconv.Atoi(choice) // let error be handled by default case below
 
 		switch choiceNum {
 		case 1:
@@ -235,7 +231,7 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 				entry.FeaturedImageURL.Valid = true
 			}
 		default:
-			fmt.Println("Bad input, must be between 1 and 4: got:", choiceNum)
+			fmt.Println("Bad input, must be between 1 and 4: got:", choice)
 			continue
 		}
 
