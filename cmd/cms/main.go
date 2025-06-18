@@ -459,7 +459,7 @@ func readContentFromEditor(content string) (string, error) {
 
 func selectEntry(reader *bufio.Reader, entries []*model.Entry) (*model.Entry, error) {
 	for i, e := range entries {
-		fmt.Printf("%d. %s - %s\n", i+1, e.Title, e.Description.String)
+		fmt.Printf("%d. %s\n", i+1, e.Title)
 	}
 
 	idx, err := getInputBetween(reader, 1, len(entries))
@@ -472,7 +472,7 @@ func selectEntry(reader *bufio.Reader, entries []*model.Entry) (*model.Entry, er
 
 func selectCategory(reader *bufio.Reader, categories []*model.Category) (*model.Category, error) {
 	for i, c := range categories {
-		fmt.Printf("%d. %s - %s\n", i+1, c.Title, c.Description)
+		fmt.Printf("%d. %s\n", i+1, c.Title)
 	}
 
 	idx, err := getInputBetween(reader, 1, len(categories))
