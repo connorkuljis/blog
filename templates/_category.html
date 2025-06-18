@@ -11,11 +11,11 @@
 		<div class="wrapper">
 			<article class="article">
 				<header class="article-header">
-					<h1>{{ .Category.Title }}</h1>
-					<h2>{{ .Category.Description }}</h2>
+					<h1 class="title">{{ .Category.Title }}</h1>
+					<h2 class="subheading">{{ .Category.Description }}</h2>
 				</header>
 
-				<section>
+				<main class="article-main">
 					<ul class="category-entries-list">
 						{{ range $i, $e := .Category.Entries }}
 						<li>
@@ -30,7 +30,7 @@
 						</li>
 						{{ end }}
 					</ul>
-				</section>
+					</section>
 			</article>
 		</div>
 	</main>

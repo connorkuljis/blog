@@ -1,27 +1,10 @@
 {{ define "footer" }}
 <footer class="footer" id="kuljis-footer">
 	<div class="footer-wrapper">
-		<div>
-			{{ .Site.Title }}
-		</div>
-		<div class="nerd-stats">
-			{{ .Site.NerdStats.Platform }}
-		</div>
+		<p>
+			2024 - {{ .Site.CreatedAt.Format "2006" }}
+			<a href="/">{{ .Site.Title }}</a>
+		</p>
 	</div>
-</footer>
-{{ end }}
-
-{{ define "footer-debug" }}
-<footer class="footer" id="kuljis-footer">
-	<p>
-		Copyright &copy; 2024 - {{ .Site.CreatedAt.Format "2006" }}
-		<a href="/">{{ .Site.Title }}</a>
-		- All rights reserved.
-	</p>
-
-	<details>
-		<summary>debug</summary>
-		<pre><code>{{ . }}</code></pre>
-	</details>
 </footer>
 {{ end }}
