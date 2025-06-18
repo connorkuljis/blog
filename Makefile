@@ -11,6 +11,9 @@ cms: clean
 
 clean:
 	rm -f ./cms
+goimports:
+	go tool goimports -w -l .
+
 	rm -rf ./dist
 
 serve:
