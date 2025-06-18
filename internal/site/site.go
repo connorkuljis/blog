@@ -13,6 +13,7 @@ import (
 
 type MySite struct {
 	Title     string
+	Author    string
 	DirBuild  string
 	DirAssets string
 
@@ -25,6 +26,7 @@ type MySite struct {
 
 func NewSite(
 	title string,
+	author string,
 	dirBuild string,
 	dirAssets string,
 	createdAt time.Time,
@@ -35,6 +37,7 @@ func NewSite(
 ) *MySite {
 	return &MySite{
 		Title:         title,
+		Author:        author,
 		DirBuild:      dirBuild,
 		DirAssets:     dirAssets,
 		CreatedAt:     createdAt,
