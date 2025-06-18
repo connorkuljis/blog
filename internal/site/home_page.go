@@ -12,7 +12,10 @@ type HomePage struct {
 }
 
 func NewHomePage(site *MySite, latestEntry *model.Entry) HomePage {
-	f := figure.NewFigure("connorkuljis", "doom", true)
+	// f := figure.NewFigure("connorkuljis", "isometric1", true)
+	// f := figure.NewFigure("connorkuljis", "slant", true)
+	// f := figure.NewFigure("connorkuljis", "univers", true)
+	f := figure.NewFigure("connorkuljis", "larry3d", true)
 
 	lines := f.Slicify()
 	var banner [][]rune
