@@ -1,7 +1,7 @@
-site-release: clean-dist
+site-release: site-clean
 	go run -v ./cmd/site/main.go
 
-site-draft: clean-dist
+site-draft: site-clean
 	go run -v ./cmd/site/main.go -d
 
 site-debug:
@@ -16,7 +16,7 @@ site-deploy: site-release
 		dist/ \
 		prod@kuljis.xyz:/home/prod/www/kuljis.xyz/dist/
 
-clean-dist:
+site-clean:
 	rm -rf ./dist
 
 cms-build:
