@@ -10,7 +10,6 @@ import (
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/site"
 	"github.com/connorkuljis/blog/internal/store"
-	"github.com/connorkuljis/blog/internal/util"
 	"github.com/jmoiron/sqlx"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
@@ -25,13 +24,8 @@ const (
 )
 
 var funcMap = template.FuncMap{
-	"slugify":  util.Slugify,
-	"truncate": util.Truncate,
 	"runeToString": func(r rune) string {
 		return string(r)
-	},
-	"sub": func(a, b int) int {
-		return a - b
 	},
 }
 
