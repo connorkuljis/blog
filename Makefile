@@ -17,8 +17,10 @@ goimports:
 	rm -rf ./dist
 
 serve:
-	./scripts/serve.sh
+	python3 -m http.server -d ./dist 3000
 
-watch:
-	./scripts/watch.sh
-
+deploy:
+	echo "Syncing local assets to staging directory..."
+	rsync --delete -avz \
+		dist/ \
+		prod@kuljis.xyz:/home/prod/www/kuljis.xyz/dist/
