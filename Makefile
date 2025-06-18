@@ -1,19 +1,21 @@
-all: site cms
-
-release:
+site-release: clean-dist
 	go run -v ./cmd/site/main.go
 
-draft:
+site-draft: clean-dist
 	go run -v ./cmd/site/main.go -d
 
-cms: clean
+
+site-watch:
+	find assets/ templates/ cmd/ internal/ | entr make site-draft
+
+cms-build:
+	rm -f ./cms
 	go build -v ./cmd/cms
 
-clean:
-	rm -f ./cms
 goimports:
 	go tool goimports -w -l .
 
+clean-dist:
 	rm -rf ./dist
 
 serve:
