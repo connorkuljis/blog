@@ -19,9 +19,7 @@
 	--serif: "Inter Tight", system-ui, serif;
 	--monospaced: "Opus One", monospace;
 
-	--font-unit: 1rem;
-	--gap-unit: 1rem;
-	--line-height: 1.625rem;
+	--font-unit: 1.125rem;
 
 	/* font size */
 	--fs-200: calc(var(--font-unit) * 0.75);
@@ -39,29 +37,52 @@
 	--fw-semi-bold: 600;
 	--fw-bold: 700;
 
-	/* spacing - based on the golden ratio */
-	--gap-small: calc(var(--gap-unit) * 0.618);
-	--gap-medium: var(--gap-unit);
-	--gap-large: calc(var(--gap-unit) * 1.618);
-	--gap-xlarge: calc(var(--gap-unit) * 2.618);
-	--gap-xxlarge: calc(var(--gap-unit) * 4.236);
-
 	--clr-primary: hsla(210, 100%, 10%, 99%);
-	--clr-secondary: hsla(210, 100%, 50%, 82%);
+	--clr-secondary: hsla(210, 100%, 70%, 98%);
 
 	/* color layers */
 	--surface-0: var(--clr-primary);
 	--text-0: var(--clr-secondary);
 }
 
-.page-wrapper {
-	min-block-size: 100dvh;
+body {
+	background-attachment: fixed;
+	background:
+		linear-gradient(120deg,
+			var(--clr-primary) 0%,
+			hsl(from var(--clr-primary) h s 22%) 100%);
+	color: var(--text-0);
+	font-family: var(--serif);
+	font-size: 1.25rem;
+	font-style: normal;
+	line-height: 1.6;
 
+	& a {
+		color: currentColor;
+	}
+
+	& b {
+		font-weight: var(--fw-semi-bold);
+	}
+
+	& h1,
+	& h2,
+	& h3,
+	& h4,
+	& h5,
+	& h6 {
+		line-height: 1.2;
+		font-size: var(--fs-500);
+		font-weight: var(--fw-normal);
+	}
+}
+
+
+.page-wrapper {
 	display: grid;
-	grid-template-rows: [header] auto [body] 1fr [footer] auto;
 	grid-template-columns: minmax(0, 1fr);
-	padding-inline: 16px;
-	row-gap: var(--gap-large);
+	grid-template-rows: [header] auto [body] 1fr [footer] auto;
+	min-block-size: 100dvh;
 
 	& .header {
 		grid-row: header;
