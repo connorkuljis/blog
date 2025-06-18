@@ -4,6 +4,8 @@ site-release: clean-dist
 site-draft: clean-dist
 	go run -v ./cmd/site/main.go -d
 
+site-debug:
+	go tool dlv debug ./cmd/site -- -d
 
 site-watch:
 	find assets/ templates/ cmd/ internal/ | entr make site-draft
@@ -11,6 +13,9 @@ site-watch:
 cms-build:
 	rm -f ./cms
 	go build -v ./cmd/cms
+
+cms-debug:
+	go tool dlv debug ./cmd/cms
 
 goimports:
 	go tool goimports -w -l .
