@@ -11,8 +11,8 @@
 		<div class="wrapper">
 			<article class="article">
 				<header class="article-header">
-					<h1 class="title">{{ .Category.Title }}</h1>
-					<h2 class="subheading">{{ .Category.Description }}</h2>
+					<h2 class="title">{{ .Category.Title }}</h2>
+					<h3 class="subheading">{{ .Category.Description }}</h3>
 				</header>
 
 				<main class="article-main">
@@ -20,12 +20,12 @@
 						{{ range $i, $e := .Category.Entries }}
 						<li>
 							<article class="entry-item">
-								<time class="entry-created-at">{{ $e.CreatedAt.Format "2006-01-02" }}</time>
-								<div class="entry-title">
+								<time class="entry-created-at">{{ $e.CreatedAt.Format "January 02, 2006" }}</time>
+								<h3 class="entry-title">
 									<a href="{{ $e.Permalink }}">
 										{{ $e.Title }}
 									</a>
-								</div>
+								</h3>
 							</article>
 						</li>
 						{{ end }}
