@@ -12,14 +12,17 @@
 	<!-- main -->
 	<main class="main">
 		<!-- ascii-art -->
-		<div class="ascii-art">
-			{{- range $i, $row := .Banner }}
-			<div class="row">
-				{{- range $x, $ch := $row }}
-				<div class="char">{{ runeToString $ch }}</div>
+		<script src="/js/marquee-animation.js"></script>
+		<div class="ascii-art-wrapper">
+			<div class="ascii-art">
+				{{- range $i, $row := .Banner }}
+				<div class="row">
+					{{- range $x, $ch := $row }}
+					<div class="char">{{ runeToString $ch }}</div>
+					{{- end }}
+				</div>
 				{{- end }}
 			</div>
-			{{- end }}
 		</div>
 		<!-- wrapper -->
 		<div class="wrapper">
