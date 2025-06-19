@@ -28,13 +28,18 @@
 		<div class="wrapper">
 			<!-- article -->
 			<article class="article">
-				<h1 class="article-title">Welcome to {{ .Site.Title }}</h1>
-				{{- template "lorem-ipsum" . }}
+				<h2 class="article-title">{{ .Site.Title }}</h2>
+
+				{{ template "about" . }}
 
 				<section>
-					{{ if .LatestEntry }}
-					<article>Latest Entry - {{ .LatestEntry.Title }}</article>
-					{{ end }}
+					{{- if .LatestEntry }}
+					<article>Latest Entry -
+						<a href="{{ .LatestEntry.Permalink }}">
+							{{ .LatestEntry.Title }}
+						</a>
+					</article>
+					{{- end }}
 				</section>
 			</article>
 		</div>
