@@ -1,7 +1,7 @@
 site-release: site-clean
 	go run -v ./cmd/site/main.go
 
-site-draft: site-clean
+site-draft:
 	go run -v ./cmd/site/main.go -d
 
 site-debug:
