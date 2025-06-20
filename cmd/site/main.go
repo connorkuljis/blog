@@ -24,14 +24,13 @@ const (
 	DirAssets = "assets"
 )
 
-var funcMap = template.FuncMap{
-	"runeToString": func(r rune) string {
-		return string(r)
-	},
-}
-
-func main() {
-	md := goldmark.New(
+var (
+	funcMap = template.FuncMap{
+		"runeToString": func(r rune) string {
+			return string(r)
+		},
+	}
+	md = goldmark.New(
 		goldmark.WithExtensions(
 			extension.GFM,
 		),
@@ -43,58 +42,54 @@ func main() {
 			html.WithXHTML(),
 		),
 	)
+	t = template.Must(template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html"))
+)
+
+func main() {
+	enableDrafts := flag.Bool("d", false, "enable drafts")
+
+	flag.Parse()
+
+	log.Println("Enable drafts:", *enableDrafts)
 
 	db, err := store.Connect()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	t := template.Must(template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html"))
+	mySite := initialiseKuljisSite(*enableDrafts, md, db, t)
 
-	enableDrafts := flag.Bool("d", false, "enable drafts")
-	flag.Parse()
-
-	if *enableDrafts {
-		fmt.Println("draft mode is enabled")
-	} else {
-		fmt.Println("draft mode is disabled")
-	}
-
-	// inject dependencies and use interface type, rather than concrete type
-	var site *site.MySite = initialiseKuljisSite(*enableDrafts, md, db, t)
-
-	err = site.Init()
+	err = mySite.Init()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	pages := site.Build()
+	pages := mySite.Build()
 
 	start := time.Now()
 
-	err = site.Render(pages)
+	err = mySite.Render(pages)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println(time.Since(start))
+	log.Println(time.Since(start))
 }
 
 func initialiseKuljisSite(enableDrafts bool, md goldmark.Markdown, db *sqlx.DB, t *template.Template) *site.MySite {
-	var (
-		categories = store.NewCategoryRepo(db)
-		entries    = store.NewEntryRepo(db)
-	)
+	categoryRepo := store.NewCategoryRepo(db)
+	entryRepo := store.NewEntryRepo(db)
 
-	allCategories, err := categories.ReadAllCategories()
+	categories, err := categoryRepo.ReadAllCategories()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(fmt.Errorf("error initialising site: %w", err))
 	}
 
-	for _, c := range allCategories {
-		categoryEntries, err := entries.ReadAllByCategoryID(c.ID, enableDrafts)
+	for _, c := range categories {
+		categoryEntries, err := entryRepo.ReadAllByCategoryID(c.ID, enableDrafts)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(fmt.Errorf("error initialising site %w", c.Title, err))
+
 		}
 
 		c.AddEntry(categoryEntries...)
@@ -109,12 +104,13 @@ func initialiseKuljisSite(enableDrafts bool, md goldmark.Markdown, db *sqlx.DB, 
 		}
 	}
 
-	categoriesMap := make(map[string]*model.Category, len(allCategories))
-	for _, category := range allCategories {
+	categoriesMap := make(map[string]*model.Category, len(categories))
+
+	for _, category := range categories {
 		categoriesMap[category.Title] = category
 	}
 
 	nerdStats := model.NewNerdStats(time.Now())
 
-	return site.NewSite(Title, Author, DirBuild, DirAssets, time.Now(), t, allCategories, categoriesMap, nerdStats)
+	return site.NewSite(Title, Author, DirBuild, DirAssets, time.Now(), t, categories, categoriesMap, nerdStats)
 }
