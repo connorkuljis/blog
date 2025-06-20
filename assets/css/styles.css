@@ -172,6 +172,12 @@ body {
 	}
 }
 
+.section {
+	&>*+* {
+		margin-block-start: 0.5rem;
+	}
+}
+
 .article-header {
 	& .title {
 		text-wrap: balance;
