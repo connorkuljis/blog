@@ -17,10 +17,20 @@ func NewEntryRepo(db *sqlx.DB) *EntryRepo {
 }
 
 func (r *EntryRepo) CreateEntry(entry *model.Entry) error {
-	q := "INSERT INTO entries (category_id, title, created_at, updated_at) VALUES (?, ?, ?, ?)"
+	q := `
+INSERT INTO 
+entries 
+	(category_id, title, created_at, updated_at) 
+VALUES 
+	($1, $2, $3, $4)
+`
 
-	res, err := r.db.Exec(q, entry.CategoryID, entry.Title,
-		entry.CreatedAt.Format(time.RFC3339), entry.UpdatedAt.Format(time.RFC3339))
+	res, err := r.db.Exec(q,
+		entry.CategoryID,
+		entry.Title,
+		entry.CreatedAt.Format(time.RFC3339),
+		entry.UpdatedAt.Format(time.RFC3339),
+	)
 	if err != nil {
 		return err
 	}
@@ -40,15 +50,12 @@ func (r *EntryRepo) ReadAllEntries(includeDrafts bool) ([]*model.Entry, error) {
 
 	q := "SELECT * FROM entries"
 
-	// if includeDrafts is false (release mode), get only non-draft (released) entries.
-	// note: sqlite does not have bools, so we use integers.
 	if !includeDrafts {
-		q += " WHERE is_draft = 0"
+		q += " WHERE is_draft != 1"
 	}
 
 	q += " ORDER BY created_at DESC"
 
-	// Execute the query
 	err := r.db.Select(&entries, q)
 	if err != nil {
 		return nil, fmt.Errorf("Error getting all entries: %w", err)
