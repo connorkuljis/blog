@@ -349,6 +349,7 @@ body {
 .ascii-art {
 	display: flex;
 	flex-direction: column;
+	margin-inline-end: 2rem;
 
 	& .row {
 		display: flex;
