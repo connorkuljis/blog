@@ -301,33 +301,34 @@ func listCategories(ctx context.Context, c *cli.Command) error {
 
 // createCategory creates a new category.
 func createCategory(ctx context.Context, c *cli.Command) error {
-	// app := ctx.Value(appKey).(*App)
-	//
-	// reader := bufio.NewReader(os.Stdin)
-	//
-	// var title string
-	// fmt.Println("Please enter a category title: (Must be unique)")
-	// fmt.Printf("title: ")
-	// title, _ = reader.ReadString('\n')
-	// title = strings.TrimSpace(title)
-	//
-	// var description string
-	// fmt.Printf("Please enter a short description for '%s'\n", title)
-	// fmt.Printf("description: ")
-	// description, _ = reader.ReadString('\n')
-	// description = strings.TrimSpace(description)
-	//
-	// category := model.NewCategory(title, description)
-	// err := app.CategoryRepo.CreateCategory(category)
-	// if err != nil {
-	// 	return err
-	// }
-	//
-	// categories, err := app.CategoryRepo.ReadAllCategories()
-	// if err != nil {
-	// 	return err
-	// }
-	//
+	app := ctx.Value(KeyApp).(*App)
+
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Println("Please enter a category title: (Must be unique)")
+	fmt.Printf("title: ")
+	title, err := reader.ReadString('\n')
+	if err != nil {
+		return err
+	}
+	title = strings.TrimSpace(title)
+
+	fmt.Printf("Please enter a short description for '%s'\n", title)
+	fmt.Printf("description: ")
+	description, err := reader.ReadString('\n')
+	if err != nil {
+		return err
+	}
+	description = strings.TrimSpace(description)
+
+	category := model.NewCategory(title, description)
+	err = app.Categories.CreateCategory(category)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Created category: '%s'\n", category.Title)
+
 	return nil
 }
 
@@ -396,30 +397,39 @@ func updateCategory(ctx context.Context, c *cli.Command) error {
 
 // deleteCategory deletes a category.
 func deleteCategory(ctx context.Context, c *cli.Command) error {
-	// db := ctx.Value(sqlxKey).(*sqlx.DB)
-	//
-	// first := c.Args().First()
-	// if first == "" {
-	// 	// TODO: define errors such as missing argument, invalid argument ect...
-	// 	return fmt.Errorf("error: missing 1 positional argument: id")
-	// }
-	//
-	// repo := store.NewCategoryRepository(db)
-	//
-	// category, err := repo.ReadCategoryByID(id)
-	// if err != nil {
-	// 	return err
-	// }
-	//
-	// fmt.Println("Are you sure you want to delete category '" + category.Title + "'")
-	//
-	// err = repo.DeleteCategoryByTitle(id)
-	// if err != nil {
-	// 	return err
-	// }
-	//
-	// fmt.Println("Deleted category.")
-	// fmt.Printf("'%s': %s\n", category.Title, category.Description)
+	app := ctx.Value(KeyApp).(*App)
+	reader := bufio.NewReader(os.Stdin)
+
+	categories, err := app.Categories.ReadAllCategories()
+	if err != nil {
+		return err
+	}
+
+	category, err := selectCategory(reader, categories)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Confirm delete '%s' [y/N]: ", category.Title)
+	choice, err := reader.ReadString('\n')
+	if err != nil {
+		return fmt.Errorf("error reading input: %w", err)
+	}
+
+	choice = strings.TrimSpace(strings.ToLower(choice))
+
+	switch choice {
+	case "y":
+		if err := app.Categories.DeleteCategoryByID(category.ID); err != nil {
+			return fmt.Errorf("failed to delete category: %w", err)
+		}
+		fmt.Printf("Deleted: '%s'\n", category.Title)
+	case "n", "":
+		fmt.Println("Exiting...")
+		return nil
+	default:
+		return fmt.Errorf("invalid input: '%s', expected 'y' or 'n'", choice)
+	}
 
 	return nil
 }
