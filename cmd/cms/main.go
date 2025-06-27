@@ -14,7 +14,9 @@ import (
 
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/store"
+	"github.com/gdamore/tcell/v2"
 	"github.com/jmoiron/sqlx"
+	"github.com/rivo/tview"
 	"github.com/urfave/cli/v3"
 )
 
@@ -117,8 +119,36 @@ func listEntries(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
+	tviewApp := tview.NewApplication()
+	table := tview.NewTable().
+		SetBorders(true)
+
+	// Headers
+	headers := []string{"ID", "Title", "Description"}
+	for i, header := range headers {
+		table.SetCell(0, i, tview.NewTableCell(header).
+			SetTextColor(tview.Styles.SecondaryTextColor).
+			SetSelectable(false))
+	}
+
+	// Data
 	for i, e := range entries {
-		fmt.Printf("%d. %s - %s\n", i+1, e.Title, e.Description.String)
+		row := i + 1
+		table.SetCell(row, 0, tview.NewTableCell(strconv.FormatInt(e.ID, 10)))
+		table.SetCell(row, 1, tview.NewTableCell(e.Title))
+		table.SetCell(row, 2, tview.NewTableCell(e.Description.String))
+	}
+
+	table.Select(1, 0).SetFixed(1, 0).SetDoneFunc(func(key tcell.Key) {
+		if key == tcell.KeyEscape {
+			tviewApp.Stop()
+		}
+	}).SetSelectedFunc(func(row int, column int) {
+		tviewApp.Stop()
+	})
+
+	if err := tviewApp.SetRoot(table, true).SetFocus(table).Run(); err != nil {
+		return err
 	}
 
 	return nil
