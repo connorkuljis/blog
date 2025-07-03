@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/connorkuljis/blog/internal/model"
+	"github.com/connorkuljis/blog/internal/dto"
 	"github.com/connorkuljis/blog/internal/site"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/jmoiron/sqlx"
@@ -85,32 +85,12 @@ func initialiseKuljisSite(enableDrafts bool, md goldmark.Markdown, db *sqlx.DB, 
 		log.Fatal(fmt.Errorf("error initialising site: %w", err))
 	}
 
-	for _, c := range categories {
-		categoryEntries, err := entryRepo.ReadAllByCategoryID(c.ID, enableDrafts)
-		if err != nil {
-			log.Fatal(fmt.Errorf("error initialising site %w", c.Title, err))
-
-		}
-
-		c.AddEntry(categoryEntries...)
-
-		for _, e := range categoryEntries {
-			err := e.ToHTML(md)
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			e.AddCategory(c)
-		}
+	entries, err := entryRepo.ReadAllEntries(enableDrafts)
+	if err != nil {
+		log.Fatal(fmt.Errorf("error initialising site: %w", err))
 	}
 
-	categoriesMap := make(map[string]*model.Category, len(categories))
+	nerdStats := dto.NewNerdStats(time.Now())
 
-	for _, category := range categories {
-		categoriesMap[category.Title] = category
-	}
-
-	nerdStats := model.NewNerdStats(time.Now())
-
-	return site.NewSite(Title, Author, DirBuild, DirAssets, time.Now(), t, categories, categoriesMap, nerdStats)
+	return site.NewSite(Title, Author, DirBuild, DirAssets, time.Now(), t, categories, entries, nerdStats, md)
 }
