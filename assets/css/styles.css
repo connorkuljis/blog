@@ -322,6 +322,7 @@ body {
 	&>table tbody tr:hover {
 		background-color: hsla(0, 0%, 100%, 0.1);
 	}
+
 }
 
 .category-entries-list {
