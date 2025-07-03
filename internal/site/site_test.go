@@ -6,8 +6,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/connorkuljis/blog/internal/dto"
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/pkg/site"
+	"github.com/yuin/goldmark"
 )
 
 func TestNewSite(t *testing.T) {
@@ -18,37 +20,38 @@ func TestNewSite(t *testing.T) {
 	createdAt := time.Now()
 	tmpl := template.New("test")
 	categories := []*model.Category{}
-	categoriesMap := make(map[string]*model.Category)
-	nerdStats := &model.NerdStats{}
+	entries := []*model.Entry{}
+	nerdStats := &dto.NerdStats{}
+	md := goldmark.New()
 
-	site := NewSite(title, author, dirBuild, dirAssets, createdAt, tmpl, categories, categoriesMap, nerdStats)
+	s := NewSite(title, author, dirBuild, dirAssets, createdAt, tmpl, categories, entries, nerdStats, md)
 
-	if site.Title != title {
-		t.Errorf("Expected title %s, got %s", title, site.Title)
+	if s.Title != title {
+		t.Errorf("Expected title %s, got %s", title, s.Title)
 	}
-	if site.Author != author {
-		t.Errorf("Expected author %s, got %s", author, site.Author)
+	if s.Author != author {
+		t.Errorf("Expected author %s, got %s", author, s.Author)
 	}
-	if site.DirBuild != dirBuild {
-		t.Errorf("Expected build directory %s, got %s", dirBuild, site.DirBuild)
+	if s.DirBuild != dirBuild {
+		t.Errorf("Expected build directory %s, got %s", dirBuild, s.DirBuild)
 	}
-	if site.DirAssets != dirAssets {
-		t.Errorf("Expected assets directory %s, got %s", dirAssets, site.DirAssets)
+	if s.DirAssets != dirAssets {
+		t.Errorf("Expected assets directory %s, got %s", dirAssets, s.DirAssets)
 	}
-	if !site.CreatedAt.Equal(createdAt) {
-		t.Errorf("Expected created at %v, got %v", createdAt, site.CreatedAt)
+	if !s.CreatedAt.Equal(createdAt) {
+		t.Errorf("Expected created at %v, got %v", createdAt, s.CreatedAt)
 	}
-	if site.T != tmpl {
-		t.Errorf("Expected template %v, got %v", tmpl, site.T)
+	if s.T != tmpl {
+		t.Errorf("Expected template %v, got %v", tmpl, s.T)
 	}
-	if len(site.Categories) != 0 {
-		t.Errorf("Expected 0 categories, got %d", len(site.Categories))
+	if len(s.Categories) != 0 {
+		t.Errorf("Expected 0 categories, got %d", len(s.Categories))
 	}
-	if len(site.CategoriesMap) != 0 {
-		t.Errorf("Expected 0 categories in map, got %d", len(site.CategoriesMap))
+	if len(s.CategoriesMap) != 0 {
+		t.Errorf("Expected 0 categories in map, got %d", len(s.CategoriesMap))
 	}
-	if site.NerdStats != nerdStats {
-		t.Errorf("Expected nerd stats %v, got %v", nerdStats, site.NerdStats)
+	if s.NerdStats != nerdStats {
+		t.Errorf("Expected nerd stats %v, got %v", nerdStats, s.NerdStats)
 	}
 }
 
@@ -93,17 +96,20 @@ func TestSite_Init(t *testing.T) {
 }
 
 func TestSite_Build(t *testing.T) {
+	cat1 := dto.Category{
+		Category: model.Category{ID: 1, Title: "Category 1"},
+	}
+	entry1 := dto.Entry{Entry: model.Entry{ID: 1, CategoryID: 1, Title: "Entry 1", CreatedAt: time.Now()}}
+	entry2 := dto.Entry{Entry: model.Entry{ID: 2, CategoryID: 1, Title: "Entry 2", CreatedAt: time.Now().Add(time.Hour)}}
+	entry1.Category = &cat1
+	entry2.Category = &cat1
+	cat1.Entries = []*dto.Entry{&entry1, &entry2}
+
 	s := &MySite{
-		Categories: []*model.Category{
-			{
-				Title: "Category 1",
-				Entries: []*model.Entry{
-					{Title: "Entry 1", CreatedAt: time.Now()},
-					{Title: "Entry 2", CreatedAt: time.Now().Add(time.Hour)},
-				},
-			},
+		Categories: []*dto.Category{
+			&cat1,
 		},
-		NerdStats: &model.NerdStats{},
+		NerdStats: &dto.NerdStats{},
 	}
 
 	pages := s.Build()
