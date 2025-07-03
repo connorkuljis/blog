@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"context"
-	_ "embed"
 	"errors"
 	"fmt"
 	"log"
@@ -11,7 +10,9 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/connorkuljis/blog/internal/dto"
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/gdamore/tcell/v2"
@@ -114,9 +115,14 @@ func main() {
 func listEntries(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	entries, err := app.Entries.ReadAllEntries(true)
+	entriesModel, err := app.Entries.ReadAllEntries(true)
 	if err != nil {
 		return err
+	}
+
+	var entries []*dto.Entry
+	for _, e := range entriesModel {
+		entries = append(entries, dto.NewEntryDTO(*e))
 	}
 
 	tviewApp := tview.NewApplication()
@@ -157,9 +163,14 @@ func listEntries(ctx context.Context, c *cli.Command) error {
 func createEntry(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	categories, err := app.Categories.ReadAllCategories()
+	categoriesModel, err := app.Categories.ReadAllCategories()
 	if err != nil {
 		return err
+	}
+
+	var categories []*dto.Category
+	for _, cat := range categoriesModel {
+		categories = append(categories, dto.NewCategoryDTO(*cat))
 	}
 
 	reader := bufio.NewReader(os.Stdin)
@@ -177,9 +188,14 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 
 	title = strings.TrimSpace(title)
 
-	entry := model.NewEntry(category.ID, title)
+	entry := dto.NewEntryDTO(model.Entry{
+		CategoryID: category.ID,
+		Title:      title,
+		CreatedAt:  time.Now(),
+		UpdatedAt:  time.Now(),
+	})
 
-	err = app.Entries.CreateEntry(entry)
+	err = app.Entries.CreateEntry(&entry.Entry)
 	if err != nil {
 		return fmt.Errorf("error creating entry: %w", err)
 	}
@@ -192,9 +208,14 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 func updateEntry(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	entries, err := app.Entries.ReadAllEntries(true)
+	entriesModel, err := app.Entries.ReadAllEntries(true)
 	if err != nil {
 		return err
+	}
+
+	var entries []*dto.Entry
+	for _, e := range entriesModel {
+		entries = append(entries, dto.NewEntryDTO(*e))
 	}
 
 	reader := bufio.NewReader(os.Stdin)
@@ -246,7 +267,6 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 				return err
 			}
 			entry.Content.String = content
-			entry.Content.String = content
 			if !entry.Content.Valid && len(content) > 0 {
 				entry.Content.Valid = true
 			}
@@ -256,7 +276,6 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 				return err
 			}
 			entry.FeaturedImageURL.String = featuredImageUrl
-			entry.FeaturedImageURL.String = featuredImageUrl
 			if !entry.FeaturedImageURL.Valid && len(featuredImageUrl) > 0 {
 				entry.FeaturedImageURL.Valid = true
 			}
@@ -265,7 +284,7 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 			continue
 		}
 
-		err = app.Entries.UpdateEntry(entry)
+		err = app.Entries.UpdateEntry(&entry.Entry)
 		if err != nil {
 			return err
 		}
@@ -279,9 +298,14 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 	reader := bufio.NewReader(os.Stdin)
 
-	entries, err := app.Entries.ReadAllEntries(true)
+	entriesModel, err := app.Entries.ReadAllEntries(true)
 	if err != nil {
 		return err
+	}
+
+	var entries []*dto.Entry
+	for _, e := range entriesModel {
+		entries = append(entries, dto.NewEntryDTO(*e))
 	}
 
 	entry, err := selectEntry(reader, entries)
@@ -317,9 +341,14 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 func listCategories(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	categories, err := app.Categories.ReadAllCategories()
+	categoriesModel, err := app.Categories.ReadAllCategories()
 	if err != nil {
 		return err
+	}
+
+	var categories []*dto.Category
+	for _, c := range categoriesModel {
+		categories = append(categories, dto.NewCategoryDTO(*c))
 	}
 
 	for i, c := range categories {
@@ -351,8 +380,11 @@ func createCategory(ctx context.Context, c *cli.Command) error {
 	}
 	description = strings.TrimSpace(description)
 
-	category := model.NewCategory(title, description)
-	err = app.Categories.CreateCategory(category)
+	category := dto.NewCategoryDTO(model.Category{
+		Title:       title,
+		Description: description,
+	})
+	err = app.Categories.CreateCategory(&category.Category)
 	if err != nil {
 		return err
 	}
@@ -365,9 +397,14 @@ func createCategory(ctx context.Context, c *cli.Command) error {
 func updateCategory(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	categories, err := app.Categories.ReadAllCategories()
+	categoriesModel, err := app.Categories.ReadAllCategories()
 	if err != nil {
 		return err
+	}
+
+	var categories []*dto.Category
+	for _, cat := range categoriesModel {
+		categories = append(categories, dto.NewCategoryDTO(*cat))
 	}
 
 	reader := bufio.NewReader(os.Stdin)
@@ -416,7 +453,7 @@ func updateCategory(ctx context.Context, c *cli.Command) error {
 			continue
 		}
 
-		err = app.Categories.UpdateCategory(selectedCategory)
+		err = app.Categories.UpdateCategory(&selectedCategory.Category)
 		if err != nil {
 			return err
 		}
@@ -430,9 +467,14 @@ func deleteCategory(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 	reader := bufio.NewReader(os.Stdin)
 
-	categories, err := app.Categories.ReadAllCategories()
+	categoriesModel, err := app.Categories.ReadAllCategories()
 	if err != nil {
 		return err
+	}
+
+	var categories []*dto.Category
+	for _, cat := range categoriesModel {
+		categories = append(categories, dto.NewCategoryDTO(*cat))
 	}
 
 	category, err := selectCategory(reader, categories)
@@ -497,7 +539,7 @@ func readContentFromEditor(content string) (string, error) {
 	return result, nil
 }
 
-func selectEntry(reader *bufio.Reader, entries []*model.Entry) (*model.Entry, error) {
+func selectEntry(reader *bufio.Reader, entries []*dto.Entry) (*dto.Entry, error) {
 	for i, e := range entries {
 		fmt.Printf("%d. %s\n", i+1, e.Title)
 	}
@@ -510,7 +552,7 @@ func selectEntry(reader *bufio.Reader, entries []*model.Entry) (*model.Entry, er
 	return entries[idx-1], nil
 }
 
-func selectCategory(reader *bufio.Reader, categories []*model.Category) (*model.Category, error) {
+func selectCategory(reader *bufio.Reader, categories []*dto.Category) (*dto.Category, error) {
 	for i, c := range categories {
 		fmt.Printf("%d. %s\n", i+1, c.Title)
 	}
