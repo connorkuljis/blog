@@ -73,7 +73,7 @@ WHERE
 	return nil
 }
 
-func (r *CategoryRepo) DeleteCategoryByTitle(id int64) error {
+func (r *CategoryRepo) DeleteCategoryByID(id int64) error {
 	_, err := r.db.Exec("DELETE FROM categories WHERE id = ?", id)
 	if err != nil {
 		return err

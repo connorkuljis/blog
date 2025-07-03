@@ -1,33 +1,4 @@
 package model
 
-import (
-	"runtime"
-	"time"
-)
-
-type NerdStats struct {
-	PageCount int
-	StartTime time.Time
-}
-
-func NewNerdStats(startTime time.Time) *NerdStats {
-	return &NerdStats{
-		StartTime: startTime,
-	}
-}
-
-func (n *NerdStats) SetPageCount(count int) {
-	n.PageCount = count
-}
-
-func (n *NerdStats) Platform() string {
-	return runtime.GOOS
-}
-
-func (n *NerdStats) Arch() string {
-	return runtime.GOARCH
-}
-
-func (n *NerdStats) Version() string {
-	return runtime.Version()
-}
+// This file is intentionally left empty after refactoring.
+// The contents have been moved to internal/dto/stats.go.

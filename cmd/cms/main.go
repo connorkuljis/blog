@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"context"
-	_ "embed"
 	"errors"
 	"fmt"
 	"log"
@@ -11,10 +10,14 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/connorkuljis/blog/internal/dto"
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/store"
+	"github.com/gdamore/tcell/v2"
 	"github.com/jmoiron/sqlx"
+	"github.com/rivo/tview"
 	"github.com/urfave/cli/v3"
 )
 
@@ -112,13 +115,43 @@ func main() {
 func listEntries(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	entries, err := app.Entries.ReadAllEntries(true)
+	entriesModel, err := app.Entries.ReadAllEntries(true)
 	if err != nil {
 		return err
 	}
 
+	entries := dto.EntriesToDTO(entriesModel)
+
+	tviewApp := tview.NewApplication()
+	table := tview.NewTable().
+		SetBorders(true)
+
+	// Headers
+	headers := []string{"ID", "Title", "Description"}
+	for i, header := range headers {
+		table.SetCell(0, i, tview.NewTableCell(header).
+			SetTextColor(tview.Styles.SecondaryTextColor).
+			SetSelectable(false))
+	}
+
+	// Data
 	for i, e := range entries {
-		fmt.Printf("%d. %s - %s\n", i+1, e.Title, e.Description.String)
+		row := i + 1
+		table.SetCell(row, 0, tview.NewTableCell(strconv.FormatInt(e.ID, 10)))
+		table.SetCell(row, 1, tview.NewTableCell(e.Title))
+		table.SetCell(row, 2, tview.NewTableCell(e.Description.String))
+	}
+
+	table.Select(1, 0).SetFixed(1, 0).SetDoneFunc(func(key tcell.Key) {
+		if key == tcell.KeyEscape {
+			tviewApp.Stop()
+		}
+	}).SetSelectedFunc(func(row int, column int) {
+		tviewApp.Stop()
+	})
+
+	if err := tviewApp.SetRoot(table, true).SetFocus(table).Run(); err != nil {
+		return err
 	}
 
 	return nil
@@ -127,10 +160,12 @@ func listEntries(ctx context.Context, c *cli.Command) error {
 func createEntry(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	categories, err := app.Categories.ReadAllCategories()
+	categoriesModel, err := app.Categories.ReadAllCategories()
 	if err != nil {
 		return err
 	}
+
+	categories := dto.CategoriesToDTO(categoriesModel)
 
 	reader := bufio.NewReader(os.Stdin)
 	category, err := selectCategory(reader, categories)
@@ -147,9 +182,14 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 
 	title = strings.TrimSpace(title)
 
-	entry := model.NewEntry(category.ID, title)
+	entry := dto.NewEntryDTO(model.Entry{
+		CategoryID: category.ID,
+		Title:      title,
+		CreatedAt:  time.Now(),
+		UpdatedAt:  time.Now(),
+	})
 
-	err = app.Entries.CreateEntry(entry)
+	err = app.Entries.CreateEntry(&entry.Entry)
 	if err != nil {
 		return fmt.Errorf("error creating entry: %w", err)
 	}
@@ -162,10 +202,12 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 func updateEntry(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	entries, err := app.Entries.ReadAllEntries(true)
+	entriesModel, err := app.Entries.ReadAllEntries(true)
 	if err != nil {
 		return err
 	}
+
+	entries := dto.EntriesToDTO(entriesModel)
 
 	reader := bufio.NewReader(os.Stdin)
 	entry, err := selectEntry(reader, entries)
@@ -216,7 +258,6 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 				return err
 			}
 			entry.Content.String = content
-			entry.Content.String = content
 			if !entry.Content.Valid && len(content) > 0 {
 				entry.Content.Valid = true
 			}
@@ -226,7 +267,6 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 				return err
 			}
 			entry.FeaturedImageURL.String = featuredImageUrl
-			entry.FeaturedImageURL.String = featuredImageUrl
 			if !entry.FeaturedImageURL.Valid && len(featuredImageUrl) > 0 {
 				entry.FeaturedImageURL.Valid = true
 			}
@@ -235,7 +275,7 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 			continue
 		}
 
-		err = app.Entries.UpdateEntry(entry)
+		err = app.Entries.UpdateEntry(&entry.Entry)
 		if err != nil {
 			return err
 		}
@@ -249,10 +289,12 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 	reader := bufio.NewReader(os.Stdin)
 
-	entries, err := app.Entries.ReadAllEntries(true)
+	entriesModel, err := app.Entries.ReadAllEntries(true)
 	if err != nil {
 		return err
 	}
+
+	entries := dto.EntriesToDTO(entriesModel)
 
 	entry, err := selectEntry(reader, entries)
 	if err != nil {
@@ -287,10 +329,12 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 func listCategories(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	categories, err := app.Categories.ReadAllCategories()
+	categoriesModel, err := app.Categories.ReadAllCategories()
 	if err != nil {
 		return err
 	}
+
+	categories := dto.CategoriesToDTO(categoriesModel)
 
 	for i, c := range categories {
 		fmt.Printf("%d. %s\n", i, c.Title)
@@ -301,43 +345,49 @@ func listCategories(ctx context.Context, c *cli.Command) error {
 
 // createCategory creates a new category.
 func createCategory(ctx context.Context, c *cli.Command) error {
-	// app := ctx.Value(appKey).(*App)
-	//
-	// reader := bufio.NewReader(os.Stdin)
-	//
-	// var title string
-	// fmt.Println("Please enter a category title: (Must be unique)")
-	// fmt.Printf("title: ")
-	// title, _ = reader.ReadString('\n')
-	// title = strings.TrimSpace(title)
-	//
-	// var description string
-	// fmt.Printf("Please enter a short description for '%s'\n", title)
-	// fmt.Printf("description: ")
-	// description, _ = reader.ReadString('\n')
-	// description = strings.TrimSpace(description)
-	//
-	// category := model.NewCategory(title, description)
-	// err := app.CategoryRepo.CreateCategory(category)
-	// if err != nil {
-	// 	return err
-	// }
-	//
-	// categories, err := app.CategoryRepo.ReadAllCategories()
-	// if err != nil {
-	// 	return err
-	// }
-	//
+	app := ctx.Value(KeyApp).(*App)
+
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Println("Please enter a category title: (Must be unique)")
+	fmt.Printf("title: ")
+	title, err := reader.ReadString('\n')
+	if err != nil {
+		return err
+	}
+	title = strings.TrimSpace(title)
+
+	fmt.Printf("Please enter a short description for '%s'\n", title)
+	fmt.Printf("description: ")
+	description, err := reader.ReadString('\n')
+	if err != nil {
+		return err
+	}
+	description = strings.TrimSpace(description)
+
+	category := dto.NewCategoryDTO(model.Category{
+		Title:       title,
+		Description: description,
+	})
+	err = app.Categories.CreateCategory(&category.Category)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Created category: '%s'\n", category.Title)
+
 	return nil
 }
 
 func updateCategory(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	categories, err := app.Categories.ReadAllCategories()
+	categoriesModel, err := app.Categories.ReadAllCategories()
 	if err != nil {
 		return err
 	}
+
+	categories := dto.CategoriesToDTO(categoriesModel)
 
 	reader := bufio.NewReader(os.Stdin)
 	selectedCategory, err := selectCategory(reader, categories)
@@ -385,7 +435,7 @@ func updateCategory(ctx context.Context, c *cli.Command) error {
 			continue
 		}
 
-		err = app.Categories.UpdateCategory(selectedCategory)
+		err = app.Categories.UpdateCategory(&selectedCategory.Category)
 		if err != nil {
 			return err
 		}
@@ -396,30 +446,41 @@ func updateCategory(ctx context.Context, c *cli.Command) error {
 
 // deleteCategory deletes a category.
 func deleteCategory(ctx context.Context, c *cli.Command) error {
-	// db := ctx.Value(sqlxKey).(*sqlx.DB)
-	//
-	// first := c.Args().First()
-	// if first == "" {
-	// 	// TODO: define errors such as missing argument, invalid argument ect...
-	// 	return fmt.Errorf("error: missing 1 positional argument: id")
-	// }
-	//
-	// repo := store.NewCategoryRepository(db)
-	//
-	// category, err := repo.ReadCategoryByID(id)
-	// if err != nil {
-	// 	return err
-	// }
-	//
-	// fmt.Println("Are you sure you want to delete category '" + category.Title + "'")
-	//
-	// err = repo.DeleteCategoryByTitle(id)
-	// if err != nil {
-	// 	return err
-	// }
-	//
-	// fmt.Println("Deleted category.")
-	// fmt.Printf("'%s': %s\n", category.Title, category.Description)
+	app := ctx.Value(KeyApp).(*App)
+	reader := bufio.NewReader(os.Stdin)
+
+	categoriesModel, err := app.Categories.ReadAllCategories()
+	if err != nil {
+		return err
+	}
+
+	categories := dto.CategoriesToDTO(categoriesModel)
+
+	category, err := selectCategory(reader, categories)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Confirm delete '%s' [y/N]: ", category.Title)
+	choice, err := reader.ReadString('\n')
+	if err != nil {
+		return fmt.Errorf("error reading input: %w", err)
+	}
+
+	choice = strings.TrimSpace(strings.ToLower(choice))
+
+	switch choice {
+	case "y":
+		if err := app.Categories.DeleteCategoryByID(category.ID); err != nil {
+			return fmt.Errorf("failed to delete category: %w", err)
+		}
+		fmt.Printf("Deleted: '%s'\n", category.Title)
+	case "n", "":
+		fmt.Println("Exiting...")
+		return nil
+	default:
+		return fmt.Errorf("invalid input: '%s', expected 'y' or 'n'", choice)
+	}
 
 	return nil
 }
@@ -457,7 +518,7 @@ func readContentFromEditor(content string) (string, error) {
 	return result, nil
 }
 
-func selectEntry(reader *bufio.Reader, entries []*model.Entry) (*model.Entry, error) {
+func selectEntry(reader *bufio.Reader, entries []*dto.Entry) (*dto.Entry, error) {
 	for i, e := range entries {
 		fmt.Printf("%d. %s\n", i+1, e.Title)
 	}
@@ -470,7 +531,7 @@ func selectEntry(reader *bufio.Reader, entries []*model.Entry) (*model.Entry, er
 	return entries[idx-1], nil
 }
 
-func selectCategory(reader *bufio.Reader, categories []*model.Category) (*model.Category, error) {
+func selectCategory(reader *bufio.Reader, categories []*dto.Category) (*dto.Category, error) {
 	for i, c := range categories {
 		fmt.Printf("%d. %s\n", i+1, c.Title)
 	}
