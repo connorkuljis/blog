@@ -120,10 +120,7 @@ func listEntries(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
-	var entries []*dto.Entry
-	for _, e := range entriesModel {
-		entries = append(entries, dto.NewEntryDTO(*e))
-	}
+	entries := dto.EntriesToDTO(entriesModel)
 
 	tviewApp := tview.NewApplication()
 	table := tview.NewTable().
@@ -168,10 +165,7 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
-	var categories []*dto.Category
-	for _, cat := range categoriesModel {
-		categories = append(categories, dto.NewCategoryDTO(*cat))
-	}
+	categories := dto.CategoriesToDTO(categoriesModel)
 
 	reader := bufio.NewReader(os.Stdin)
 	category, err := selectCategory(reader, categories)
@@ -213,10 +207,7 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
-	var entries []*dto.Entry
-	for _, e := range entriesModel {
-		entries = append(entries, dto.NewEntryDTO(*e))
-	}
+	entries := dto.EntriesToDTO(entriesModel)
 
 	reader := bufio.NewReader(os.Stdin)
 	entry, err := selectEntry(reader, entries)
@@ -303,10 +294,7 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
-	var entries []*dto.Entry
-	for _, e := range entriesModel {
-		entries = append(entries, dto.NewEntryDTO(*e))
-	}
+	entries := dto.EntriesToDTO(entriesModel)
 
 	entry, err := selectEntry(reader, entries)
 	if err != nil {
@@ -346,10 +334,7 @@ func listCategories(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
-	var categories []*dto.Category
-	for _, c := range categoriesModel {
-		categories = append(categories, dto.NewCategoryDTO(*c))
-	}
+	categories := dto.CategoriesToDTO(categoriesModel)
 
 	for i, c := range categories {
 		fmt.Printf("%d. %s\n", i, c.Title)
@@ -402,10 +387,7 @@ func updateCategory(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
-	var categories []*dto.Category
-	for _, cat := range categoriesModel {
-		categories = append(categories, dto.NewCategoryDTO(*cat))
-	}
+	categories := dto.CategoriesToDTO(categoriesModel)
 
 	reader := bufio.NewReader(os.Stdin)
 	selectedCategory, err := selectCategory(reader, categories)
@@ -472,10 +454,7 @@ func deleteCategory(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 
-	var categories []*dto.Category
-	for _, cat := range categoriesModel {
-		categories = append(categories, dto.NewCategoryDTO(*cat))
-	}
+	categories := dto.CategoriesToDTO(categoriesModel)
 
 	category, err := selectCategory(reader, categories)
 	if err != nil {
