@@ -7,8 +7,10 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/connorkuljis/blog/internal/dto"
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/pkg/site"
+	"github.com/yuin/goldmark"
 )
 
 type MySite struct {
@@ -19,11 +21,16 @@ type MySite struct {
 
 	CreatedAt     time.Time
 	T             *template.Template
-	Categories    []*model.Category
-	CategoriesMap map[string]*model.Category
-	NerdStats     *model.NerdStats
+	Categories    []*dto.Category
+	CategoriesMap map[string]*dto.Category
+	NerdStats     *dto.NerdStats
+	markdown      goldmark.Markdown
 }
 
+// NewSite creates a new MySite instance.
+// It takes the raw database models and transforms them into DTOs (Data Transfer Objects)
+// that are suitable for rendering the website.
+// This function is the main entry point for building the site's data structure.
 func NewSite(
 	title string,
 	author string,
@@ -31,10 +38,41 @@ func NewSite(
 	dirAssets string,
 	createdAt time.Time,
 	t *template.Template,
-	categories []*model.Category,
-	categoriesMap map[string]*model.Category,
-	nerdStats *model.NerdStats,
+	categoriesModel []*model.Category,
+	entriesModel []*model.Entry,
+	nerdStats *dto.NerdStats,
+	markdown goldmark.Markdown,
 ) *MySite {
+	// Create maps for efficient lookups.
+	// dtoCategoriesMap maps category IDs to category DTOs.
+	// dtoCategoriesByTitle maps category titles to category DTOs.
+	dtoCategoriesMap := make(map[int64]*dto.Category)
+	dtoCategories := make([]*dto.Category, 0, len(categoriesModel))
+	dtoCategoriesByTitle := make(map[string]*dto.Category)
+
+	// Transform category models to category DTOs and populate the maps.
+	for _, mCat := range categoriesModel {
+		dtoCat := dto.NewCategoryDTO(*mCat)
+
+		dtoCategories = append(dtoCategories, dtoCat)
+		dtoCategoriesMap[dtoCat.ID] = dtoCat
+		dtoCategoriesByTitle[dtoCat.Title] = dtoCat
+	}
+
+	// Transform entry models to entry DTOs.
+	// It also associates each entry with its corresponding category DTO.
+	for _, mEntry := range entriesModel {
+		dtoEntry := dto.NewEntryDTO(*mEntry)
+
+		// Find the category for the entry and add the entry to the category's list.
+		if dtoCat, ok := dtoCategoriesMap[dtoEntry.CategoryID]; ok {
+			dtoEntry.Category = dtoCat
+			dtoCat.AddEntry(dtoEntry)
+			// Convert the entry's markdown content to HTML.
+			dtoEntry.ToHTML(markdown)
+		}
+	}
+
 	return &MySite{
 		Title:         title,
 		Author:        author,
@@ -42,9 +80,10 @@ func NewSite(
 		DirAssets:     dirAssets,
 		CreatedAt:     createdAt,
 		T:             t,
-		Categories:    categories,
-		CategoriesMap: categoriesMap,
+		Categories:    dtoCategories,
+		CategoriesMap: dtoCategoriesByTitle,
 		NerdStats:     nerdStats,
+		markdown:      markdown,
 	}
 }
 
@@ -71,7 +110,7 @@ func (s *MySite) Init() error {
 func (s *MySite) Build() []site.Page {
 	var pages = []site.Page{}
 
-	var latestEntry *model.Entry
+	var latestEntry *dto.Entry
 	for _, c := range s.Categories {
 		for _, e := range c.Entries {
 			if latestEntry == nil || e.CreatedAt.After(latestEntry.CreatedAt) {
@@ -87,8 +126,8 @@ func (s *MySite) Build() []site.Page {
 		pages = append(pages, NewCategoryPage(s, category))
 
 		for i, entry := range category.Entries {
-			var next *model.Entry
-			var prev *model.Entry
+			var next *dto.Entry
+			var prev *dto.Entry
 
 			// Get previous entry if exists
 			if i > 0 {

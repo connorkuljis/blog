@@ -2,16 +2,16 @@ package site
 
 import (
 	"github.com/common-nighthawk/go-figure"
-	"github.com/connorkuljis/blog/internal/model"
+	"github.com/connorkuljis/blog/internal/dto"
 )
 
 type HomePage struct {
 	Site        *MySite
-	LatestEntry *model.Entry
+	LatestEntry *dto.Entry
 	Banner      [][]rune
 }
 
-func NewHomePage(site *MySite, latestEntry *model.Entry) HomePage {
+func NewHomePage(site *MySite, latestEntry *dto.Entry) HomePage {
 	// f := figure.NewFigure("connorkuljis", "isometric1", true)
 	// f := figure.NewFigure("connorkuljis", "slant", true)
 	// f := figure.NewFigure("connorkuljis", "univers", true)

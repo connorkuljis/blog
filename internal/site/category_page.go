@@ -3,15 +3,15 @@ package site
 import (
 	"path/filepath"
 
-	"github.com/connorkuljis/blog/internal/model"
+	"github.com/connorkuljis/blog/internal/dto"
 )
 
 type CategoryPage struct {
 	Site     *MySite
-	Category *model.Category
+	Category *dto.Category
 }
 
-func NewCategoryPage(site *MySite, category *model.Category) CategoryPage {
+func NewCategoryPage(site *MySite, category *dto.Category) CategoryPage {
 	p := CategoryPage{
 		Site:     site,
 		Category: category,
