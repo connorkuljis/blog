@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{{ template "head" . }}
+
+<body>
+	{{ template "header" . }}
+
+	<main>
+		<h1>Entries tagged with "{{.Tag.Name}}"</h1>
+		<ul>
+			{{ range .Tag.Entries }}
+			<li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+			{{ end }}
+		</ul>
+	</main>
+
+	{{ template "footer" . }}
+</body>
+
+</html>

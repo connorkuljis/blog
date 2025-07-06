@@ -40,6 +40,12 @@
 				</main>
 
 				<footer class="article-footer">
+					<div class="tags">
+						{{ range .Entry.Tags }}
+						<a href="{{ .Permalink }}">{{ .Name }}</a>
+						{{ end }}
+					</div>
+
 					<div class="prev">
 						{{ if .Prev }}
 						<span>Previous</span>

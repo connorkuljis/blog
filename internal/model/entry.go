@@ -16,6 +16,7 @@ type Entry struct {
 	*store.Entry
 
 	Category  *Category
+	Tags      []*Tag
 	Markdown  template.HTML
 	Permalink string
 	WordCount int

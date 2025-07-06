@@ -28,6 +28,7 @@ type App struct {
 	DB         *sqlx.DB
 	Entries    []*model.Entry
 	Categories []*model.Category
+	Tags       []*model.Tag
 }
 
 const KeyApp = "app"
@@ -80,6 +81,14 @@ func main() {
 				}
 
 				app.Categories = append(app.Categories, mCategory)
+			}
+
+			tags, err := store.NewTagRepo(db).GetTags()
+			if err != nil {
+				log.Fatal(err)
+			}
+			for _, t := range tags {
+				app.Tags = append(app.Tags, &model.Tag{Tag: t})
 			}
 
 			ctx = context.WithValue(ctx, KeyApp, app)
@@ -135,6 +144,29 @@ func main() {
 						Name:   "delete",
 						Usage:  "Delete a category.",
 						Action: deleteCategory,
+					},
+				},
+			},
+			{
+				Name:    "tags",
+				Aliases: []string{"t"},
+				Usage:   "operations on tags",
+				Action:  listTags,
+				Commands: []*cli.Command{
+					{
+						Name:   "create",
+						Usage:  "Create a new tag.",
+						Action: createTag,
+					},
+					{
+						Name:   "update",
+						Usage:  "Update an existing tag.",
+						Action: updateTag,
+					},
+					{
+						Name:   "delete",
+						Usage:  "Delete a tag.",
+						Action: deleteTag,
 					},
 				},
 			},
@@ -241,8 +273,9 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 		fmt.Println("2. Description")
 		fmt.Println("3. Content")
 		fmt.Println("4. Featured Image Url")
+		fmt.Println("5. Manage Tags")
 
-		fmt.Printf("Enter the number (%d-%d) or 'q' to quit: ", 1, 4)
+		fmt.Printf("Enter the number (%d-%d) or 'q' to quit: ", 1, 5)
 		choice, err := reader.ReadString('\n')
 		if err != nil {
 			return err
@@ -290,8 +323,13 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 			if !entry.FeaturedImageURL.Valid && len(featuredImageUrl) > 0 {
 				entry.FeaturedImageURL.Valid = true
 			}
+		case 5:
+			err := manageTagsForEntry(reader, app, entry)
+			if err != nil {
+				return err
+			}
 		default:
-			fmt.Println("Bad input, must be between 1 and 4: got:", choice)
+			fmt.Println("Bad input, must be between 1 and 5: got:", choice)
 			continue
 		}
 
@@ -513,7 +551,7 @@ func readContentFromEditor(content string) (string, error) {
 		return "", fmt.Errorf("Error: unable to read from '%s': %w", f.Name(), err)
 	}
 
-	result := strings.TrimSuffix(string(b), "\n")
+	result := strings.TrimSuffix(string(b), " ")
 
 	return result, nil
 }
@@ -577,4 +615,182 @@ func getInputBetween(reader *bufio.Reader, min int, max int) (int, error) {
 	}
 
 	return choiceNum, nil
+}
+
+func listTags(ctx context.Context, c *cli.Command) error {
+	app := ctx.Value(KeyApp).(*App)
+	tags := app.Tags
+	for i, t := range tags {
+		fmt.Printf("%d. %s\n", i, t.Name)
+	}
+	return nil
+}
+
+func createTag(ctx context.Context, c *cli.Command) error {
+	app := ctx.Value(KeyApp).(*App)
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Println("Please enter a tag name: (Must be unique)")
+	fmt.Printf("name: ")
+	name, err := reader.ReadString('\n')
+	if err != nil {
+		return err
+	}
+	name = strings.TrimSpace(name)
+
+	tag := &store.Tag{
+		Name: name,
+	}
+	err = store.NewTagRepo(app.DB).CreateTag(tag)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Created tag: '%s'\n", tag.Name)
+	return nil
+}
+
+func updateTag(ctx context.Context, c *cli.Command) error {
+	app := ctx.Value(KeyApp).(*App)
+	reader := bufio.NewReader(os.Stdin)
+
+	tags := app.Tags
+	tag, err := selectTag(reader, tags)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Enter the new name for '%s': ", tag.Name)
+	name, err := reader.ReadString('\n')
+	if err != nil {
+		return err
+	}
+	name = strings.TrimSpace(name)
+	tag.Name = name
+
+	err = store.NewTagRepo(app.DB).UpdateTag(tag.Tag)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Updated tag: '%s'\n", tag.Name)
+	return nil
+}
+
+func deleteTag(ctx context.Context, c *cli.Command) error {
+	app := ctx.Value(KeyApp).(*App)
+	reader := bufio.NewReader(os.Stdin)
+
+	tags := app.Tags
+	tag, err := selectTag(reader, tags)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Confirm delete '%s' [y/N]: ", tag.Name)
+	choice, err := reader.ReadString('\n')
+	if err != nil {
+		return fmt.Errorf("error reading input: %w", err)
+	}
+
+	choice = strings.TrimSpace(strings.ToLower(choice))
+
+	switch choice {
+	case "y":
+		if err = store.NewTagRepo(app.DB).DeleteTag(tag.ID); err != nil {
+			return fmt.Errorf("failed to delete tag: %w", err)
+		}
+		fmt.Printf("Deleted: '%s'\n", tag.Name)
+	case "n", "":
+		fmt.Println("Exiting...")
+		return nil
+	default:
+		return fmt.Errorf("invalid input: '%s', expected 'y' or 'n'", choice)
+	}
+
+	return nil
+}
+
+func selectTag(reader *bufio.Reader, tags []*model.Tag) (*model.Tag, error) {
+	for i, t := range tags {
+		fmt.Printf("%d. %s\n", i+1, t.Name)
+	}
+
+	idx, err := getInputBetween(reader, 1, len(tags))
+	if err != nil {
+		return nil, err
+	}
+
+	return tags[idx-1], nil
+}
+
+func manageTagsForEntry(reader *bufio.Reader, app *App, entry *model.Entry) error {
+	fmt.Println("1. Add Tag")
+	fmt.Println("2. Remove Tag")
+	fmt.Printf("Enter the number (1-2) or 'q' to quit: ")
+
+	choice, err := reader.ReadString('\n')
+	if err != nil {
+		return err
+	}
+	choice = strings.TrimSpace(choice)
+
+	if choice == "q" {
+		return ErrSelectionCancelled
+	}
+
+	choiceNum, _ := strconv.Atoi(choice)
+
+	switch choiceNum {
+	case 1:
+		// Filter out tags already on the entry
+		var availableTags []*model.Tag
+		for _, t := range app.Tags {
+			found := false
+			for _, et := range entry.Tags {
+				if et.ID == t.ID {
+					found = true
+					break
+				}
+			}
+			if !found {
+				availableTags = append(availableTags, t)
+			}
+		}
+
+		if len(availableTags) == 0 {
+			fmt.Println("No new tags to add.")
+			return nil
+		}
+
+		tag, err := selectTag(reader, availableTags)
+		if err != nil {
+			return err
+		}
+		err = store.NewEntryRepo(app.DB).AddTagToEntry(entry.ID, tag.ID)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("Added tag '%s' to entry '%s'\n", tag.Name, entry.Title)
+
+	case 2:
+		if len(entry.Tags) == 0 {
+			fmt.Println("No tags to remove from this entry.")
+			return nil
+		}
+
+		tag, err := selectTag(reader, entry.Tags)
+		if err != nil {
+			return err
+		}
+		err = store.NewEntryRepo(app.DB).RemoveTagFromEntry(entry.ID, tag.ID)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("Removed tag '%s' from entry '%s'\n", tag.Name, entry.Title)
+	default:
+		fmt.Println("Bad input, must be 1 or 2: got:", choice)
+	}
+
+	return nil
 }

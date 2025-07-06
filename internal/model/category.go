@@ -19,7 +19,7 @@ func NewCategory(c *store.Category) *Category {
 	return &Category{
 		Category:  c,
 		Entries:   []*Entry{},
-		Permalink: fmt.Sprintf("/%s", util.Slugify(c.Title)),
+		Permalink: "/" + util.Slugify(c.Title),
 	}
 }
 

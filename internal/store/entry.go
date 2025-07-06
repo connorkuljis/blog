@@ -148,10 +148,48 @@ WHERE
 }
 
 func (r *EntryRepo) DeleteEntryByID(id int64) error {
-	_, err := r.db.Exec("DELETE FROM entries WHERE id = $1", id)
+	_, err := r.db.Exec("DELETE * FROM entries WHERE id = ?", id)
 	if err != nil {
-		return fmt.Errorf("Error deleting entry by id `%d`: %w", id, err)
+		// TODO: better error handling
+		return err
 	}
 
 	return nil
+}
+
+func (r *EntryRepo) ReadAllByTag(tag string, enableDrafts bool) ([]*Entry, error) {
+	var entries []*Entry
+
+	q := `
+	SELECT e.*
+	FROM entries e
+	JOIN entry_tags et ON e.id = et.entry_id
+	JOIN tags t ON et.tag_id = t.id
+	WHERE t.name = ?
+	`
+
+	if !enableDrafts {
+		q += "AND e.is_draft != 1"
+	}
+
+	q += " ORDER BY e.created_at DESC"
+
+	err := r.db.Select(&entries, q, tag)
+	if err != nil {
+		return nil, fmt.Errorf("Error getting all entries by tag: %w", err)
+	}
+
+	return entries, nil
+}
+
+func (r *EntryRepo) AddTagToEntry(entryID int64, tagID int64) error {
+	q := "INSERT INTO entry_tags (entry_id, tag_id) VALUES (?, ?)"
+	_, err := r.db.Exec(q, entryID, tagID)
+	return err
+}
+
+func (r *EntryRepo) RemoveTagFromEntry(entryID int64, tagID int64) error {
+	q := "DELETE FROM entry_tags WHERE entry_id = ? AND tag_id = ?"
+	_, err := r.db.Exec(q, entryID, tagID)
+	return err
 }

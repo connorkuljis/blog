@@ -25,13 +25,11 @@ type MySite struct {
 	T             *template.Template
 	Categories    []*model.Category
 	CategoriesMap map[string]*model.Category
+	Tags          []*model.Tag
+	TagsMap       map[string]*model.Tag
 	NerdStats     *model.NerdStats
 }
 
-// NewSite creates a new MySite instance.
-// It takes the raw database models and transforms them into DTOs (Data Transfer Objects)
-// that are suitable for rendering the website.
-// This function is the main entry point for building the site's data structure.
 func NewSite(
 	title string,
 	author string,
@@ -54,6 +52,18 @@ func NewSite(
 		NerdStats: nerdStats,
 	}
 
+	site.TagsMap = make(map[string]*model.Tag)
+	tags, err := store.NewTagRepo(db).GetTags()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, t := range tags {
+		tag := model.NewTag(t)
+		site.Tags = append(site.Tags, tag)
+		site.TagsMap[t.Name] = tag
+	}
+
 	categories, err := store.NewCategoryRepo(db).ReadAllCategories()
 	if err != nil {
 		log.Fatal(err)
@@ -70,6 +80,18 @@ func NewSite(
 
 		for _, e := range entries {
 			mEntry := model.NewEntry(e, mCategory, markdown)
+
+			tags, err := store.NewTagRepo(db).GetTagsForEntry(e.ID)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			for _, t := range tags {
+				tag := model.NewTag(t)
+				mEntry.Tags = append(mEntry.Tags, tag)
+				site.TagsMap[t.Name].Entries = append(site.TagsMap[t.Name].Entries, mEntry)
+			}
+
 			mCategory.AddEntry(mEntry)
 		}
 	}
@@ -122,6 +144,10 @@ func (s *MySite) Build() []site.Page {
 
 			pages = append(pages, NewEntryPage(s, category, entry, next, prev))
 		}
+	}
+
+	for _, tag := range s.Tags {
+		pages = append(pages, NewTagPage(s, tag))
 	}
 
 	s.NerdStats.PageCount = len(pages)

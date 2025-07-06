@@ -9,6 +9,7 @@ import (
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/site"
 	"github.com/connorkuljis/blog/internal/store"
+	"github.com/connorkuljis/blog/internal/util"
 	"github.com/jmoiron/sqlx"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
@@ -28,6 +29,7 @@ var (
 		"runeToString": func(r rune) string {
 			return string(r)
 		},
+		"slugify": util.Slugify,
 	}
 	md = goldmark.New(
 		goldmark.WithExtensions(
