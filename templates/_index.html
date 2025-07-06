@@ -12,7 +12,6 @@
 	<!-- main -->
 	<main class="main">
 		<!-- ascii-art -->
-		<script src="/js/marquee-animation.js"></script>
 		<div class="ascii-art-wrapper">
 			<div class="ascii-art">
 				{{- range $i, $row := .Banner }}
@@ -23,21 +22,27 @@
 				</div>
 				{{- end }}
 			</div>
+			<script src="/js/marquee-animation.js"></script>
 		</div>
+
 		<!-- wrapper -->
 		<div class="wrapper">
 			<!-- article -->
 			<article class="article">
-				<h2 class="article-title">{{ .Site.Title }}</h2>
 
 				{{ template "about" . }}
 
+				{{ template "contact" . }}
+
 				<section>
 					{{- if .LatestEntry }}
-					<article>Latest Entry -
-						<a href="{{ .LatestEntry.Permalink }}">
-							{{ .LatestEntry.Title }}
-						</a>
+					<article>
+						<div>
+							Read my latest article:
+							<a href="{{ .LatestEntry.Permalink }}">
+								{{ .LatestEntry.Title }}
+							</a>
+						</div>
 					</article>
 					{{- end }}
 				</section>

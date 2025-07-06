@@ -1,27 +1,35 @@
 <!-- templates/components.html -->
 {{ define "about" }}
-<article class="about" id="kuljis-about">
-	<h2>About Me</h2>
+<section class="section about" id="kuljis-about">
+	<h2>About</h2>
+
 	<p>
-		Hi, I'm Connor Kuljis. I'm a software engineer with a passion for building things that matter. I love working on
-		challenging problems and creating solutions that make a difference.
+		Hi, I'm Connor. I live in Perth, Australia.
 	</p>
-</article>
+
+	<p>
+		I like to build things. I have a background in software engineering and a keen interest
+		in software development.
+	</p>
+
+	<p>
+		Right now I'm into linux automation and containerization.
+	</p>
+</section>
 {{ end }}
 
 {{ define "education" }}
-<article class="education" id="kuljis-education">
+<section class="section education" id="kuljis-education">
 	<h2>Education</h2>
 	<p>Here is some incredibly embarrasing information about me.</p>
-	<p>Please hire me.</p>
-</article>
+</section>
 {{ end }}
 
 {{ define "contact" }}
-<article class="contact" id="kuljis-contact">
+<section class="section contact" id="kuljis-contact">
 	<h2>Contact</h2>
 	{{- template "socials" . }}
-</article>
+</section>
 {{ end }}
 
 {{ define "socials" }}
@@ -36,7 +44,6 @@
 {{ end }}
 
 {{ define "lorem-ipsum" }}
-<h>Lorem Ipsum</h>
 <p>
 	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
 	aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.

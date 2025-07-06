@@ -13,16 +13,19 @@
 	<main class="main">
 		<!-- wrapper -->
 		<div class="wrapper">
-			<!-- content-grid -->
-			<div class="content-grid">
-				<!-- article -->
-				<article class="article">
-					{{- template "lorem-ipsum" . }}
+			<!-- article -->
+			<article class="article">
 
-					<section>
-					</section>
-				</article>
-			</div>
+				{{ template "about" . }}
+
+				{{ template "education" . }}
+
+				{{ template "contact" . }}
+
+				{{ template "lorem-ipsum" . }}
+
+				<p>Kanye West is the greatest artist of all time.</p>
+			</article>
 		</div>
 	</main>
 
