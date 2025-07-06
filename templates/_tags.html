@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{{ template "head.html" . }}
+
+<body id="_tags" class="page-wrapper">
+	{{ template "header.html" . }}
+
+	<main class="main">
+		<div class="wrapper">
+			<article class="article">
+				<header class="article-header">
+					<h2 class="title">Tags</h2>
+				</header>
+
+				<main class="article-main">
+					<ul class="tags-list">
+						{{ range .Tags }}
+						<li class="tags-list-item">
+							<a href="{{ .Permalink }}">{{ .Name }}</a>
+						</li>
+						{{ end }}
+					</ul>
+				</main>
+			</article>
+		</div>
+</body>
+
+{{ template "footer.html" . }}
+
+</html>

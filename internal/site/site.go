@@ -146,6 +146,8 @@ func (s *MySite) Build() []site.Page {
 		}
 	}
 
+	pages = append(pages, NewTagsPage(s, s.Tags))
+
 	for _, tag := range s.Tags {
 		pages = append(pages, NewTagPage(s, tag))
 	}
