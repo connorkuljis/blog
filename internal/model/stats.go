@@ -7,27 +7,18 @@ import (
 
 type NerdStats struct {
 	PageCount int
+	Platform  string
+	Arch      string
+	Version   string
+
 	StartTime time.Time
 }
 
 func NewNerdStats(startTime time.Time) *NerdStats {
 	return &NerdStats{
 		StartTime: startTime,
+		Platform:  runtime.GOOS,
+		Arch:      runtime.GOARCH,
+		Version:   runtime.Version(),
 	}
-}
-
-func (n *NerdStats) SetPageCount(count int) {
-	n.PageCount = count
-}
-
-func (n *NerdStats) Platform() string {
-	return runtime.GOOS
-}
-
-func (n *NerdStats) Arch() string {
-	return runtime.GOARCH
-}
-
-func (n *NerdStats) Version() string {
-	return runtime.Version()
 }

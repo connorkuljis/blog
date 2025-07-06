@@ -11,7 +11,7 @@ type HomePage struct {
 	Banner      [][]rune
 }
 
-func NewHomePage(site *MySite, latestEntry *model.Entry) HomePage {
+func NewHomePage(s *MySite) HomePage {
 	f := figure.NewFigure("connorkuljis", "larry3d", true)
 
 	lines := f.Slicify()
@@ -20,7 +20,16 @@ func NewHomePage(site *MySite, latestEntry *model.Entry) HomePage {
 		banner = append(banner, []rune(line))
 	}
 
-	p := HomePage{Site: site, LatestEntry: latestEntry, Banner: banner}
+	var latestEntry *model.Entry
+	for _, c := range s.Categories {
+		for _, e := range c.Entries {
+			if latestEntry == nil || e.CreatedAt.After(latestEntry.CreatedAt) {
+				latestEntry = e
+			}
+		}
+	}
+
+	p := HomePage{Site: s, LatestEntry: latestEntry, Banner: banner}
 	return p
 }
 

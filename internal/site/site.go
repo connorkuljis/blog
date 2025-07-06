@@ -10,21 +10,22 @@ import (
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/connorkuljis/blog/pkg/site"
+	"github.com/jmoiron/sqlx"
 	"github.com/yuin/goldmark"
 )
 
 type MySite struct {
-	Title     string
-	Author    string
-	DirBuild  string
-	DirAssets string
+	Title        string
+	Author       string
+	DirBuild     string
+	DirAssets    string
+	EnableDrafts bool
 
 	CreatedAt     time.Time
 	T             *template.Template
 	Categories    []*model.Category
 	CategoriesMap map[string]*model.Category
 	NerdStats     *model.NerdStats
-	markdown      goldmark.Markdown
 }
 
 // NewSite creates a new MySite instance.
@@ -36,53 +37,44 @@ func NewSite(
 	author string,
 	dirBuild string,
 	dirAssets string,
+	enableDrafts bool,
 	createdAt time.Time,
 	t *template.Template,
-	categoriesData []*store.Category,
-	entriesData []*store.Entry,
+	db *sqlx.DB,
 	nerdStats *model.NerdStats,
 	markdown goldmark.Markdown,
 ) *MySite {
-	// Create maps for efficient lookups.
-	allCategories := make([]*model.Category, 0, len(categoriesData))
-	mapCategoryIDToCategory := make(map[int64]*model.Category)
-	mapCategoryTitleToCategory := make(map[string]*model.Category)
-
-	// Transform category models to category DTOs and populate the maps.
-	for _, c := range categoriesData {
-		category := model.NewCategory(*c)
-
-		allCategories = append(allCategories, category)
-		mapCategoryIDToCategory[category.ID] = category
-		mapCategoryTitleToCategory[category.Title] = category
+	site := &MySite{
+		Title:     title,
+		Author:    author,
+		DirBuild:  dirBuild,
+		DirAssets: dirAssets,
+		CreatedAt: createdAt,
+		T:         t,
+		NerdStats: nerdStats,
 	}
 
-	// Transform entry models to entry DTOs.
-	// It also associates each entry with its corresponding category DTO.
-	for _, e := range entriesData {
-		entry := model.NewEntry(*e)
+	categories, err := store.NewCategoryRepo(db).ReadAllCategories()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-		// Find the category for the entry and add the entry to the category's list.
-		if category, ok := mapCategoryIDToCategory[entry.CategoryID]; ok {
-			entry.AddCategory(category)
-			category.AddEntry(entry)
-			// Convert the entry's markdown content to HTML.
-			entry.ToHTML(markdown)
+	for _, c := range categories {
+		mCategory := model.NewCategory(c)
+		site.Categories = append(site.Categories, mCategory)
+
+		entries, err := store.NewEntryRepo(db).ReadAllByCategoryID(c.ID, enableDrafts)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		for _, e := range entries {
+			mEntry := model.NewEntry(e, mCategory, markdown)
+			mCategory.AddEntry(mEntry)
 		}
 	}
 
-	return &MySite{
-		Title:         title,
-		Author:        author,
-		DirBuild:      dirBuild,
-		DirAssets:     dirAssets,
-		CreatedAt:     createdAt,
-		T:             t,
-		Categories:    allCategories,
-		CategoriesMap: mapCategoryTitleToCategory,
-		NerdStats:     nerdStats,
-		markdown:      markdown,
-	}
+	return site
 }
 
 func (s *MySite) Init() error {
@@ -108,24 +100,15 @@ func (s *MySite) Init() error {
 func (s *MySite) Build() []site.Page {
 	var pages = []site.Page{}
 
-	var latestEntry *dto.Entry
-	for _, c := range s.Categories {
-		for _, e := range c.Entries {
-			if latestEntry == nil || e.CreatedAt.After(latestEntry.CreatedAt) {
-				latestEntry = e
-			}
-		}
-	}
-
-	pages = append(pages, NewHomePage(s, latestEntry))
+	pages = append(pages, NewHomePage(s))
 	pages = append(pages, NewAboutPage(s))
 
 	for _, category := range s.Categories {
 		pages = append(pages, NewCategoryPage(s, category))
 
 		for i, entry := range category.Entries {
-			var next *dto.Entry
-			var prev *dto.Entry
+			var next *model.Entry
+			var prev *model.Entry
 
 			// Get previous entry if exists
 			if i > 0 {
@@ -141,7 +124,7 @@ func (s *MySite) Build() []site.Page {
 		}
 	}
 
-	s.NerdStats.SetPageCount(len(pages))
+	s.NerdStats.PageCount = len(pages)
 
 	return pages
 }

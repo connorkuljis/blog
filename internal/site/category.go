@@ -24,7 +24,7 @@ func (p CategoryPage) Title() string {
 }
 
 func (p CategoryPage) FileName() string {
-	return filepath.Join(p.Category.Permalink(), "index.html")
+	return filepath.Join(p.Category.Permalink, "index.html")
 }
 
 func (p CategoryPage) TemplateName() string {

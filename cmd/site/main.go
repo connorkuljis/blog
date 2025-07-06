@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"html/template"
 	"log"
 	"time"
@@ -77,20 +76,18 @@ func main() {
 }
 
 func initialiseKuljisSite(enableDrafts bool, md goldmark.Markdown, db *sqlx.DB, t *template.Template) *site.MySite {
-	categoryRepo := store.NewCategoryRepo(db)
-	entryRepo := store.NewEntryRepo(db)
-
-	categories, err := categoryRepo.ReadAllCategories()
-	if err != nil {
-		log.Fatal(fmt.Errorf("error initialising site: %w", err))
-	}
-
-	entries, err := entryRepo.ReadAllEntries(enableDrafts)
-	if err != nil {
-		log.Fatal(fmt.Errorf("error initialising site: %w", err))
-	}
-
 	nerdStats := model.NewNerdStats(time.Now())
 
-	return site.NewSite(Title, Author, DirBuild, DirAssets, time.Now(), t, categories, entries, nerdStats, md)
+	return site.NewSite(
+		Title,
+		Author,
+		DirBuild,
+		DirAssets,
+		enableDrafts,
+		time.Now(),
+		t,
+		db,
+		nerdStats,
+		md,
+	)
 }
