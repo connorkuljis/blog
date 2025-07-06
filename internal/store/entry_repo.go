@@ -1,12 +1,24 @@
 package store
 
 import (
+	"database/sql"
 	"fmt"
 	"time"
 
-	"github.com/connorkuljis/blog/internal/model"
 	"github.com/jmoiron/sqlx"
 )
+
+type Entry struct {
+	ID               int64          `db:"id"`
+	CategoryID       int64          `db:"category_id"`
+	Title            string         `db:"title"`
+	Content          sql.NullString `db:"content"`
+	Description      sql.NullString `db:"description"`
+	FeaturedImageURL sql.NullString `db:"featured_image_url"`
+	CreatedAt        time.Time      `db:"created_at"`
+	UpdatedAt        time.Time      `db:"updated_at"`
+	IsDraft          int            `db:"is_draft"`
+}
 
 type EntryRepo struct {
 	db *sqlx.DB
@@ -16,7 +28,7 @@ func NewEntryRepo(db *sqlx.DB) *EntryRepo {
 	return &EntryRepo{db: db}
 }
 
-func (r *EntryRepo) CreateEntry(entry *model.Entry) error {
+func (r *EntryRepo) CreateEntry(entry *Entry) error {
 	q := `
 INSERT INTO 
 entries 
@@ -45,8 +57,8 @@ VALUES
 	return nil
 }
 
-func (r *EntryRepo) ReadAllEntries(includeDrafts bool) ([]*model.Entry, error) {
-	var entries []*model.Entry
+func (r *EntryRepo) ReadAllEntries(includeDrafts bool) ([]*Entry, error) {
+	var entries []*Entry
 
 	q := "SELECT * FROM entries"
 
@@ -64,8 +76,8 @@ func (r *EntryRepo) ReadAllEntries(includeDrafts bool) ([]*model.Entry, error) {
 	return entries, nil
 }
 
-func (r *EntryRepo) ReadRecentEntries(limit int) ([]model.Entry, error) {
-	var entries []model.Entry
+func (r *EntryRepo) ReadRecentEntries(limit int) ([]Entry, error) {
+	var entries []Entry
 	err := r.db.Select(&entries, "SELECT * FROM entries ORDER BY created_at DESC LIMIT ?", limit)
 	if err != nil {
 		return nil, fmt.Errorf("Error getting all entries: %w", err)
@@ -74,13 +86,13 @@ func (r *EntryRepo) ReadRecentEntries(limit int) ([]model.Entry, error) {
 	return entries, nil
 }
 
-func (r *EntryRepo) ReadAllByCategoryID(categoryID int64, enableDrafts bool) ([]*model.Entry, error) {
-	var entries []*model.Entry
+func (r *EntryRepo) ReadAllByCategoryID(categoryID int64, enableDrafts bool) ([]*Entry, error) {
+	var entries []*Entry
 
 	q := "SELECT * FROM entries WHERE category_id = ?"
 
 	if !enableDrafts {
-		q += "AND is_draft = 0"
+		q += "AND is_draft != 1"
 	}
 
 	q += " ORDER BY created_at DESC"
@@ -93,8 +105,8 @@ func (r *EntryRepo) ReadAllByCategoryID(categoryID int64, enableDrafts bool) ([]
 	return entries, nil
 }
 
-func (r *EntryRepo) ReadEntryByID(id int64) (*model.Entry, error) {
-	var entry model.Entry
+func (r *EntryRepo) ReadEntryByID(id int64) (*Entry, error) {
+	var entry Entry
 	err := r.db.Get(&entry, "SELECT * FROM entries WHERE id = ?", id)
 	if err != nil {
 		return nil, fmt.Errorf("Error getting entry by id `%d`: %w", id, err)
@@ -103,7 +115,7 @@ func (r *EntryRepo) ReadEntryByID(id int64) (*model.Entry, error) {
 	return &entry, nil
 }
 
-func (r *EntryRepo) UpdateEntry(entry *model.Entry) error {
+func (r *EntryRepo) UpdateEntry(entry *Entry) error {
 	q := `
 UPDATE 
 	entries 

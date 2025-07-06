@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/connorkuljis/blog/internal/dto"
+	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/site"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/jmoiron/sqlx"
@@ -90,7 +90,7 @@ func initialiseKuljisSite(enableDrafts bool, md goldmark.Markdown, db *sqlx.DB, 
 		log.Fatal(fmt.Errorf("error initialising site: %w", err))
 	}
 
-	nerdStats := dto.NewNerdStats(time.Now())
+	nerdStats := model.NewNerdStats(time.Now())
 
 	return site.NewSite(Title, Author, DirBuild, DirAssets, time.Now(), t, categories, entries, nerdStats, md)
 }

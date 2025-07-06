@@ -3,23 +3,23 @@ package site
 import (
 	"path/filepath"
 
-	"github.com/connorkuljis/blog/internal/dto"
+	"github.com/connorkuljis/blog/internal/model"
 )
 
 type EntryPage struct {
 	Site     *MySite
-	Category *dto.Category
-	Entry    *dto.Entry
-	Next     *dto.Entry
-	Prev     *dto.Entry
+	Category *model.Category
+	Entry    *model.Entry
+	Next     *model.Entry
+	Prev     *model.Entry
 }
 
 func NewEntryPage(
 	site *MySite,
-	category *dto.Category,
-	entry *dto.Entry,
-	next *dto.Entry,
-	prev *dto.Entry,
+	category *model.Category,
+	entry *model.Entry,
+	next *model.Entry,
+	prev *model.Entry,
 ) EntryPage {
 	return EntryPage{
 		Site:     site,

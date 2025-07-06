@@ -12,24 +12,40 @@ import (
 	"strings"
 	"time"
 
-	"github.com/connorkuljis/blog/internal/dto"
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/gdamore/tcell/v2"
 	"github.com/jmoiron/sqlx"
 	"github.com/rivo/tview"
 	"github.com/urfave/cli/v3"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	"github.com/yuin/goldmark/parser"
+	"github.com/yuin/goldmark/renderer/html"
 )
 
 type App struct {
 	DB         *sqlx.DB
-	Entries    *store.EntryRepo
-	Categories *store.CategoryRepo
+	Entries    []*model.Entry
+	Categories []*model.Category
 }
 
 const KeyApp = "app"
 
 var ErrSelectionCancelled = errors.New("selection cancelled by user")
+
+var md = goldmark.New(
+	goldmark.WithExtensions(
+		extension.GFM,
+	),
+	goldmark.WithParserOptions(
+		parser.WithAutoHeadingID(),
+	),
+	goldmark.WithRendererOptions(
+		html.WithHardWraps(),
+		html.WithXHTML(),
+	),
+)
 
 func main() {
 	cmd := &cli.Command{
@@ -42,9 +58,28 @@ func main() {
 			}
 
 			app := &App{
-				DB:         db,
-				Entries:    store.NewEntryRepo(db),
-				Categories: store.NewCategoryRepo(db),
+				DB: db,
+			}
+
+			categories, err := store.NewCategoryRepo(db).ReadAllCategories()
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			for _, c := range categories {
+				entries, err := store.NewEntryRepo(db).ReadAllByCategoryID(c.ID, true)
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				mCategory := model.NewCategory(c)
+				for _, e := range entries {
+					mEntry := model.NewEntry(e, mCategory, md)
+					mCategory.AddEntry(mEntry)
+					app.Entries = append(app.Entries, mEntry)
+				}
+
+				app.Categories = append(app.Categories, mCategory)
 			}
 
 			ctx = context.WithValue(ctx, KeyApp, app)
@@ -115,12 +150,7 @@ func main() {
 func listEntries(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	entriesModel, err := app.Entries.ReadAllEntries(true)
-	if err != nil {
-		return err
-	}
-
-	entries := dto.EntriesToDTO(entriesModel)
+	entries := app.Entries
 
 	tviewApp := tview.NewApplication()
 	table := tview.NewTable().
@@ -160,12 +190,7 @@ func listEntries(ctx context.Context, c *cli.Command) error {
 func createEntry(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	categoriesModel, err := app.Categories.ReadAllCategories()
-	if err != nil {
-		return err
-	}
-
-	categories := dto.CategoriesToDTO(categoriesModel)
+	categories := app.Categories
 
 	reader := bufio.NewReader(os.Stdin)
 	category, err := selectCategory(reader, categories)
@@ -182,14 +207,14 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 
 	title = strings.TrimSpace(title)
 
-	entry := dto.NewEntryDTO(model.Entry{
+	entry := &store.Entry{
 		CategoryID: category.ID,
 		Title:      title,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
-	})
+	}
 
-	err = app.Entries.CreateEntry(&entry.Entry)
+	err = store.NewEntryRepo(app.DB).CreateEntry(entry)
 	if err != nil {
 		return fmt.Errorf("error creating entry: %w", err)
 	}
@@ -202,12 +227,7 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 func updateEntry(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	entriesModel, err := app.Entries.ReadAllEntries(true)
-	if err != nil {
-		return err
-	}
-
-	entries := dto.EntriesToDTO(entriesModel)
+	entries := app.Entries
 
 	reader := bufio.NewReader(os.Stdin)
 	entry, err := selectEntry(reader, entries)
@@ -275,7 +295,7 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 			continue
 		}
 
-		err = app.Entries.UpdateEntry(&entry.Entry)
+		err = store.NewEntryRepo(app.DB).UpdateEntry(entry.Entry)
 		if err != nil {
 			return err
 		}
@@ -289,12 +309,7 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 	reader := bufio.NewReader(os.Stdin)
 
-	entriesModel, err := app.Entries.ReadAllEntries(true)
-	if err != nil {
-		return err
-	}
-
-	entries := dto.EntriesToDTO(entriesModel)
+	entries := app.Entries
 
 	entry, err := selectEntry(reader, entries)
 	if err != nil {
@@ -311,7 +326,7 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 
 	switch choice {
 	case "y":
-		if err := app.Entries.DeleteEntryByID(entry.ID); err != nil {
+		if err := store.NewEntryRepo(app.DB).DeleteEntryByID(entry.ID); err != nil {
 			return fmt.Errorf("failed to delete entry: %w", err)
 		}
 		fmt.Printf("Deleted: '%s'\n", entry.Title)
@@ -329,12 +344,7 @@ func deleteEntry(ctx context.Context, c *cli.Command) error {
 func listCategories(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	categoriesModel, err := app.Categories.ReadAllCategories()
-	if err != nil {
-		return err
-	}
-
-	categories := dto.CategoriesToDTO(categoriesModel)
+	categories := app.Categories
 
 	for i, c := range categories {
 		fmt.Printf("%d. %s\n", i, c.Title)
@@ -365,11 +375,11 @@ func createCategory(ctx context.Context, c *cli.Command) error {
 	}
 	description = strings.TrimSpace(description)
 
-	category := dto.NewCategoryDTO(model.Category{
+	category := &store.Category{
 		Title:       title,
 		Description: description,
-	})
-	err = app.Categories.CreateCategory(&category.Category)
+	}
+	err = store.NewCategoryRepo(app.DB).CreateCategory(category)
 	if err != nil {
 		return err
 	}
@@ -382,12 +392,7 @@ func createCategory(ctx context.Context, c *cli.Command) error {
 func updateCategory(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
-	categoriesModel, err := app.Categories.ReadAllCategories()
-	if err != nil {
-		return err
-	}
-
-	categories := dto.CategoriesToDTO(categoriesModel)
+	categories := app.Categories
 
 	reader := bufio.NewReader(os.Stdin)
 	selectedCategory, err := selectCategory(reader, categories)
@@ -435,7 +440,7 @@ func updateCategory(ctx context.Context, c *cli.Command) error {
 			continue
 		}
 
-		err = app.Categories.UpdateCategory(&selectedCategory.Category)
+		err = store.NewCategoryRepo(app.DB).UpdateCategory(selectedCategory.Category)
 		if err != nil {
 			return err
 		}
@@ -449,12 +454,7 @@ func deleteCategory(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 	reader := bufio.NewReader(os.Stdin)
 
-	categoriesModel, err := app.Categories.ReadAllCategories()
-	if err != nil {
-		return err
-	}
-
-	categories := dto.CategoriesToDTO(categoriesModel)
+	categories := app.Categories
 
 	category, err := selectCategory(reader, categories)
 	if err != nil {
@@ -471,7 +471,7 @@ func deleteCategory(ctx context.Context, c *cli.Command) error {
 
 	switch choice {
 	case "y":
-		if err := app.Categories.DeleteCategoryByID(category.ID); err != nil {
+		if err = store.NewCategoryRepo(app.DB).DeleteCategoryByID(category.ID); err != nil {
 			return fmt.Errorf("failed to delete category: %w", err)
 		}
 		fmt.Printf("Deleted: '%s'\n", category.Title)
@@ -518,7 +518,7 @@ func readContentFromEditor(content string) (string, error) {
 	return result, nil
 }
 
-func selectEntry(reader *bufio.Reader, entries []*dto.Entry) (*dto.Entry, error) {
+func selectEntry(reader *bufio.Reader, entries []*model.Entry) (*model.Entry, error) {
 	for i, e := range entries {
 		fmt.Printf("%d. %s\n", i+1, e.Title)
 	}
@@ -531,7 +531,7 @@ func selectEntry(reader *bufio.Reader, entries []*dto.Entry) (*dto.Entry, error)
 	return entries[idx-1], nil
 }
 
-func selectCategory(reader *bufio.Reader, categories []*dto.Category) (*dto.Category, error) {
+func selectCategory(reader *bufio.Reader, categories []*model.Category) (*model.Category, error) {
 	for i, c := range categories {
 		fmt.Printf("%d. %s\n", i+1, c.Title)
 	}

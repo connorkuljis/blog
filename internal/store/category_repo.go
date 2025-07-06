@@ -3,9 +3,14 @@ package store
 import (
 	"fmt"
 
-	"github.com/connorkuljis/blog/internal/model"
 	"github.com/jmoiron/sqlx"
 )
+
+type Category struct {
+	ID          int64  `db:"id"`
+	Title       string `db:"title"`
+	Description string `db:"description"`
+}
 
 type CategoryRepo struct {
 	db *sqlx.DB
@@ -15,7 +20,7 @@ func NewCategoryRepo(db *sqlx.DB) *CategoryRepo {
 	return &CategoryRepo{db: db}
 }
 
-func (r *CategoryRepo) CreateCategory(category *model.Category) error {
+func (r *CategoryRepo) CreateCategory(category *Category) error {
 	_, err := r.db.Exec("INSERT INTO categories (title, description) VALUES (?, ?)", category.Title, category.Description)
 	if err != nil {
 		return err
@@ -24,8 +29,8 @@ func (r *CategoryRepo) CreateCategory(category *model.Category) error {
 	return nil
 }
 
-func (r *CategoryRepo) ReadCategoryByID(id int64) (model.Category, error) {
-	var category model.Category
+func (r *CategoryRepo) ReadCategoryByID(id int64) (Category, error) {
+	var category Category
 	err := r.db.Get(&category, "SELECT * FROM categories WHERE id = ?", id)
 	if err != nil {
 		return category, err
@@ -34,8 +39,8 @@ func (r *CategoryRepo) ReadCategoryByID(id int64) (model.Category, error) {
 	return category, nil
 }
 
-func (r *CategoryRepo) ReadCategoryByTitle(title string) (model.Category, error) {
-	var category model.Category
+func (r *CategoryRepo) ReadCategoryByTitle(title string) (Category, error) {
+	var category Category
 	err := r.db.Get(&category, "SELECT * FROM categories WHERE title LIKE ?", title)
 	if err != nil {
 		return category, err
@@ -44,8 +49,8 @@ func (r *CategoryRepo) ReadCategoryByTitle(title string) (model.Category, error)
 	return category, nil
 }
 
-func (r *CategoryRepo) ReadAllCategories() ([]*model.Category, error) {
-	var categories []*model.Category
+func (r *CategoryRepo) ReadAllCategories() ([]*Category, error) {
+	var categories []*Category
 	err := r.db.Select(&categories, "SELECT * FROM categories")
 	if err != nil {
 		return categories, err
@@ -54,7 +59,7 @@ func (r *CategoryRepo) ReadAllCategories() ([]*model.Category, error) {
 	return categories, nil
 }
 
-func (r *CategoryRepo) UpdateCategory(category *model.Category) error {
+func (r *CategoryRepo) UpdateCategory(category *Category) error {
 	q := `
 UPDATE
 	categories

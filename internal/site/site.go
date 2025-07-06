@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/connorkuljis/blog/internal/dto"
 	"github.com/connorkuljis/blog/internal/model"
+	"github.com/connorkuljis/blog/internal/store"
 	"github.com/connorkuljis/blog/pkg/site"
 	"github.com/yuin/goldmark"
 )
@@ -21,9 +21,9 @@ type MySite struct {
 
 	CreatedAt     time.Time
 	T             *template.Template
-	Categories    []*dto.Category
-	CategoriesMap map[string]*dto.Category
-	NerdStats     *dto.NerdStats
+	Categories    []*model.Category
+	CategoriesMap map[string]*model.Category
+	NerdStats     *model.NerdStats
 	markdown      goldmark.Markdown
 }
 
@@ -38,38 +38,36 @@ func NewSite(
 	dirAssets string,
 	createdAt time.Time,
 	t *template.Template,
-	categoriesModel []*model.Category,
-	entriesModel []*model.Entry,
-	nerdStats *dto.NerdStats,
+	categoriesData []*store.Category,
+	entriesData []*store.Entry,
+	nerdStats *model.NerdStats,
 	markdown goldmark.Markdown,
 ) *MySite {
 	// Create maps for efficient lookups.
-	// dtoCategoriesMap maps category IDs to category DTOs.
-	// dtoCategoriesByTitle maps category titles to category DTOs.
-	dtoCategoriesMap := make(map[int64]*dto.Category)
-	dtoCategories := make([]*dto.Category, 0, len(categoriesModel))
-	dtoCategoriesByTitle := make(map[string]*dto.Category)
+	allCategories := make([]*model.Category, 0, len(categoriesData))
+	mapCategoryIDToCategory := make(map[int64]*model.Category)
+	mapCategoryTitleToCategory := make(map[string]*model.Category)
 
 	// Transform category models to category DTOs and populate the maps.
-	for _, mCat := range categoriesModel {
-		dtoCat := dto.NewCategoryDTO(*mCat)
+	for _, c := range categoriesData {
+		category := model.NewCategory(*c)
 
-		dtoCategories = append(dtoCategories, dtoCat)
-		dtoCategoriesMap[dtoCat.ID] = dtoCat
-		dtoCategoriesByTitle[dtoCat.Title] = dtoCat
+		allCategories = append(allCategories, category)
+		mapCategoryIDToCategory[category.ID] = category
+		mapCategoryTitleToCategory[category.Title] = category
 	}
 
 	// Transform entry models to entry DTOs.
 	// It also associates each entry with its corresponding category DTO.
-	for _, mEntry := range entriesModel {
-		dtoEntry := dto.NewEntryDTO(*mEntry)
+	for _, e := range entriesData {
+		entry := model.NewEntry(*e)
 
 		// Find the category for the entry and add the entry to the category's list.
-		if dtoCat, ok := dtoCategoriesMap[dtoEntry.CategoryID]; ok {
-			dtoEntry.Category = dtoCat
-			dtoCat.AddEntry(dtoEntry)
+		if category, ok := mapCategoryIDToCategory[entry.CategoryID]; ok {
+			entry.AddCategory(category)
+			category.AddEntry(entry)
 			// Convert the entry's markdown content to HTML.
-			dtoEntry.ToHTML(markdown)
+			entry.ToHTML(markdown)
 		}
 	}
 
@@ -80,8 +78,8 @@ func NewSite(
 		DirAssets:     dirAssets,
 		CreatedAt:     createdAt,
 		T:             t,
-		Categories:    dtoCategories,
-		CategoriesMap: dtoCategoriesByTitle,
+		Categories:    allCategories,
+		CategoriesMap: mapCategoryTitleToCategory,
 		NerdStats:     nerdStats,
 		markdown:      markdown,
 	}
