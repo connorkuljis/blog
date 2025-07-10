@@ -25,7 +25,11 @@
 					</h2>
 
 					<div class="author">
+						{{ if .Entry.Author }}
+						by <a href="/about">{{ .Entry.Author.Name }}</a>
+						{{ else }}
 						by <a href="/about">{{ .Site.Author }}</a>
+						{{ end }}
 					</div>
 
 					{{ if .Entry.FeaturedImageURL.Valid }}
