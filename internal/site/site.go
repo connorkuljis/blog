@@ -27,6 +27,8 @@ type MySite struct {
 	CategoriesMap map[string]*model.Category
 	Tags          []*model.Tag
 	TagsMap       map[string]*model.Tag
+	Authors       []*model.Author
+	AuthorsMap    map[int64]*model.Author
 	NerdStats     *model.NerdStats
 }
 
@@ -64,6 +66,18 @@ func NewSite(
 		site.TagsMap[t.Name] = tag
 	}
 
+	site.AuthorsMap = make(map[int64]*model.Author)
+	authors, err := store.NewAuthorRepo(db).ReadAllAuthors()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, a := range authors {
+		author := model.NewAuthor(a)
+		site.Authors = append(site.Authors, author)
+		site.AuthorsMap[a.ID] = author
+	}
+
 	categories, err := store.NewCategoryRepo(db).ReadAllCategories()
 	if err != nil {
 		log.Fatal(err)
@@ -80,6 +94,11 @@ func NewSite(
 
 		for _, e := range entries {
 			mEntry := model.NewEntry(e, mCategory, markdown)
+
+			// Assign author to entry
+			if author, exists := site.AuthorsMap[e.AuthorID]; exists {
+				mEntry.Author = author
+			}
 
 			tags, err := store.NewTagRepo(db).GetTagsForEntry(e.ID)
 			if err != nil {

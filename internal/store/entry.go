@@ -18,6 +18,7 @@ type Entry struct {
 	CreatedAt        time.Time      `db:"created_at"`
 	UpdatedAt        time.Time      `db:"updated_at"`
 	IsDraft          int            `db:"is_draft"`
+	AuthorID         int64          `db:"author_id"`
 }
 
 type EntryRepo struct {
@@ -32,14 +33,15 @@ func (r *EntryRepo) CreateEntry(entry *Entry) error {
 	q := `
 INSERT INTO 
 entries 
-	(category_id, title, created_at, updated_at) 
+	(category_id, title, author_id, created_at, updated_at) 
 VALUES 
-	($1, $2, $3, $4)
+	($1, $2, $3, $4, $5)
 `
 
 	res, err := r.db.Exec(q,
 		entry.CategoryID,
 		entry.Title,
+		entry.AuthorID,
 		entry.CreatedAt.Format(time.RFC3339),
 		entry.UpdatedAt.Format(time.RFC3339),
 	)
@@ -125,6 +127,7 @@ SET
 	content = ?, 
 	description = ?, 
 	featured_image_url = ?, 
+	author_id = ?, 
 	updated_at = ?, 
 	is_draft = ? 
 WHERE 
@@ -136,6 +139,7 @@ WHERE
 		entry.Content,
 		entry.Description,
 		entry.FeaturedImageURL,
+		entry.AuthorID,
 		entry.UpdatedAt,
 		entry.IsDraft,
 		entry.ID,
@@ -148,7 +152,7 @@ WHERE
 }
 
 func (r *EntryRepo) DeleteEntryByID(id int64) error {
-	_, err := r.db.Exec("DELETE * FROM entries WHERE id = ?", id)
+	_, err := r.db.Exec("DELETE FROM entries WHERE id = ?", id)
 	if err != nil {
 		// TODO: better error handling
 		return err
