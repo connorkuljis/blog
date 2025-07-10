@@ -3,7 +3,9 @@ package main
 import (
 	"flag"
 	"html/template"
+	"io"
 	"log"
+	"os"
 	"time"
 
 	"github.com/connorkuljis/blog/internal/model"
@@ -50,6 +52,18 @@ func main() {
 	enableDrafts := flag.Bool("d", false, "enable drafts")
 
 	flag.Parse()
+
+	// Setup file logging
+	os.MkdirAll("logs", 0755)
+	logFile, err := os.OpenFile("logs/site-build.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatal("Failed to open log file:", err)
+	}
+	defer logFile.Close()
+
+	// Set up multi-writer to log to both stdout and file
+	multiWriter := io.MultiWriter(os.Stdout, logFile)
+	log.SetOutput(multiWriter)
 
 	log.Println("Enable drafts:", *enableDrafts)
 
