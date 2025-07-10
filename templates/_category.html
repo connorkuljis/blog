@@ -1,20 +1,25 @@
-<!-- category.html -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <!-- head -->
 {{ template "head.html" . }}
 
 <body id="_category" class="page-wrapper">
+	<!-- header -->
 	{{ template "header.html" . }}
 
+	<!-- main -->
 	<main class="main">
+		<!-- wrapper -->
 		<div class="wrapper">
+			<!-- article -->
 			<article class="article">
+				<!-- article-header -->
 				<header class="article-header">
 					<h2 class="title">{{ .Category.Title }}</h2>
 					<h3 class="subheading">{{ .Category.Description }}</h3>
 				</header>
 
+				<!-- article-main -->
 				<main class="article-main">
 					<ul class="category-entries-list">
 						{{ range $i, $e := .Category.Entries }}

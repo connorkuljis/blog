@@ -1,9 +1,5 @@
-
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="en">
-
-
 
 <head>
 	<meta charset="utf-8" />
@@ -13,13 +9,19 @@
 	<link rel="stylesheet" href="/css/styles.css" />
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<script>
+		 
+		(_ => {
+			let FF_FOUC_FIX;
+		})();
+	</script>
 </head>
 
 
 <body id="_about" class="page-wrapper">
 	
-	
-<header class="header" id="kuljis-header">
+	<header class="header" id="kuljis-header">
 	
 	<div class="header-wrapper">
 		
@@ -30,9 +32,11 @@
 			
 			<ul class="categories-list">
 				<li><a href="/about">About</a></li>
+				<li><a href="/tags">Tags</a></li>
 				<li><a href="/blog">Blog</a></li>
 				<li><a href="/til">TIL</a></li>
 				<li><a href="/projects">Projects</a></li>
+				<li><a href="/journal">Journal</a></li>
 			</ul>
 		</nav>
 	</div>
@@ -44,10 +48,50 @@
 		
 		<div class="wrapper">
 			
-			<div class="content-grid">
+			<article class="article">
+
 				
-				<article class="article">
-<h1>Lorem Ipsum</h1>
+<section class="section about" id="kuljis-about">
+	<h2>About</h2>
+
+	<p>
+		Hi, I'm Connor. I live in Perth, Australia.
+	</p>
+
+	<p>
+		I like to build things. I have a background in software engineering and a keen interest
+		in software development.
+	</p>
+
+	<p>
+		Right now I'm into linux automation and containerization.
+	</p>
+</section>
+
+
+				
+<section class="section education" id="kuljis-education">
+	<h2>Education</h2>
+	<p>Here is some incredibly embarrasing information about me.</p>
+</section>
+
+
+				
+<section class="section contact" id="kuljis-contact">
+	<h2>Contact</h2>
+<ul class="socials" id="kuljis-socials" role="list">
+	<li>
+		<a class="github" href="https://github.com/connorkuljis">Github</a>
+	</li>
+	<li>
+		<a class="linkedin" href="https://linkedin.com/in/connor-kuljis">Linkedin</a>
+	</li>
+</ul>
+
+</section>
+
+
+				
 <p>
 	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
 	aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
@@ -60,23 +104,20 @@
 </p>
 
 
-					<section>
-					</section>
-				</article>
-			</div>
+				<p>Kanye West is the greatest artist of all time.</p>
+			</article>
 		</div>
 	</main>
 
-	
-<footer class="footer" id="kuljis-footer">
+	<footer class="footer" id="kuljis-footer">
 	<div class="footer-wrapper">
-		<div>
-			kuljis.xyz
-		</div>
-		<div class="nerd-stats">
-			linux
-		</div>
+		<p>
+			2024 - 2025
+			<a href="https://kuljis.xyz">kuljis.xyz</a>
+		</p>
 	</div>
+
+	
 </footer>
 
 </body>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>kuljis.xyz | Learning Recursion</title>
+
+	<link rel="icon" href="/images/icon.png" />
+	<link rel="stylesheet" href="/css/styles.css" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<script>
+		 
+		(_ => {
+			let FF_FOUC_FIX;
+		})();
+	</script>
+</head>
+
+
+<body id="_entry" class="page-wrapper">
+	<header class="header" id="kuljis-header">
+	
+	<div class="header-wrapper">
+		
+		<nav class="nav" id="kuljis-nav">
+			
+			<div><a href="/">Home</a></div>
+
+			
+			<ul class="categories-list">
+				<li><a href="/about">About</a></li>
+				<li><a href="/tags">Tags</a></li>
+				<li><a href="/blog">Blog</a></li>
+				<li><a href="/til">TIL</a></li>
+				<li><a href="/projects">Projects</a></li>
+				<li><a href="/journal">Journal</a></li>
+			</ul>
+		</nav>
+	</div>
+</header>
+
+
+	<main class="main">
+		<div class="wrapper">
+			<article class="article">
+				<header class="article-header">
+					<div class="article-category">
+						<a href="/blog">
+							Blog
+						</a>
+					</div>
+
+					<div class="created-at">
+						<time>March 23, 2025</time>
+					</div>
+
+					<h2 class="title">
+						Learning Recursion
+					</h2>
+
+					<div class="author">
+						by <a href="/about">Connor Kuljis</a>
+					</div>
+
+					
+					<figure class="featured-image-wrapper">
+						<img src="/images/six_triangular_numbers.png" />
+					</figure>
+					
+				</header>
+
+				<main class="article-main markdown">
+					<p>I learned recursion using triangular numbers as an exercise.</p>
+<p>Triangular numbers are the sum of all natural numbers up to a certain number.<br />
+For example, the 5th triangular number is 1 + 2 + 3 + 4 + 5 = 15.</p>
+<p>Here is the code I used to calculate the nth triangular number using recursion:</p>
+<pre><code class="language-java">public class TriangularNumber {
+    public static int calculateTriangularNumber(int n) {
+        if (n == 1) {
+            return 1;
+        }
+
+        return n + calculateTriangularNumber(n - 1);
+    }
+
+    public static void main(String[] args) {
+        int n = 5;
+        int result = calculateTriangularNumber(n);
+        System.out.println(&quot;The &quot; + n + &quot;th triangular number is: &quot; + result);
+    }
+}
+</code></pre>
+<p>When you run this code with <code>n = 5</code>, it will output:</p>
+<pre><code class="language-plaintext">The 5th triangular number is: 15
+</code></pre>
+
+				</main>
+
+				<footer class="article-footer">
+					<div class="tags">
+						
+					</div>
+
+					<div class="prev-next-grid">
+						
+						<a href="/blog/2025-05-24-software-geeks-move-differently" class="prev">
+							<span>Previous</span>
+							<p>Software Geeks Move Differently</p>
+						</a>
+						
+
+						
+						<a href="/blog/2025-03-23-bloat-is-the-universal-enemy" class="next">
+							<span>Next</span>
+							<p>Bloat is the Universal Enemy</p>
+						</a>
+						
+					</div>
+				</footer>
+			</article>
+		</div>
+	</main>
+
+	<footer class="footer" id="kuljis-footer">
+	<div class="footer-wrapper">
+		<p>
+			2024 - 2025
+			<a href="https://kuljis.xyz">kuljis.xyz</a>
+		</p>
+	</div>
+
+	
+</footer>
+
+</body>
+
+</html>

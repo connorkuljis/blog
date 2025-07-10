@@ -1,8 +1,5 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-
 
 <head>
 	<meta charset="utf-8" />
@@ -12,12 +9,19 @@
 	<link rel="stylesheet" href="/css/styles.css" />
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<script>
+		 
+		(_ => {
+			let FF_FOUC_FIX;
+		})();
+	</script>
 </head>
 
 
 <body id="_category" class="page-wrapper">
 	
-<header class="header" id="kuljis-header">
+	<header class="header" id="kuljis-header">
 	
 	<div class="header-wrapper">
 		
@@ -28,42 +32,70 @@
 			
 			<ul class="categories-list">
 				<li><a href="/about">About</a></li>
+				<li><a href="/tags">Tags</a></li>
 				<li><a href="/blog">Blog</a></li>
 				<li><a href="/til">TIL</a></li>
 				<li><a href="/projects">Projects</a></li>
+				<li><a href="/journal">Journal</a></li>
 			</ul>
 		</nav>
 	</div>
 </header>
 
 
+	
 	<main class="main">
+		
 		<div class="wrapper">
+			
 			<article class="article">
+				
 				<header class="article-header">
-					<h1>Projects</h1>
-					<h2>Collection of programming projects.</h2>
+					<h2 class="title">Projects</h2>
+					<h3 class="subheading">Collection of programming projects.</h3>
 				</header>
 
-				<section>
+				
+				<main class="article-main">
 					<ul class="category-entries-list">
 						
+						<li>
+							<article class="entry-item">
+								<time class="entry-created-at">June 25, 2025</time>
+								<h3 class="entry-title">
+									<a href="/projects/2025-06-25-literally-anything-with-mcp-containers-and-infrastructure">
+										Literally anything with MCP, containers and infrastructure
+									</a>
+								</h3>
+							</article>
+						</li>
+						
+						<li>
+							<article class="entry-item">
+								<time class="entry-created-at">February 05, 2025</time>
+								<h3 class="entry-title">
+									<a href="/projects/2025-02-05-ausfinder-fyi">
+										ausfinder.fyi
+									</a>
+								</h3>
+							</article>
+						</li>
+						
 					</ul>
-				</section>
+					</section>
 			</article>
 		</div>
 	</main>
 
-	
-<footer class="footer" id="kuljis-footer">
+	<footer class="footer" id="kuljis-footer">
 	<div class="footer-wrapper">
-		<div>
-			kuljis.xyz
-		</div>
-		<div class="nerd-stats">
-			linux
-		</div>
+		<p>
+			2024 - 2025
+			<a href="https://kuljis.xyz">kuljis.xyz</a>
+		</p>
 	</div>
+
+	
 </footer>
 
 </body>

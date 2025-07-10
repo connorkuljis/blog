@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<!-- head -->
 {{ template "head.html" . }}
 
 <body id="_tag" class="page-wrapper">
+	<!-- header -->
 	{{ template "header.html" . }}
 
+	<!-- main -->
 	<main class="main">
+		<!-- wrapper -->
 		<div class="wrapper">
+			<!-- article -->
 			<article class="article">
+				<!-- article-header -->
 				<header class="article-header">
 					<h2 class="title">{{ .Tag.Name }}</h2>
 					<h3 class="subheading">Entries tagged with "{{ .Tag.Name }}"</h3>
 					<p class="subtitle">({{ len .Tag.Entries }}) entries</p>
 				</header>
 
+				<!-- article-main -->
 				<main class="article-main">
 					<div>
 						<ul>
@@ -28,6 +34,7 @@
 		</div>
 	</main>
 
+	<!-- footer -->
 	{{ template "footer.html" . }}
 </body>
 

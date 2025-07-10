@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>kuljis.xyz | Edit a terminal command in visual mode</title>
+
+	<link rel="icon" href="/images/icon.png" />
+	<link rel="stylesheet" href="/css/styles.css" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<script>
+		 
+		(_ => {
+			let FF_FOUC_FIX;
+		})();
+	</script>
+</head>
+
+
+<body id="_entry" class="page-wrapper">
+	<header class="header" id="kuljis-header">
+	
+	<div class="header-wrapper">
+		
+		<nav class="nav" id="kuljis-nav">
+			
+			<div><a href="/">Home</a></div>
+
+			
+			<ul class="categories-list">
+				<li><a href="/about">About</a></li>
+				<li><a href="/tags">Tags</a></li>
+				<li><a href="/blog">Blog</a></li>
+				<li><a href="/til">TIL</a></li>
+				<li><a href="/projects">Projects</a></li>
+				<li><a href="/journal">Journal</a></li>
+			</ul>
+		</nav>
+	</div>
+</header>
+
+
+	<main class="main">
+		<div class="wrapper">
+			<article class="article">
+				<header class="article-header">
+					<div class="article-category">
+						<a href="/til">
+							TIL
+						</a>
+					</div>
+
+					<div class="created-at">
+						<time>June 14, 2025</time>
+					</div>
+
+					<h2 class="title">
+						Edit a terminal command in visual mode
+					</h2>
+
+					<div class="author">
+						by <a href="/about">Connor Kuljis</a>
+					</div>
+
+					
+				</header>
+
+				<main class="article-main markdown">
+					<p>In bash edit the current command line in your default editor, you can use the following key sequence:</p>
+<p>Enter normal mode by pressing <code>ESC</code>, then press <code>v</code></p>
+<p>This requires <code>set -o vi</code> in your <code>.bashrc</code>.</p>
+<p>Or</p>
+<p>Press <code>C-x C-e</code> to open your current command line with your default editor.</p>
+<h2 id="example">Example</h2>
+<p><a href="https://go.dev/doc/install">https://go.dev/doc/install</a></p>
+<blockquote>
+<p>Remove any previous Go installation by deleting the /usr/local/go folder (if it exists), then extract the archive you just downloaded into /usr/local, creating a fresh Go tree in /usr/local/go:<br />
+<code>$ rm -rf /usr/local/go &amp;&amp; tar -C /usr/local -xzf go1.24.4.linux-amd64.tar.gz</code><br />
+(You may need to run each command separately with the necessary permissions, as root or through sudo.)</p>
+</blockquote>
+<p>When I copied the command to my terminal, I realized that I had to edit the command line before executing it. Usually this would mean navigating my curor to the correct position using the arrow keys, and appending sudo to each command. Instead, I used the <code>C-x C-e</code> key sequence to open the command in my default editor, which allowed me to easily add <code>sudo</code> before each command without having to navigate through the command line.</p>
+<pre><code class="language-bash">sudo rm -rf /usr/local/go &amp;&amp; \
+sudo tar -C /usr/local -xzf ~/Downloads/go1.24.4.linux-amd64.tar.gz
+</code></pre>
+
+				</main>
+
+				<footer class="article-footer">
+					<div class="tags">
+						
+					</div>
+
+					<div class="prev-next-grid">
+						
+						<a href="/til/2025-06-17-get-file-space-usage-of-a-directory-in-gnu-linux" class="prev">
+							<span>Previous</span>
+							<p>Get file space usage of a directory in GNU/Linux</p>
+						</a>
+						
+
+						
+						<a href="/til/2025-06-06-livestreaming-hasn-t-been-infected-by-ai-yet" class="next">
+							<span>Next</span>
+							<p>Livestreaming hasn&#39;t been infected by AI (yet)</p>
+						</a>
+						
+					</div>
+				</footer>
+			</article>
+		</div>
+	</main>
+
+	<footer class="footer" id="kuljis-footer">
+	<div class="footer-wrapper">
+		<p>
+			2024 - 2025
+			<a href="https://kuljis.xyz">kuljis.xyz</a>
+		</p>
+	</div>
+
+	
+</footer>
+
+</body>
+
+</html>

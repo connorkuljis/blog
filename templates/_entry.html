@@ -1,6 +1,6 @@
-<!-- entry.html -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+<!-- head -->
 {{ template "head.html" . }}
 
 <body id="_entry" class="page-wrapper">
@@ -46,17 +46,19 @@
 						{{ end }}
 					</div>
 
-					<div class="prev">
+					<div class="prev-next-grid">
 						{{ if .Prev }}
-						<span>Previous</span>
-						<a href="{{ .Prev.Permalink }}">{{ .Prev.Title }}</a>
+						<a href="{{ .Prev.Permalink }}" class="prev">
+							<span>Previous</span>
+							<p>{{ .Prev.Title }}</p>
+						</a>
 						{{ end }}
-					</div>
 
-					<div class="next">
 						{{ if .Next }}
-						<span>Next</span>
-						<a href="{{ .Next.Permalink }}">{{ .Next.Title }}</a>
+						<a href="{{ .Next.Permalink }}" class="next">
+							<span>Next</span>
+							<p>{{ .Next.Title }}</p>
+						</a>
 						{{ end }}
 					</div>
 				</footer>

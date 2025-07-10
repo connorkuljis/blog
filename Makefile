@@ -1,26 +1,29 @@
-site-release: site-clean
-	go run -v ./cmd/site/main.go
+list-commands:
+	@cat Makefile
 
-site-draft:
-	go run -v ./cmd/site/main.go -d
+site-build-release: site-clean
+	@go run -v ./cmd/site/main.go
+
+site-build-draft:
+	@go run -v ./cmd/site/main.go -d
 
 site-debug:
 	go tool dlv debug ./cmd/site -- -d
 
 site-watch:
-	find assets/ templates/ cmd/ internal/ | entr make site-draft
+	@find assets/ templates/ cmd/ internal/ | entr make site-build-draft
 
-site-deploy: site-release
-	echo "Syncing local assets to staging directory..."
-	rsync --delete -avz \
+site-deploy: site-build-release
+	@echo "Syncing local assets to staging directory..."
+	@rsync --delete -avz \
 		dist/ \
 		prod@kuljis.xyz:/home/prod/www/kuljis.xyz/dist/
 
 site-clean:
-	rm -rf ./dist
+	@rm -rf ./dist
 
 cms-build:
-	rm -f ./cms
+	@rm -f ./cms
 	go build -v ./cmd/cms
 
 cms-debug:
