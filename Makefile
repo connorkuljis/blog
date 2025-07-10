@@ -1,37 +1,51 @@
+# Variables
+GO := go
+PYTHON := python3
+DIST_DIR := ./dist
+SITE_CMD := ./cmd/site/main.go
+CMS_CMD := ./cmd/cms
+CMS_BINARY := ./cms
+DEPLOY_HOST := prod@kuljis.xyz:/home/prod/www/kuljis.xyz/dist/
+SERVE_PORT := 3000
+WATCH_DIRS := assets/ templates/ cmd/ internal/
+
+# Targets
+.PHONY: list-commands site-build-release site-build-draft site-debug site-watch site-deploy site-clean cms-build cms-debug goimports serve
+
 list-commands:
 	@cat Makefile
 
 site-build-release: site-clean
-	@go run -v ./cmd/site/main.go
+	@$(GO) run -v $(SITE_CMD)
 
 site-build-draft:
-	@go run -v ./cmd/site/main.go -d
+	@$(GO) run -v $(SITE_CMD) -d
 
 site-debug:
-	go tool dlv debug ./cmd/site -- -d
+	$(GO) tool dlv debug $(SITE_CMD) -- -d
 
 site-watch:
-	@find assets/ templates/ cmd/ internal/ | entr make site-build-draft
+	@find $(WATCH_DIRS) | entr make site-build-draft
 
 site-deploy: site-build-release
 	@echo "Syncing local assets to staging directory..."
 	@rsync --delete -avz \
-		dist/ \
-		prod@kuljis.xyz:/home/prod/www/kuljis.xyz/dist/
+		$(DIST_DIR)/ \
+		$(DEPLOY_HOST)
 
 site-clean:
-	@rm -rf ./dist
+	@rm -rf $(DIST_DIR)
 
 cms-build:
-	@rm -f ./cms
-	go build -v ./cmd/cms
+	@rm -f $(CMS_BINARY)
+	$(GO) build -v $(CMS_CMD)
 
 cms-debug:
-	go tool dlv debug ./cmd/cms
+	$(GO) tool dlv debug $(CMS_CMD)
 
 goimports:
-	go tool goimports -w -l .
+	$(GO) tool goimports -w -l .
 
 serve:
-	python3 -m http.server -d ./dist 3000
+	$(PYTHON) -m http.server -d $(DIST_DIR) $(SERVE_PORT)
 
