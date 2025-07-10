@@ -29,6 +29,7 @@ type App struct {
 	Entries    []*model.Entry
 	Categories []*model.Category
 	Tags       []*model.Tag
+	Authors    []*model.Author
 }
 
 const KeyApp = "app"
@@ -89,6 +90,14 @@ func main() {
 			}
 			for _, t := range tags {
 				app.Tags = append(app.Tags, &model.Tag{Tag: t})
+			}
+
+			authors, err := store.NewAuthorRepo(db).ReadAllAuthors()
+			if err != nil {
+				log.Fatal(err)
+			}
+			for _, a := range authors {
+				app.Authors = append(app.Authors, model.NewAuthor(a))
 			}
 
 			ctx = context.WithValue(ctx, KeyApp, app)
@@ -170,6 +179,29 @@ func main() {
 					},
 				},
 			},
+			{
+				Name:    "authors",
+				Aliases: []string{"a"},
+				Usage:   "operations on authors",
+				Action:  listAuthors,
+				Commands: []*cli.Command{
+					{
+						Name:   "create",
+						Usage:  "Create a new author.",
+						Action: createAuthor,
+					},
+					{
+						Name:   "update",
+						Usage:  "Update an existing author.",
+						Action: updateAuthor,
+					},
+					{
+						Name:   "delete",
+						Usage:  "Delete an author.",
+						Action: deleteAuthor,
+					},
+				},
+			},
 		},
 	}
 
@@ -223,6 +255,7 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 	app := ctx.Value(KeyApp).(*App)
 
 	categories := app.Categories
+	authors := app.Authors
 
 	reader := bufio.NewReader(os.Stdin)
 	category, err := selectCategory(reader, categories)
@@ -230,6 +263,12 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 		return err
 	}
 	fmt.Println(category)
+
+	author, err := selectAuthor(reader, authors)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Selected author: %s\n", author.Name)
 
 	fmt.Println("Please enter entry title: ")
 	title, err := reader.ReadString('\n')
@@ -241,6 +280,7 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 
 	entry := &store.Entry{
 		CategoryID: category.ID,
+		AuthorID:   author.ID,
 		Title:      title,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
@@ -274,8 +314,9 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 		fmt.Println("3. Content")
 		fmt.Println("4. Featured Image Url")
 		fmt.Println("5. Manage Tags")
+		fmt.Println("6. Author")
 
-		fmt.Printf("Enter the number (%d-%d) or 'q' to quit: ", 1, 5)
+		fmt.Printf("Enter the number (%d-%d) or 'q' to quit: ", 1, 6)
 		choice, err := reader.ReadString('\n')
 		if err != nil {
 			return err
@@ -328,8 +369,15 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 			if err != nil {
 				return err
 			}
+		case 6:
+			author, err := selectAuthor(reader, app.Authors)
+			if err != nil {
+				return err
+			}
+			entry.AuthorID = author.ID
+			fmt.Printf("Updated author to: %s\n", author.Name)
 		default:
-			fmt.Println("Bad input, must be between 1 and 5: got:", choice)
+			fmt.Println("Bad input, must be between 1 and 6: got:", choice)
 			continue
 		}
 
@@ -793,4 +841,172 @@ func manageTagsForEntry(reader *bufio.Reader, app *App, entry *model.Entry) erro
 	}
 
 	return nil
+}
+
+func listAuthors(ctx context.Context, c *cli.Command) error {
+	app := ctx.Value(KeyApp).(*App)
+	authors := app.Authors
+	for i, a := range authors {
+		fmt.Printf("%d. %s (%s)\n", i+1, a.Name, a.Email)
+	}
+	return nil
+}
+
+func createAuthor(ctx context.Context, c *cli.Command) error {
+	app := ctx.Value(KeyApp).(*App)
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Println("Please enter author name:")
+	fmt.Printf("name: ")
+	name, err := reader.ReadString('\n')
+	if err != nil {
+		return err
+	}
+	name = strings.TrimSpace(name)
+
+	fmt.Println("Please enter author email:")
+	fmt.Printf("email: ")
+	email, err := reader.ReadString('\n')
+	if err != nil {
+		return err
+	}
+	email = strings.TrimSpace(email)
+
+	fmt.Println("Please enter author bio:")
+	fmt.Printf("bio: ")
+	bio, err := reader.ReadString('\n')
+	if err != nil {
+		return err
+	}
+	bio = strings.TrimSpace(bio)
+
+	author := &store.Author{
+		Name:      name,
+		Email:     email,
+		Bio:       bio,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	err = store.NewAuthorRepo(app.DB).CreateAuthor(author)
+	if err != nil {
+		return fmt.Errorf("error creating author: %w", err)
+	}
+
+	fmt.Printf("Created author: %s (%s)\n", author.Name, author.Email)
+	return nil
+}
+
+func updateAuthor(ctx context.Context, c *cli.Command) error {
+	app := ctx.Value(KeyApp).(*App)
+	reader := bufio.NewReader(os.Stdin)
+
+	authors := app.Authors
+	author, err := selectAuthor(reader, authors)
+	if err != nil {
+		return err
+	}
+
+	for {
+		fmt.Println("Select a field to update.")
+		fmt.Println("1. Name")
+		fmt.Println("2. Email")
+		fmt.Println("3. Bio")
+
+		fmt.Printf("Enter the number (1-3) or 'q' to quit: ")
+		choice, err := reader.ReadString('\n')
+		if err != nil {
+			return err
+		}
+
+		choice = strings.TrimSpace(choice)
+
+		if choice == "q" {
+			return ErrSelectionCancelled
+		}
+
+		choiceNum, err := strconv.Atoi(choice)
+		if err != nil {
+			return err
+		}
+
+		switch choiceNum {
+		case 1:
+			name, err := readContentFromEditor(author.Name)
+			if err != nil {
+				return err
+			}
+			author.Name = name
+		case 2:
+			email, err := readContentFromEditor(author.Email)
+			if err != nil {
+				return err
+			}
+			author.Email = email
+		case 3:
+			bio, err := readContentFromEditor(author.Bio)
+			if err != nil {
+				return err
+			}
+			author.Bio = bio
+		default:
+			fmt.Println("Bad input, must be between 1 and 3: got:", choiceNum)
+			continue
+		}
+
+		author.UpdatedAt = time.Now()
+		err = store.NewAuthorRepo(app.DB).UpdateAuthor(author.Author)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println("Updated author:", author.Name)
+	}
+}
+
+func deleteAuthor(ctx context.Context, c *cli.Command) error {
+	app := ctx.Value(KeyApp).(*App)
+	reader := bufio.NewReader(os.Stdin)
+
+	authors := app.Authors
+	author, err := selectAuthor(reader, authors)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Confirm delete '%s' [y/N]: ", author.Name)
+	choice, err := reader.ReadString('\n')
+	if err != nil {
+		return fmt.Errorf("error reading input: %w", err)
+	}
+
+	choice = strings.TrimSpace(strings.ToLower(choice))
+
+	switch choice {
+	case "y":
+		if err = store.NewAuthorRepo(app.DB).DeleteAuthorByID(author.ID); err != nil {
+			return fmt.Errorf("failed to delete author: %w", err)
+		}
+		fmt.Printf("Deleted: '%s'\n", author.Name)
+	case "n", "":
+		fmt.Println("Exiting...")
+		return nil
+	default:
+		return fmt.Errorf("invalid input: '%s', expected 'y' or 'n'", choice)
+	}
+
+	return nil
+}
+
+func selectAuthor(reader *bufio.Reader, authors []*model.Author) (*model.Author, error) {
+	for i, a := range authors {
+		fmt.Printf("%d. %s (%s)\n", i+1, a.Name, a.Email)
+	}
+
+	idx, err := getInputBetween(reader, 1, len(authors))
+	if err != nil {
+		return nil, err
+	}
+
+	return authors[idx-1], nil
 }
