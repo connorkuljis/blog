@@ -8,15 +8,13 @@ import (
 	"os"
 	"time"
 
+	"github.com/connorkuljis/blog/internal/markdown"
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/site"
 	"github.com/connorkuljis/blog/internal/store"
-	"github.com/connorkuljis/blog/internal/util"
+	"github.com/connorkuljis/blog/internal/templates"
 	"github.com/jmoiron/sqlx"
 	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/extension"
-	"github.com/yuin/goldmark/parser"
-	"github.com/yuin/goldmark/renderer/html"
 )
 
 const (
@@ -27,25 +25,7 @@ const (
 )
 
 var (
-	funcMap = template.FuncMap{
-		"runeToString": func(r rune) string {
-			return string(r)
-		},
-		"slugify": util.Slugify,
-	}
-	md = goldmark.New(
-		goldmark.WithExtensions(
-			extension.GFM,
-		),
-		goldmark.WithParserOptions(
-			parser.WithAutoHeadingID(),
-		),
-		goldmark.WithRendererOptions(
-			html.WithHardWraps(),
-			html.WithXHTML(),
-		),
-	)
-	t = template.Must(template.New("").Funcs(funcMap).Option("missingkey=error").ParseGlob("templates/*.html"))
+	md = markdown.NewMarkdown()
 )
 
 func main() {
@@ -71,6 +51,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	t := templates.NewTemplate()
 
 	mySite := initialiseKuljisSite(*enableDrafts, md, db, t)
 

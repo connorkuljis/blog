@@ -42,9 +42,21 @@
 
 	/* color layers */
 	--surface-0: var(--clr-primary);
-	--surface-code: #282c34;
+	--surface-code: hsl(220, 14%, 18%);
 	--text-0: var(--clr-secondary);
-	--text-code: #ABB2BF;
+	--text-code: hsl(210, 10%, 70%);
+}
+
+@keyframes flash-lightyellow {
+	0% {
+		background-color: transparent;
+	}
+	50% {
+		background-color: lightyellow;
+	}
+	100% {
+		background-color: transparent;
+	}
 }
 
 body {
@@ -62,6 +74,11 @@ body {
 
 	& a {
 		color: currentColor;
+		
+		&:visited,
+		&:active {
+			animation: flash-lightyellow 1.5s ease-in-out;
+		}
 	}
 
 	& b {
@@ -139,6 +156,85 @@ body {
 		list-style: none;
 		margin: 0;
 		padding: 0;
+
+		@media (max-width: 768px) {
+			display: none;
+			flex-direction: column;
+			width: 100%;
+			gap: 0.5rem;
+			margin-block-start: 1rem;
+
+			&[aria-expanded="true"] {
+				display: flex;
+			}
+		}
+	}
+
+	& .hamburger {
+		display: none;
+		background: none;
+		border: none;
+		padding: 0.5rem;
+		cursor: pointer;
+		z-index: 1000;
+
+		@media (max-width: 768px) {
+			display: block;
+		}
+
+		&:focus {
+			outline: none;
+		}
+	}
+
+	& .hamburger-box {
+		width: 24px;
+		height: 18px;
+		display: inline-block;
+		position: relative;
+	}
+
+	& .hamburger-inner {
+		display: block;
+		top: 50%;
+		margin-top: -1px;
+
+		&,
+		&::before,
+		&::after {
+			width: 24px;
+			height: 2px;
+			background-color: var(--text-0);
+			border-radius: 4px;
+			position: absolute;
+			transition: transform 0.2s ease, opacity 0.2s ease;
+		}
+
+		&::before,
+		&::after {
+			content: "";
+		}
+
+		&::before {
+			top: -6px;
+		}
+
+		&::after {
+			bottom: -6px;
+		}
+	}
+
+	& .hamburger[aria-expanded="true"] .hamburger-inner {
+		transform: rotate(45deg);
+
+		&::before {
+			transform: rotate(90deg) translateX(-6px);
+			opacity: 0;
+		}
+
+		&::after {
+			transform: rotate(90deg) translateX(-6px);
+		}
 	}
 }
 
