@@ -6,10 +6,10 @@
 	<title>kuljis.xyz | How to update a go module version</title>
 
 	<link rel="icon" href="/images/icon.png" />
-	<link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/js/hamburger-menu.js" defer></script>
 	<script>
 		 
 		(_ => {
@@ -29,7 +29,14 @@
 			<div><a href="/">Home</a></div>
 
 			
-			<ul class="categories-list">
+			<button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="categories-list">
+				<span class="hamburger-box">
+					<span class="hamburger-inner"></span>
+				</span>
+			</button>
+
+			
+			<ul class="categories-list" id="categories-list">
 				<li><a href="/about">About</a></li>
 				<li><a href="/tags">Tags</a></li>
 				<li><a href="/blog">Blog</a></li>
