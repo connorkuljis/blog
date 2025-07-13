@@ -1,5 +1,9 @@
+# Ignore CMS directory
 /cms
+# Ignore site directory
 /site
-remote.env
+
+# Ignore logs directory
 logs/
+# Ignore dist directory
 dist/
