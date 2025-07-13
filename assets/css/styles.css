@@ -18,7 +18,7 @@
 	--serif: "Inter Tight", system-ui, serif;
 	--monospace: "Opus One", monospace;
 
-	--font-unit: 1.375rem;
+	--font-unit: 1.125rem;
 
 	/* font size */
 	--fs-200: calc(var(--font-unit) * 0.75);
@@ -107,13 +107,8 @@ body {
 	min-block-size: 100dvh;
 
 	& .header {
-		padding-block: 1.75rem;
+		padding-block: 3rem;
 		grid-row: header;
-		position: sticky;
-		top: 0;
-		backdrop-filter: blur(16px);
-		background-color: hsla(0, 0%, 100%, 0.01);
-		z-index: 1;
 	}
 
 	& .main {
