@@ -2,7 +2,7 @@
 	<div class="footer-wrapper">
 		<p>
 			2024 - {{ .Site.CreatedAt.Format "2006" }}
-			<a href="https://kuljis.xyz">{{ .Site.Title }}</a>
+			<a href="{{ .Site.Config.Domain }}">{{ .Site.Config.Title }}</a>
 		</p>
 	</div>
 
