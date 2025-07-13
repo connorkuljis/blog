@@ -41,7 +41,7 @@ A self-contained blog platform with a terminal-based CMS and static site generat
 
 ## Prerequisites
 
-- Go 1.19 or higher
+- Go 1.24 or higher
 - SQLite3
 - Python 3 (for local development server)
 - [Goose](https://pressly.github.io/goose/installation/) (for database migrations) - included in go.mod as github.com/pressly/goose/v3
@@ -121,11 +121,11 @@ make serve
    ```
 3. Create a new migration:
    ```bash
-   goose create <migration_name> sql
+   go tool goose create <migration_name> sql
    ```
 4. Apply migrations:
    ```bash
-   goose up
+   go tool goose up
    ```
 
 ## Development
