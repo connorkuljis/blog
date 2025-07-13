@@ -84,11 +84,7 @@ func initialiseKuljisSite(
 ) *site.MySite {
 
 	return site.NewSite(
-		cfg.Title,
-		cfg.Author,
-		cfg.Domain,
-		cfg.DirBuild,
-		cfg.DirAssets,
+		*cfg,
 		enableDrafts,
 		time.Now(),
 		t,

@@ -16,13 +16,9 @@ import (
 )
 
 type MySite struct {
-	Title        string
-	Author       string
-	Domain       string
-	DirBuild     string
-	DirAssets    string
 	EnableDrafts bool
 
+	Config        Config
 	CreatedAt     time.Time
 	T             *template.Template
 	Categories    []*model.Category
@@ -49,11 +45,7 @@ func LoadConfig(path string) (*Config, error) {
 }
 
 func NewSite(
-	title string,
-	author string,
-	domain string,
-	dirBuild string,
-	dirAssets string,
+	config Config,
 	enableDrafts bool,
 	createdAt time.Time,
 	t *template.Template,
@@ -62,11 +54,7 @@ func NewSite(
 	markdown goldmark.Markdown,
 ) *MySite {
 	site := &MySite{
-		Title:     title,
-		Author:    author,
-		Domain:    domain,
-		DirBuild:  dirBuild,
-		DirAssets: dirAssets,
+		Config:    config,
 		CreatedAt: createdAt,
 		T:         t,
 		NerdStats: nerdStats,
@@ -88,16 +76,16 @@ func NewSite(
 }
 
 func (s *MySite) Init() error {
-	if err := os.RemoveAll(s.DirBuild); err != nil {
+	if err := os.RemoveAll(s.Config.DirBuild); err != nil {
 		return err
 	}
 
-	if err := os.MkdirAll(s.DirBuild, os.ModePerm); err != nil {
+	if err := os.MkdirAll(s.Config.DirBuild, os.ModePerm); err != nil {
 		return err
 	}
 
-	staticAssets := os.DirFS(s.DirAssets)
-	if err := os.CopyFS(s.DirBuild, staticAssets); err != nil {
+	staticAssets := os.DirFS(s.Config.DirAssets)
+	if err := os.CopyFS(s.Config.DirBuild, staticAssets); err != nil {
 		return err
 	}
 
@@ -144,7 +132,7 @@ func (s *MySite) Build() []site.Page {
 
 func (s *MySite) Render(pages []site.Page) error {
 	for _, page := range pages {
-		filename := filepath.Join(s.DirBuild, page.FileName())
+		filename := filepath.Join(s.Config.DirBuild, page.FileName())
 
 		dir := filepath.Dir(filename)
 		if err := os.MkdirAll(dir, os.ModePerm); err != nil {

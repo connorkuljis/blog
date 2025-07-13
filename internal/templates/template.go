@@ -1,8 +1,9 @@
 package templates
 
 import (
-	"github.com/connorkuljis/blog/internal/util"
 	"html/template"
+
+	"github.com/connorkuljis/blog/internal/util"
 )
 
 var (
