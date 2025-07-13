@@ -51,9 +51,11 @@
 	0% {
 		background-color: transparent;
 	}
+
 	50% {
 		background-color: lightyellow;
 	}
+
 	100% {
 		background-color: transparent;
 	}
@@ -74,7 +76,7 @@ body {
 
 	& a {
 		color: currentColor;
-		
+
 		&:visited,
 		&:active {
 			animation: flash-lightyellow 1.5s ease-in-out;
@@ -105,7 +107,13 @@ body {
 	min-block-size: 100dvh;
 
 	& .header {
+		padding-block: 1.75rem;
 		grid-row: header;
+		position: sticky;
+		top: 0;
+		backdrop-filter: blur(16px);
+		background-color: hsla(0, 0%, 100%, 0.01);
+		z-index: 1;
 	}
 
 	& .main {
@@ -113,6 +121,7 @@ body {
 	}
 
 	& .footer {
+		padding-block: 3rem;
 		grid-row: footer;
 	}
 }
@@ -127,7 +136,6 @@ body {
 .footer-wrapper {
 	margin-inline: auto;
 	max-inline-size: 96rem;
-	padding-block: 3rem;
 	padding-inline: max(1.5rem, 3.5vw);
 }
 
@@ -475,6 +483,7 @@ body {
 }
 
 .ascii-art-wrapper {
+	padding-block-start: 1.5rem;
 	max-inline-size: 72rem;
 	margin-inline: auto;
 	overflow: hidden;
