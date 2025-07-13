@@ -44,7 +44,7 @@ A self-contained blog platform with a terminal-based CMS and static site generat
 - Go 1.19 or higher
 - SQLite3
 - Python 3 (for local development server)
-- [Goose](https://pressly.github.io/goose/installation/) (for database migrations)
+- [Goose](https://pressly.github.io/goose/installation/) (for database migrations) - included in go.mod as github.com/pressly/goose/v3
 - entr (optional, for watch mode)
 
 ## Configuration
@@ -145,6 +145,13 @@ make serve
 3. Make changes to templates, assets, or Go code
 4. The site will automatically rebuild on file changes
 5. Refresh your browser to see updates
+
+### Go Tools
+
+The project includes several Go tools in its go.mod file:
+- `goose` - Database migrations (github.com/pressly/goose/v3)
+- `goimports` - Code formatting (golang.org/x/tools/cmd/goimports)
+- `dlv` - Debugger (github.com/go-delve/delve/cmd/dlv)
 
 ### Project Dependencies
 
