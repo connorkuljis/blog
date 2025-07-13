@@ -18,7 +18,6 @@ type Entry struct {
 	CreatedAt        time.Time      `db:"created_at"`
 	UpdatedAt        time.Time      `db:"updated_at"`
 	IsDraft          int            `db:"is_draft"`
-	AuthorID         int64          `db:"author_id"`
 }
 
 type EntryRepo struct {
@@ -41,7 +40,6 @@ VALUES
 	res, err := r.db.Exec(q,
 		entry.CategoryID,
 		entry.Title,
-		entry.AuthorID,
 		entry.CreatedAt.Format(time.RFC3339),
 		entry.UpdatedAt.Format(time.RFC3339),
 	)
@@ -127,7 +125,6 @@ SET
 	content = ?, 
 	description = ?, 
 	featured_image_url = ?, 
-	author_id = ?, 
 	updated_at = ?, 
 	is_draft = ? 
 WHERE 
@@ -139,7 +136,6 @@ WHERE
 		entry.Content,
 		entry.Description,
 		entry.FeaturedImageURL,
-		entry.AuthorID,
 		entry.UpdatedAt,
 		entry.IsDraft,
 		entry.ID,

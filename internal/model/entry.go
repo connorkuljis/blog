@@ -16,7 +16,6 @@ type Entry struct {
 	*store.Entry
 
 	Category  *Category
-	Author    *Author
 	Tags      []*Tag
 	Markdown  template.HTML
 	Permalink string
