@@ -15,23 +15,6 @@ import (
 	"github.com/yuin/goldmark"
 )
 
-type Config struct {
-	Title     string `toml:"title"`
-	Author    string `toml:"author"`
-	Domain    string `toml:"domain"`
-	DirBuild  string `toml:"dir_build"`
-	DirAssets string `toml:"dir_assets"`
-}
-
-func LoadConfig(path string) (*Config, error) {
-	var config Config
-	if _, err := toml.DecodeFile(path, &config); err != nil {
-		return nil, err
-	}
-
-	return &config, nil
-}
-
 type MySite struct {
 	Title        string
 	Author       string
@@ -47,6 +30,22 @@ type MySite struct {
 	Tags          []*model.Tag
 	TagsMap       map[string]*model.Tag
 	NerdStats     *model.NerdStats
+}
+
+type Config struct {
+	Title     string `toml:"title"`
+	Author    string `toml:"author"`
+	Domain    string `toml:"domain"`
+	DirBuild  string `toml:"dir_build"`
+	DirAssets string `toml:"dir_assets"`
+}
+
+func LoadConfig(path string) (*Config, error) {
+	var config Config
+	if _, err := toml.DecodeFile(path, &config); err != nil {
+		return nil, err
+	}
+	return &config, nil
 }
 
 func NewSite(
@@ -73,67 +72,32 @@ func NewSite(
 		NerdStats: nerdStats,
 	}
 
-	site.TagsMap = make(map[string]*model.Tag)
-	tags, err := store.NewTagRepo(db).GetTags()
-	if err != nil {
+	categoryRepo := store.NewCategoryRepo(db)
+	entryRepo := store.NewEntryRepo(db)
+	tagRepo := store.NewTagRepo(db)
+
+	if err := site.loadTags(tagRepo); err != nil {
 		log.Fatal(err)
 	}
 
-	for _, t := range tags {
-		tag := model.NewTag(t)
-		site.Tags = append(site.Tags, tag)
-		site.TagsMap[t.Name] = tag
-	}
-
-	categories, err := store.NewCategoryRepo(db).ReadAllCategories()
-	if err != nil {
+	if err := site.loadCategories(categoryRepo, entryRepo, tagRepo, enableDrafts, markdown); err != nil {
 		log.Fatal(err)
-	}
-
-	for _, c := range categories {
-		mCategory := model.NewCategory(c)
-		site.Categories = append(site.Categories, mCategory)
-
-		entries, err := store.NewEntryRepo(db).ReadAllByCategoryID(c.ID, enableDrafts)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		for _, e := range entries {
-			mEntry := model.NewEntry(e, mCategory, markdown)
-
-			tags, err := store.NewTagRepo(db).GetTagsForEntry(e.ID)
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			for _, t := range tags {
-				tag := model.NewTag(t)
-				mEntry.Tags = append(mEntry.Tags, tag)
-				site.TagsMap[t.Name].Entries = append(site.TagsMap[t.Name].Entries, mEntry)
-			}
-
-			mCategory.AddEntry(mEntry)
-		}
 	}
 
 	return site
 }
 
 func (s *MySite) Init() error {
-	err := os.RemoveAll(s.DirBuild)
-	if err != nil {
+	if err := os.RemoveAll(s.DirBuild); err != nil {
 		return err
 	}
 
-	err = os.MkdirAll(s.DirBuild, os.ModePerm)
-	if err != nil {
+	if err := os.MkdirAll(s.DirBuild, os.ModePerm); err != nil {
 		return err
 	}
 
 	staticAssets := os.DirFS(s.DirAssets)
-	err = os.CopyFS(s.DirBuild, staticAssets)
-	if err != nil {
+	if err := os.CopyFS(s.DirBuild, staticAssets); err != nil {
 		return err
 	}
 
@@ -183,8 +147,7 @@ func (s *MySite) Render(pages []site.Page) error {
 		filename := filepath.Join(s.DirBuild, page.FileName())
 
 		dir := filepath.Dir(filename)
-		err := os.MkdirAll(dir, os.ModePerm)
-		if err != nil {
+		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
 			return err
 		}
 
@@ -194,12 +157,67 @@ func (s *MySite) Render(pages []site.Page) error {
 		}
 		defer f.Close()
 
-		err = s.T.ExecuteTemplate(f, page.TemplateName(), page) // note: assume each page is rendered as concrete type when accessing data in templates.
-		if err != nil {
+		if err := s.T.ExecuteTemplate(f, page.TemplateName(), page); err != nil { // note: assume each page is rendered as concrete type when accessing data in templates.
 			return err
 		}
 		log.Println("created:", page.FileName())
 	}
 
+	return nil
+}
+
+func (s *MySite) loadTags(tagRepo *store.TagRepo) error {
+	s.TagsMap = make(map[string]*model.Tag)
+	tags, err := tagRepo.GetTags()
+	if err != nil {
+		return err
+	}
+
+	for _, t := range tags {
+		tag := model.NewTag(t)
+		s.Tags = append(s.Tags, tag)
+		s.TagsMap[t.Name] = tag
+	}
+	return nil
+}
+
+func (s *MySite) loadCategories(
+	categoryRepo *store.CategoryRepo,
+	entryRepo *store.EntryRepo,
+	tagRepo *store.TagRepo,
+	enableDrafts bool,
+	markdown goldmark.Markdown,
+) error {
+	categories, err := categoryRepo.ReadAllCategories()
+	if err != nil {
+		return err
+	}
+
+	for _, c := range categories {
+		mCategory := model.NewCategory(c)
+		s.Categories = append(s.Categories, mCategory)
+
+		entries, err := entryRepo.ReadAllByCategoryID(c.ID, enableDrafts)
+		if err != nil {
+			return err
+		}
+
+		for _, e := range entries {
+			mEntry := model.NewEntry(e, mCategory, markdown)
+
+			tags, err := tagRepo.GetTagsForEntry(e.ID)
+			if err != nil {
+				return err
+			}
+
+			for _, t := range tags {
+				tag := model.NewTag(t)
+				mEntry.Tags = append(mEntry.Tags, tag)
+				s.TagsMap[t.Name].Entries = append(s.TagsMap[t.Name].Entries, mEntry)
+			}
+
+			mCategory.AddEntry(mEntry)
+		}
+	}
 	return nil
 }
