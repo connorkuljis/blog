@@ -8,15 +8,14 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/store"
-	"github.com/gdamore/tcell/v2"
 	"github.com/jmoiron/sqlx"
-	"github.com/rivo/tview"
 	"github.com/urfave/cli/v3"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/extension"
@@ -90,6 +89,11 @@ func main() {
 			for _, t := range tags {
 				app.Tags = append(app.Tags, &model.Tag{Tag: t})
 			}
+
+			// Sort entries by creation date (newest first)
+			sort.Slice(app.Entries, func(i, j int) bool {
+				return app.Entries[i].CreatedAt.After(app.Entries[j].CreatedAt)
+			})
 
 			ctx = context.WithValue(ctx, KeyApp, app)
 
@@ -184,36 +188,9 @@ func listEntries(ctx context.Context, c *cli.Command) error {
 
 	entries := app.Entries
 
-	tviewApp := tview.NewApplication()
-	table := tview.NewTable().
-		SetBorders(true)
-
-	// Headers
-	headers := []string{"ID", "Title", "Description"}
-	for i, header := range headers {
-		table.SetCell(0, i, tview.NewTableCell(header).
-			SetTextColor(tview.Styles.SecondaryTextColor).
-			SetSelectable(false))
-	}
-
-	// Data
-	for i, e := range entries {
-		row := i + 1
-		table.SetCell(row, 0, tview.NewTableCell(strconv.FormatInt(e.ID, 10)))
-		table.SetCell(row, 1, tview.NewTableCell(e.Title))
-		table.SetCell(row, 2, tview.NewTableCell(e.Description.String))
-	}
-
-	table.Select(1, 0).SetFixed(1, 0).SetDoneFunc(func(key tcell.Key) {
-		if key == tcell.KeyEscape {
-			tviewApp.Stop()
-		}
-	}).SetSelectedFunc(func(row int, column int) {
-		tviewApp.Stop()
-	})
-
-	if err := tviewApp.SetRoot(table, true).SetFocus(table).Run(); err != nil {
-		return err
+	fmt.Println("ID | Created | Title ")
+	for _, e := range entries {
+		fmt.Printf("%d | %s | %s\n", e.ID, e.CreatedAt.Format("2006-01-02"), e.Title)
 	}
 
 	return nil
@@ -551,7 +528,7 @@ func readContentFromEditor(content string) (string, error) {
 		return "", fmt.Errorf("Error: unable to read from '%s': %w", f.Name(), err)
 	}
 
-	result := strings.TrimSuffix(string(b), " ")
+	result := strings.TrimRight(string(b), "\n\r")
 
 	return result, nil
 }
