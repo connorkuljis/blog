@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/BurntSushi/toml"
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/connorkuljis/blog/pkg/site"
@@ -14,9 +15,27 @@ import (
 	"github.com/yuin/goldmark"
 )
 
+type Config struct {
+	Title     string `toml:"title"`
+	Author    string `toml:"author"`
+	Domain    string `toml:"domain"`
+	DirBuild  string `toml:"dir_build"`
+	DirAssets string `toml:"dir_assets"`
+}
+
+func LoadConfig(path string) (*Config, error) {
+	var config Config
+	if _, err := toml.DecodeFile(path, &config); err != nil {
+		return nil, err
+	}
+
+	return &config, nil
+}
+
 type MySite struct {
 	Title        string
 	Author       string
+	Domain       string
 	DirBuild     string
 	DirAssets    string
 	EnableDrafts bool
@@ -35,6 +54,7 @@ type MySite struct {
 func NewSite(
 	title string,
 	author string,
+	domain string,
 	dirBuild string,
 	dirAssets string,
 	enableDrafts bool,
@@ -47,6 +67,7 @@ func NewSite(
 	site := &MySite{
 		Title:     title,
 		Author:    author,
+		Domain:    domain,
 		DirBuild:  dirBuild,
 		DirAssets: dirAssets,
 		CreatedAt: createdAt,

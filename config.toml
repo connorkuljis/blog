@@ -1,0 +1,5 @@
+title = "Connor's Blog"
+domain = "kuljis.xyz"
+author = "Connor Kuljis"
+dir_build = "dist"
+dir_assets = "assets"

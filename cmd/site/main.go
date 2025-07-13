@@ -17,19 +17,13 @@ import (
 	"github.com/yuin/goldmark"
 )
 
-const (
-	Title     = "kuljis.xyz"
-	Author    = "Connor Kuljis"
-	DirBuild  = "dist"
-	DirAssets = "assets"
-)
-
 var (
 	md = markdown.NewMarkdown()
 )
 
 func main() {
 	enableDrafts := flag.Bool("d", false, "enable drafts")
+	configFile := flag.String("config", "config.toml", "path to config file")
 
 	flag.Parse()
 
@@ -47,6 +41,11 @@ func main() {
 
 	log.Println("Enable drafts:", *enableDrafts)
 
+	cfg, err := site.LoadConfig(*configFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	db, err := store.Connect()
 	if err != nil {
 		log.Fatal(err)
@@ -54,7 +53,7 @@ func main() {
 
 	t := templates.NewTemplate()
 
-	mySite := initialiseKuljisSite(*enableDrafts, md, db, t)
+	mySite := initialiseKuljisSite(*enableDrafts, md, db, t, cfg)
 
 	err = mySite.Init()
 	if err != nil {
@@ -73,14 +72,15 @@ func main() {
 	log.Println(time.Since(start))
 }
 
-func initialiseKuljisSite(enableDrafts bool, md goldmark.Markdown, db *sqlx.DB, t *template.Template) *site.MySite {
+func initialiseKuljisSite(enableDrafts bool, md goldmark.Markdown, db *sqlx.DB, t *template.Template, cfg *site.Config) *site.MySite {
 	nerdStats := model.NewNerdStats(time.Now())
 
 	return site.NewSite(
-		Title,
-		Author,
-		DirBuild,
-		DirAssets,
+		cfg.Title,
+		cfg.Author,
+		cfg.Domain,
+		cfg.DirBuild,
+		cfg.DirAssets,
 		enableDrafts,
 		time.Now(),
 		t,

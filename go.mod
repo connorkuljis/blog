@@ -3,6 +3,7 @@ module github.com/connorkuljis/blog
 go 1.24.4
 
 require (
+	github.com/BurntSushi/toml v1.5.0
 	github.com/common-nighthawk/go-figure v0.0.0-20210622060536-734e95fb86be
 	github.com/gdamore/tcell/v2 v2.8.1
 	github.com/jmoiron/sqlx v1.4.0
