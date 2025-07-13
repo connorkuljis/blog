@@ -25,9 +25,7 @@
 					</h2>
 
 					<div class="author">
-						{{ if .Entry.Author }}
-						by <a href="/about">{{ .Entry.Author.Name }}</a>
-						{{ else }}
+						{{ if .Site.Author }}
 						by <a href="/about">{{ .Site.Author }}</a>
 						{{ end }}
 					</div>

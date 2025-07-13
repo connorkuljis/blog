@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8" />
-	<title>Connor&#39;s Blog | Projects</title>
+	<title>Connor&#39;s Blog | How to clear cached go module dependencies</title>
 
 	<link rel="icon" href="/images/icon.png" />
 	<link rel="stylesheet" href="/css/styles.css" />
@@ -19,8 +19,7 @@
 </head>
 
 
-<body id="_category" class="page-wrapper">
-	
+<body id="_entry" class="page-wrapper">
 	<header class="header" id="kuljis-header">
 	
 	<div class="header-wrapper">
@@ -50,46 +49,63 @@
 </header>
 
 
-	
 	<main class="main">
-		
 		<div class="wrapper">
-			
 			<article class="article">
-				
 				<header class="article-header">
-					<h2 class="title">Projects</h2>
-					<h3 class="subheading">Collection of programming projects.</h3>
+					<div class="article-category">
+						<a href="/til">
+							TIL
+						</a>
+					</div>
+
+					<div class="created-at">
+						<time>June 17, 2025</time>
+					</div>
+
+					<h2 class="title">
+						How to clear cached go module dependencies
+					</h2>
+
+					<div class="author">
+						
+						by <a href="/about">Connor Kuljis</a>
+						
+					</div>
+
+					
 				</header>
 
-				
-				<main class="article-main">
-					<ul class="category-entries-list">
+				<main class="article-main markdown">
+					<p>To clean the Go module cache, you can use the following command:</p>
+<pre><code class="language-bash">go clean -modcache
+</code></pre>
+<p>This will remove all cached module files from the Go module cache directory.</p>
+<p>This is useful when building a Go project and you want to ensure that you are using the latest versions of the modules without any cached versions interfering.</p>
+
+				</main>
+
+				<footer class="article-footer">
+					<div class="tags">
 						
-						<li>
-							<article class="entry-item">
-								<time class="entry-created-at">June 25, 2025</time>
-								<h3 class="entry-title">
-									<a href="/projects/2025-06-25-literally-anything-with-mcp-containers-and-infrastructure">
-										Literally anything with MCP, containers and infrastructure
-									</a>
-								</h3>
-							</article>
-						</li>
+					</div>
+
+					<div class="prev-next-grid">
 						
-						<li>
-							<article class="entry-item">
-								<time class="entry-created-at">February 05, 2025</time>
-								<h3 class="entry-title">
-									<a href="/projects/2025-02-05-ausfinder-fyi">
-										ausfinder.fyi
-									</a>
-								</h3>
-							</article>
-						</li>
+						<a href="/til/2025-06-17-how-to-add-a-tool-to-a-go-module-in-go-1-24" class="prev">
+							<span>Previous</span>
+							<p>How to add a tool to a go module in Go 1.24</p>
+						</a>
 						
-					</ul>
-					</section>
+
+						
+						<a href="/til/2025-06-17-how-to-update-a-go-module-version" class="next">
+							<span>Next</span>
+							<p>How to update a go module version</p>
+						</a>
+						
+					</div>
+				</footer>
 			</article>
 		</div>
 	</main>
