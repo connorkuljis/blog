@@ -53,7 +53,9 @@ func main() {
 
 	t := templates.NewTemplate()
 
-	mySite := initialiseKuljisSite(*enableDrafts, md, db, t, cfg)
+	nerdStats := model.NewNerdStats(time.Now())
+
+	mySite := initialiseKuljisSite(*enableDrafts, md, db, t, cfg, nerdStats)
 
 	err = mySite.Init()
 	if err != nil {
@@ -72,8 +74,14 @@ func main() {
 	log.Println(time.Since(start))
 }
 
-func initialiseKuljisSite(enableDrafts bool, md goldmark.Markdown, db *sqlx.DB, t *template.Template, cfg *site.Config) *site.MySite {
-	nerdStats := model.NewNerdStats(time.Now())
+func initialiseKuljisSite(
+	enableDrafts bool,
+	md goldmark.Markdown,
+	db *sqlx.DB,
+	t *template.Template,
+	cfg *site.Config,
+	nerdStats *model.NerdStats,
+) *site.MySite {
 
 	return site.NewSite(
 		cfg.Title,
