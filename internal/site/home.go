@@ -1,13 +1,15 @@
 package site
 
 import (
+	"sort"
+
 	"github.com/common-nighthawk/go-figure"
 	"github.com/connorkuljis/blog/internal/model"
 )
 
 type HomePage struct {
 	Site        *MySite
-	LatestEntry *model.Entry
+	RecentPosts []*model.Entry
 	Banner      [][]rune
 }
 
@@ -20,16 +22,23 @@ func NewHomePage(s *MySite) HomePage {
 		banner = append(banner, []rune(line))
 	}
 
-	var latestEntry *model.Entry
+	var allEntries []*model.Entry
 	for _, c := range s.Categories {
 		for _, e := range c.Entries {
-			if latestEntry == nil || e.CreatedAt.After(latestEntry.CreatedAt) {
-				latestEntry = e
-			}
+			allEntries = append(allEntries, e)
 		}
 	}
 
-	p := HomePage{Site: s, LatestEntry: latestEntry, Banner: banner}
+	sort.Slice(allEntries, func(i, j int) bool {
+		return allEntries[i].CreatedAt.After(allEntries[j].CreatedAt)
+	})
+
+	recentPosts := allEntries
+	if len(allEntries) > 5 {
+		recentPosts = allEntries[:5]
+	}
+
+	p := HomePage{Site: s, RecentPosts: recentPosts, Banner: banner}
 	return p
 }
 

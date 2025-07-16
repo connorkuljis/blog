@@ -33,13 +33,18 @@
 				{{ template "contact" . }}
 
 				<section>
-					{{- if .LatestEntry }}
+					{{- if .RecentPosts }}
 					<article>
 						<div>
-							Read my latest article:
-							<a href="{{ .LatestEntry.Permalink }}">
-								{{ .LatestEntry.Title }}
-							</a>
+							<h3>Recent Posts</h3>
+							<ul>
+								{{- range .RecentPosts }}
+								<li>
+									<a href="{{ .Permalink }}">{{ .Title }}</a>
+									<span class="date">{{ .CreatedAt.Format "2006-01-02" }}</span>
+								</li>
+								{{- end }}
+							</ul>
 						</div>
 					</article>
 					{{- end }}
