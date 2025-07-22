@@ -2,26 +2,35 @@
 	<!-- wrapper -->
 	<div class="header-wrapper">
 		<!-- nav -->
-		<nav class="nav" id="kuljis-nav">
-			<!-- home link -->
-			<div><a href="/">Home</a></div>
-			<button class="theme-toggle" aria-label="Switch theme">☀️</button>
-
-			<!-- hamburger button -->
-			<button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="categories-list">
-				<span class="hamburger-box">
-					<span class="hamburger-inner"></span>
-				</span>
-			</button>
-
-			<!-- categories-list -->
-			<ul class="categories-list" id="categories-list">
-				<li><a href="/about">About</a></li>
-				<li><a href="/tags">Tags</a></li>
-				{{- range $_, $category := .Site.Categories }}
-				<li><a href="{{ $category.Permalink }}">{{ $category.Title }}</a></li>
-				{{- end }}
+		<nav class="nav" id="kuljis-nav" x-data="{ isMenuMobileOpen: false }">
+			<ul id="kuljis-home" role="list">
+				<li><a href="/">Home</a></li>
 			</ul>
+
+			{{ define "header-category-items" }}
+			{{- range .Site.Categories }}
+			<li>
+				<a href="{{ .Permalink }}">{{ .Title }}</a>
+			</li>
+			{{- end }}
+			{{ end }}
+
+			<!-- menu -->
+			<ul class="menu" id="kuljis-category-menu" role="list">
+				{{ template "header-category-items" . }}
+			</ul>
+
+			<!-- menu-mobile -->
+			<div class="menu-mobile-wrapper">
+				<button @click="isMenuMobileOpen = !isMenuMobileOpen" class="menu-toggle"
+					aria-label="Open menu">menu</button>
+
+				<ul x-show="isMenuMobileOpen" class="menu-mobile" id="kuljis-category-menu-mobile" role="list">
+					{{ template "header-category-items" . }}
+				</ul>
+			</div>
+
+			<button class="theme-toggle" aria-label="Switch theme">☀️</button>
 		</nav>
 	</div>
 </header>
