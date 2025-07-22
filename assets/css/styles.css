@@ -112,7 +112,7 @@ body {
 	min-block-size: 100dvh;
 
 	& .header {
-		padding-block: 3rem;
+		padding-block: 2.25rem;
 		grid-row: header;
 	}
 
