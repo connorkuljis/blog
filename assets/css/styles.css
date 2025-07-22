@@ -44,7 +44,7 @@
 	--surface-0: var(--clr-primary);
 	--surface-code: hsl(220, 14%, 95%);
 	--text-0: var(--clr-secondary);
-	--text-code: hsl(210, 10%, 30%); 
+	--text-code: hsl(210, 10%, 30%);
 }
 
 body[data-theme="dark"] {
@@ -72,13 +72,8 @@ body[data-theme="dark"] {
 }
 
 body {
-	background:
-		linear-gradient(120deg,
-			var(--clr-primary) 0%,
-			hsl(from var(--clr-primary) h s 22%) 100%);
-	background-attachment: fixed;
+	background: var(--surface-0);
 	color: var(--text-0);
-
 	font-family: var(--serif);
 	font-size: var(--fs-400);
 	font-style: normal;
