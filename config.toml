@@ -1,5 +1,5 @@
 title = "Connor's Blog"
-domain = "kuljis.xyz"
+domain = "https://kuljis.xyz"
 author = "Connor Kuljis"
 dir_build = "dist"
 dir_assets = "assets"
