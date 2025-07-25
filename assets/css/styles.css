@@ -3,8 +3,6 @@
 /* Date Created: 2025 */
 
 @import url("/css/reset.css");
-@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap');
-
 
 @font-face {
 	font-family: "Opus One";
@@ -15,20 +13,22 @@
 }
 
 :root {
-	--serif: "Inter Tight", system-ui, serif;
-	--monospace: "Opus One", monospace;
+	/* font-family */
+	--ff-serif: "Inter Tight", system-ui, serif;
+	--ff-serif: -apple-system, BlinkMacSystemFont, "Inter", "IBM Plex Sans",
+		"Segoe UI", Helvetica, Arial, sans-serif;
+	--ff-mono: "Opus One", monospace, WebKitWorkaround;
 
-	--font-unit: 1.125rem;
-
-	/* font size */
-	--fs-200: calc(var(--font-unit) * 0.75);
-	--fs-300: calc(var(--font-unit) * 0.825);
-	--fs-400: var(--font-unit);
-	--fs-500: calc(var(--font-unit) * 1.25);
-	--fs-600: calc(var(--font-unit) * 1.5);
-	--fs-700: calc(var(--font-unit) * 2);
-	--fs-800: calc(var(--font-unit) * 2.5);
-	--fs-900: calc(var(--font-unit) * 3);
+	/* font-size */
+	--fs: 1.125rem;
+	--fs-200: calc(var(--fs) * 0.75);
+	--fs-300: calc(var(--fs) * 0.825);
+	--fs-400: var(--fs);
+	--fs-500: calc(var(--fs) * 1.25);
+	--fs-600: calc(var(--fs) * 1.5);
+	--fs-700: calc(var(--fs) * 2);
+	--fs-800: calc(var(--fs) * 2.5);
+	--fs-900: calc(var(--fs) * 3);
 
 	/* font weight */
 	--fw-light: 200;
@@ -74,7 +74,7 @@ body[data-theme="dark"] {
 body {
 	background: var(--surface-0);
 	color: var(--text-0);
-	font-family: var(--serif);
+	font-family: var(--ff-serif);
 	font-size: var(--fs-400);
 	font-style: normal;
 	line-height: 1.6;
@@ -84,7 +84,10 @@ body {
 
 		&:visited,
 		&:active {
-			animation: flash-lightyellow 1.5s ease-in-out;
+			background-color: lightyellow;
+			padding: 0.25rem;
+			border: 1px dashed var(--text-0);
+			/* animation: flash-lightyellow 0.15s ease-in-out; */
 		}
 	}
 
@@ -108,20 +111,21 @@ body {
 .page-wrapper {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr);
-	grid-template-rows: [header] auto [body] 1fr [footer] auto;
-	min-block-size: 100dvh;
+	grid-template-rows: [header] auto [body] minmax(100dvh, auto) [footer] auto;
 
 	& .header {
-		padding-block: 2.25rem;
+		padding-block-start: 2.25rem;
 		grid-row: header;
 	}
 
 	& .main {
+		padding-block-start: 2.25rem;
 		grid-row: body;
 	}
 
 	& .footer {
-		padding-block: 3rem;
+		padding-block-start: 8rem;
+		padding-block-end: 1rem;
 		grid-row: footer;
 	}
 }
@@ -137,12 +141,6 @@ body {
 	margin-inline: auto;
 	max-inline-size: 96rem;
 	padding-inline: max(1.5rem, 3.5vw);
-}
-
-.footer-wrapper {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
 }
 
 .header .nav {
@@ -162,19 +160,6 @@ body {
 		flex-wrap: wrap;
 		gap: 1rem;
 
-		/* hide on mobile */
-		@media (max-width: 768px) {
-			display: none;
-		}
-	}
-
-	& .menu-mobile-wrapper {
-		display: none;
-
-		/* show on mobile */
-		@media (max-width: 768px) {
-			display: block;
-		}
 	}
 
 	& .theme-toggle {
@@ -200,24 +185,25 @@ body {
 	& .article-footer {
 		margin-block-start: 3rem;
 	}
+
+	& .article-footer .prev-next-grid {
+		margin-block-start: 3rem;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1.5rem;
+
+		& .prev {
+			grid-column: 1;
+			text-align: left;
+		}
+
+		& .next {
+			grid-column: 2;
+			text-align: right;
+		}
+	}
 }
 
-.article .article-footer .prev-next-grid {
-	margin-block-start: 3rem;
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 1.5rem;
-
-	& .prev {
-		grid-column: 1;
-		text-align: left;
-	}
-
-	& .next {
-		grid-column: 2;
-		text-align: right;
-	}
-}
 
 .section {
 	&>*+* {
@@ -316,7 +302,7 @@ body {
 	}
 
 	& code {
-		font-family: var(--monospace);
+		font-family: var(--ff-mono);
 	}
 
 	&>img {
@@ -369,7 +355,7 @@ body {
 
 }
 
-.category-entries-list {
+.article .category-entries-list {
 	display: flex;
 	flex-direction: column;
 	gap: 0.75rem;
@@ -428,13 +414,13 @@ body {
 	margin-inline: auto;
 	overflow: hidden;
 	display: flex;
+	justify-content: space-between;
 	flex-wrap: nowrap;
 }
 
 .ascii-art {
 	display: flex;
 	flex-direction: column;
-	margin-inline-end: 2rem;
 
 	& .row {
 		display: flex;
@@ -442,10 +428,36 @@ body {
 
 	& .row .char {
 		flex-shrink: 0;
-		font-family: var(--monospace);
+		font-family: var(--ff-mono);
 		font-size: var(--fs-200);
 		font-weight: var(--fw-bold);
 		line-height: 1.25;
 		width: 1ch;
+	}
+}
+
+.footer .grid {
+	display: flex;
+	gap: 5rem;
+	flex-wrap: wrap;
+
+	& a {
+		text-decoration: none;
+	}
+
+	& h6 {
+		font-weight: var(--fw-thin);
+	}
+
+	& .more-wrapper {
+		grid-area: more;
+	}
+
+	& .contact-wrapper {
+		grid-area: contact;
+	}
+
+	& .copyright-wrapper {
+		grid-area: copy;
 	}
 }
