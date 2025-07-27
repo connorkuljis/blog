@@ -1,36 +1,26 @@
-<header class="header" id="kuljis-header">
+<header class="header" id="kuljis-header" role="banner">
 	<!-- wrapper -->
 	<div class="header-wrapper">
 		<!-- nav -->
-		<nav class="nav" id="kuljis-nav" x-data="{ isMenuMobileOpen: false }">
+		<nav class="nav" id="kuljis-nav" role="navigation" aria-label="Main navigation">
 			<ul id="kuljis-home" role="list">
 				<li><a href="/">Home</a></li>
 			</ul>
-
-			{{ define "header-category-items" }}
-			{{- range .Site.Categories }}
-			<li>
-				<a href="{{ .Permalink }}">{{ .Title }}</a>
-			</li>
-			{{- end }}
-			{{ end }}
 
 			<!-- menu -->
 			<ul class="menu" id="kuljis-category-menu" role="list">
 				{{ template "header-category-items" . }}
 			</ul>
 
-			<!-- menu-mobile -->
-			<div class="menu-mobile-wrapper">
-				<button @click="isMenuMobileOpen = !isMenuMobileOpen" class="menu-toggle"
-					aria-label="Open menu">menu</button>
-
-				<ul x-show="isMenuMobileOpen" class="menu-mobile" id="kuljis-category-menu-mobile" role="list">
-					{{ template "header-category-items" . }}
-				</ul>
-			</div>
-
 			<button class="theme-toggle" aria-label="Switch theme">☀️</button>
 		</nav>
 	</div>
 </header>
+
+{{ define "header-category-items" }}
+{{- range .Site.Categories }}
+<li>
+	<a href="{{ .Permalink }}">{{ .Title }}</a>
+</li>
+{{- end }}
+{{ end }}
