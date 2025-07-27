@@ -15,7 +15,7 @@
 :root {
 	/* font-family */
 	--ff-serif: "Inter Tight", system-ui, serif;
-	--ff-serif: -apple-system, BlinkMacSystemFont, "Inter", "IBM Plex Sans",
+	--ff-sans: -apple-system, BlinkMacSystemFont, "Inter", "IBM Plex Sans",
 		"Segoe UI", Helvetica, Arial, sans-serif;
 	--ff-mono: "Opus One", monospace, WebKitWorkaround;
 
@@ -31,7 +31,8 @@
 	--fs-900: calc(var(--fs) * 3);
 
 	/* font weight */
-	--fw-light: 200;
+	--fw-thin: 200;
+	--fw-light: 300;
 	--fw-normal: 400;
 	--fw-semi-bold: 600;
 	--fw-bold: 700;
@@ -74,7 +75,7 @@ body[data-theme="dark"] {
 body {
 	background: var(--surface-0);
 	color: var(--text-0);
-	font-family: var(--ff-serif);
+	font-family: var(--ff-sans);
 	font-size: var(--fs-400);
 	font-style: normal;
 	line-height: 1.6;
