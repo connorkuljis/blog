@@ -20,7 +20,7 @@
 	--ff-mono: "Opus One", monospace, WebKitWorkaround;
 
 	/* font-size */
-	--fs: 1.125rem;
+	--fs: 1rem;
 	--fs-200: calc(var(--fs) * 0.75);
 	--fs-300: calc(var(--fs) * 0.825);
 	--fs-400: var(--fs);
@@ -58,20 +58,6 @@ body[data-theme="dark"] {
 	--text-code: hsl(210, 10%, 70%);
 }
 
-@keyframes flash-lightyellow {
-	0% {
-		background-color: transparent;
-	}
-
-	50% {
-		background-color: lightyellow;
-	}
-
-	100% {
-		background-color: transparent;
-	}
-}
-
 body {
 	background: var(--surface-0);
 	color: var(--text-0);
@@ -82,14 +68,11 @@ body {
 
 	& a {
 		color: currentColor;
+	}
 
-		&:visited,
-		&:active {
-			background-color: lightyellow;
-			padding: 0.25rem;
-			border: 1px dashed var(--text-0);
-			/* animation: flash-lightyellow 0.15s ease-in-out; */
-		}
+	& a:visited,
+	& a:active {
+		background-color: lightyellow;
 	}
 
 	& b {
@@ -120,7 +103,7 @@ body {
 	}
 
 	& .main {
-		padding-block-start: 2.25rem;
+		padding-block-start: 2rem;
 		grid-row: body;
 	}
 
@@ -144,31 +127,38 @@ body {
 	padding-inline: max(1.5rem, 3.5vw);
 }
 
-.header .nav {
-	align-items: center;
+.header .nav,
+.header .nav .menu {
 	display: flex;
-	flex-wrap: wrap;
+	flex-direction: column;
+	align-items: flex-start;
 	gap: 1rem;
-	justify-content: space-between;
 
-	& a {
-		text-decoration: none;
-	}
+}
 
-	& .menu {
-		display: flex;
+.header .nav a {
+	text-decoration: none;
+}
+
+.header .nav .theme-toggle {
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 1.5rem;
+	padding: 0.5rem;
+}
+
+@media (min-width: 600px) {
+	.header .nav {
+		flex-direction: row;
+		justify-content: space-between;
 		align-items: center;
-		flex-wrap: wrap;
-		gap: 1rem;
-
 	}
 
-	& .theme-toggle {
-		background: none;
-		border: none;
-		cursor: pointer;
-		font-size: 1.5rem;
-		padding: 0.5rem;
+	.header .nav .menu {
+		width: 100%;
+		flex-direction: row;
+		justify-content: flex-end;
 	}
 }
 
