@@ -24,5 +24,5 @@ func (p AboutPage) FileName() string {
 }
 
 func (p AboutPage) TemplateName() string {
-	return "_about.html"
+	return "about.html"
 }

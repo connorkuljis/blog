@@ -1,0 +1,34 @@
+{{ define "view" }}
+<main>
+	<!-- wrapper -->
+	<div>
+		<!-- article -->
+		<article>
+			<!-- article-header -->
+			<header>
+				<h2>{{ .Category.Title }}</h2>
+				<h3>{{ .Category.Description }}</h3>
+			</header>
+
+			<!-- article-main -->
+			<main>
+				<ul>
+					{{ range $i, $e := .Category.Entries }}
+					<li>
+						<article>
+							<time>{{ $e.CreatedAt.Format
+								"January 02, 2006" }}</time>
+							<h3>
+								<a href="{{ $e.Permalink }}">
+									{{ $e.Title }}
+								</a>
+							</h3>
+						</article>
+					</li>
+					{{ end }}
+				</ul>
+				</section>
+		</article>
+	</div>
+</main>
+{{ end }}

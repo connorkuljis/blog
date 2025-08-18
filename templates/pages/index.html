@@ -1,0 +1,70 @@
+{{ define "view" }}
+<main>
+	<!-- wrapper -->
+	<div>
+		<!-- article -->
+		<article>
+
+			{{ template "about" . }}
+
+			{{ template "contact" . }}
+
+			<section>
+				{{- if .RecentPosts }}
+				<article>
+					<div>
+						<h3>Recent Posts</h3>
+						<ul>
+							{{- range .RecentPosts }}
+							<li>
+								<a href="{{ .Permalink }}">{{ .Title }}</a>
+								<span>{{ .CreatedAt.Format "2006-01-02" }}</span>
+							</li>
+							{{- end }}
+						</ul>
+					</div>
+				</article>
+				{{- end }}
+
+				{{- /* All posts as scrollable cards using HomePage.Posts */ -}}
+				{{- if .Posts }}
+				<div>
+					<h3>All Posts</h3>
+					<div>
+						{{- range .Posts }}
+						<article>
+							<a href="{{ .Permalink }}">
+								<header>
+									<h4>{{ .Title }}</h4>
+									<time>{{ .CreatedAt.Format "2006-01-02" }}</time>
+								</header>
+
+								{{- if .Description.Valid }}
+								<p>{{ .Description.String }}</p>
+								{{- else if .Content.Valid }}
+								<p>{{ truncate .Content.String 200 }}</p>
+								{{- else }}
+								<p></p>
+								{{- end }}
+
+								{{- if .Tags }}
+								<p>
+									{{- range $i, $tag := .Tags -}}
+									<a  href="/tag/{{ $tag | slugify }}">{{ $tag }}</a>{{ if lt (add $i
+									1) (len .Tags) }}, {{ end }}
+									{{- end }}
+								</p>
+								{{- end }}
+
+								<p>Read more →</p>
+							</a>
+						</article>
+						{{- end }}
+					</div>
+				</div>
+				{{- end }}
+			</section>
+		</article>
+	</div>
+</main>
+{{ end }}

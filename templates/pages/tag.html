@@ -1,0 +1,27 @@
+{{ define "view" }}
+<main>
+	<!-- wrapper -->
+	<div>
+		<!-- article -->
+		<article>
+			<!-- article-header -->
+			<header>
+				<h2>{{ .Tag.Name }}</h2>
+				<h3>Entries tagged with "{{ .Tag.Name }}"</h3>
+				<p>({{ len .Tag.Entries }}) entries</p>
+			</header>
+
+			<!-- article-main -->
+			<main>
+				<div>
+					<ul>
+						{{ range .Tag.Entries }}
+						<li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+						{{ end }}
+					</ul>
+				</div>
+			</main>
+		</article>
+	</div>
+</main>
+{{ end }}

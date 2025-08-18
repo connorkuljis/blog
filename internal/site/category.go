@@ -28,5 +28,5 @@ func (p CategoryPage) FileName() string {
 }
 
 func (p CategoryPage) TemplateName() string {
-	return "_category.html"
+	return "category.html"
 }

@@ -39,5 +39,5 @@ func (p EntryPage) FileName() string {
 }
 
 func (p EntryPage) TemplateName() string {
-	return "_entry.html"
+	return "entry.html"
 }

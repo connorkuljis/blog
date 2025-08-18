@@ -1,0 +1,63 @@
+{{ define "view" }}
+<main>
+	<div>
+		<article>
+			<header>
+				<div>
+					<a href="{{ .Entry.Category.Permalink }}">
+						{{ .Entry.Category.Title }}
+					</a>
+				</div>
+
+				<div>
+					<time>{{ .Entry.CreatedAt.Format "January 02, 2006"}}</time>
+				</div>
+
+				<h2>
+					{{ .Entry.Title }}
+				</h2>
+
+				<div>
+					{{ if .Site.Config.Author }}
+					by <a href="/about">{{ .Site.Config.Author }}</a>
+					{{ end }}
+				</div>
+
+				{{ if .Entry.FeaturedImageURL.Valid }}
+				<figure>
+					<img src="{{ .Entry.FeaturedImageURL.String }}" />
+				</figure>
+				{{ end }}
+			</header>
+
+			<main>
+				{{ .Entry.Markdown }}
+			</main>
+
+			<footer>
+				<div>
+					{{ range .Entry.Tags }}
+					<a href="{{ .Permalink }}">{{ .Name }}</a>
+					{{ end }}
+				</div>
+
+				<div>
+					{{ if .Prev }}
+					<a href="{{ .Prev.Permalink }}">
+						<span>Previous</span>
+						<p>{{ .Prev.Title }}</p>
+					</a>
+					{{ end }}
+
+					{{ if .Next }}
+					<a href="{{ .Next.Permalink }}">
+						<span>Next</span>
+						<p>{{ .Next.Title }}</p>
+					</a>
+					{{ end }}
+				</div>
+			</footer>
+		</article>
+	</div>
+</main>
+{{ end }}

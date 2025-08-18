@@ -1,6 +1,7 @@
 package site
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"os"
@@ -18,9 +19,11 @@ import (
 type MySite struct {
 	EnableDrafts bool
 
-	Config        Config
-	CreatedAt     time.Time
-	T             *template.Template
+	Config    Config
+	CreatedAt time.Time
+	// TRoot is the base template parsed once; we'll clone it per-page to build TSet entries.
+	TRoot         *template.Template
+	TSet          map[string]*template.Template
 	Categories    []*model.Category
 	CategoriesMap map[string]*model.Category
 	Tags          []*model.Tag
@@ -56,7 +59,8 @@ func NewSite(
 	site := &MySite{
 		Config:    config,
 		CreatedAt: createdAt,
-		T:         t,
+		TRoot:     t,
+		TSet:      make(map[string]*template.Template),
 		NerdStats: nerdStats,
 	}
 
@@ -131,6 +135,13 @@ func (s *MySite) Build() []site.Page {
 }
 
 func (s *MySite) Render(pages []site.Page) error {
+	// Ensure TSet is populated
+	if len(s.TSet) == 0 {
+		if err := s.buildTSet(); err != nil {
+			return err
+		}
+	}
+
 	for _, page := range pages {
 		filename := filepath.Join(s.Config.DirBuild, page.FileName())
 
@@ -145,16 +156,62 @@ func (s *MySite) Render(pages []site.Page) error {
 		}
 		defer f.Close()
 
-		if err := s.T.ExecuteTemplate(f, page.TemplateName(), page); err != nil { // note: assume each page is rendered as concrete type when accessing data in templates.
+		// Lookup the prebuilt template for this page and execute it.
+		tmplName := page.TemplateName()
+		tmpl, ok := s.TSet[tmplName]
+		if !ok {
+			return fmt.Errorf("template not found in TSet: %s", tmplName)
+		}
+		// Execute the layout template inside this cloned template set so the layout can call the page view.
+		if err := tmpl.ExecuteTemplate(f, "_layout.html", page); err != nil {
 			return err
 		}
+
 		log.Println("created:", page.FileName())
 	}
 
 	return nil
 }
 
+func (s *MySite) buildTSet() error {
+	// For each page template file, create a new template set that contains:
+	// - the _layout.html as the top level template
+	// - all component templates (head, header, footer)
+	// - the single page view template (from templates/pages/<name>) parsed under its filename
+
+	// Get list of page templates
+	pages, err := filepath.Glob("templates/pages/*.html")
+	if err != nil {
+		return err
+	}
+
+	for _, p := range pages {
+		name := filepath.Base(p)
+		// Clone root template
+		root, err := s.TRoot.Clone()
+		if err != nil {
+			return err
+		}
+
+		// Parse only the page file into the cloned template under its filename
+		content, err := os.ReadFile(p)
+		if err != nil {
+			return err
+		}
+		// Ensure parsed as named template with name equal to filename
+		if _, err := root.New(name).Parse(string(content)); err != nil {
+			return err
+		}
+
+		// Store in TSet keyed by the filename used by pages (TemplateName())
+		s.TSet[name] = root
+	}
+
+	return nil
+}
+
 func (s *MySite) loadTags(tagRepo *store.TagRepo) error {
+
 	s.TagsMap = make(map[string]*model.Tag)
 	tags, err := tagRepo.GetTags()
 	if err != nil {

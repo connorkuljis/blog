@@ -27,5 +27,5 @@ func (p *TagsPage) FileName() string {
 }
 
 func (p *TagsPage) TemplateName() string {
-	return "_tags.html"
+	return "tags.html"
 }
