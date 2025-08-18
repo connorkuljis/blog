@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS entries_with_desc (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     category_id INTEGER NOT NULL,
     title       TEXT NOT NULL,
-    content     TEXT, -- change this to nullable.
+    content     TEXT,
 	description TEXT, -- add description
 	featured_image_url TEXT, -- add featured image url
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

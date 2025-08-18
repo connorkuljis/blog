@@ -32,23 +32,60 @@
 
 				{{ template "contact" . }}
 
-				<section>
-					{{- if .RecentPosts }}
-					<article>
-						<div>
-							<h3>Recent Posts</h3>
-							<ul>
-								{{- range .RecentPosts }}
-								<li>
-									<a href="{{ .Permalink }}">{{ .Title }}</a>
-									<span class="date">{{ .CreatedAt.Format "2006-01-02" }}</span>
-								</li>
+			<section>
+				{{- if .RecentPosts }}
+				<article>
+					<div>
+						<h3>Recent Posts</h3>
+						<ul>
+							{{- range .RecentPosts }}
+							<li>
+								<a href="{{ .Permalink }}">{{ .Title }}</a>
+								<span class="date">{{ .CreatedAt.Format "2006-01-02" }}</span>
+							</li>
+							{{- end }}
+						</ul>
+					</div>
+				</article>
+				{{- end }}
+
+				{{- /* All posts as scrollable cards using HomePage.Posts */ -}}
+				{{- if .Posts }}
+				<div>
+					<h3>All Posts</h3>
+					<div class="posts-scroller">
+						{{- range .Posts }}
+						<article class="post-card">
+							<a class="card-link" href="{{ .Permalink }}">
+								<header class="card-header">
+									<h4 class="card-title">{{ .Title }}</h4>
+									<time class="card-date">{{ .CreatedAt.Format "2006-01-02" }}</time>
+								</header>
+
+						{{- if .Description.Valid }}
+						<p class="card-excerpt">{{ .Description.String }}</p>
+						{{- else if .Content.Valid }}
+						<p class="card-excerpt">{{ truncate .Content.String 200 }}</p>
+						{{- else }}
+						<p class="card-excerpt"></p>
+						{{- end }}
+
+								{{- if .Tags }}
+								<p class="card-tags">
+									{{- range $i, $tag := .Tags -}}
+										<a class="tag" href="/tag/{{ $tag | slugify }}">{{ $tag }}</a>{{ if lt (add $i 1) (len .Tags) }}, {{ end }}
+									{{- end }}
+								</p>
 								{{- end }}
-							</ul>
-						</div>
-					</article>
-					{{- end }}
-				</section>
+
+								<p class="card-cta">Read more →</p>
+							</a>
+						</article>
+						{{- end }}
+					</div>
+				</div>
+				{{- end }}
+			</section>
 			</article>
 		</div>
 	</main>
