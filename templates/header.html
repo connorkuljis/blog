@@ -3,16 +3,18 @@
 	<div id="kuljis-header-wrapper">
 		<!-- nav -->
 		<nav id="kuljis-nav" role="navigation" aria-label="Main navigation">
+			<h3>Nav</h3>
 			<ul role="list">
 				<li><a href="/">Home</a></li>
+				<li><a href="/about">About</a></li>
+				<li><a href="/tags">Tags</a></li>
 			</ul>
 
 			<!-- menu -->
+			<h3>Categories</h3>
 			<ul role="list">
 				{{ template "header-category-items" . }}
 			</ul>
-
-			<button aria-label="Switch theme">☀️</button>
 		</nav>
 	</div>
 </header>
