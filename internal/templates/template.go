@@ -11,7 +11,9 @@ var (
 		"runeToString": func(r rune) string {
 			return string(r)
 		},
-		"slugify": util.Slugify,
+		"slugify":  util.Slugify,
+		"truncate": util.Truncate,
+		"add":      func(a, b int) int { return a + b },
 	}
 )
 

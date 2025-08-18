@@ -9,6 +9,7 @@ import (
 
 type HomePage struct {
 	Site        *MySite
+	Posts       []*model.Entry
 	RecentPosts []*model.Entry
 	Banner      [][]rune
 }
@@ -33,12 +34,14 @@ func NewHomePage(s *MySite) HomePage {
 		return allEntries[i].CreatedAt.After(allEntries[j].CreatedAt)
 	})
 
-	recentPosts := allEntries
-	if len(allEntries) > 5 {
-		recentPosts = allEntries[:5]
+	posts := allEntries
+
+	recentPosts := posts
+	if len(posts) > 5 {
+		recentPosts = posts[:5]
 	}
 
-	p := HomePage{Site: s, RecentPosts: recentPosts, Banner: banner}
+	p := HomePage{Site: s, Posts: posts, RecentPosts: recentPosts, Banner: banner}
 	return p
 }
 
