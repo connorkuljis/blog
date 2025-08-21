@@ -3,18 +3,21 @@
 	<div id="kuljis-header-wrapper">
 		<!-- nav -->
 		<nav id="kuljis-nav" role="navigation" aria-label="Main navigation">
-			<h3>Nav</h3>
-			<ul role="list">
-				<li><a href="/">Home</a></li>
-				<li><a href="/about">About</a></li>
-				<li><a href="/tags">Tags</a></li>
-			</ul>
+			<div>
+				<h3>Nav</h3>
+				<ul id="kuljis-nav-list" role="list">
+					<li><a href="/">Home</a></li>
+					<li><a href="/about">About</a></li>
+					<li><a href="/tags">Tags</a></li>
+				</ul>
+			</div>
 
-			<!-- menu -->
-			<h3>Categories</h3>
-			<ul role="list">
-				{{ template "header-category-items" . }}
-			</ul>
+			<div>
+				<h3>Categories</h3>
+				<ul id="kuljis-categories-list" role="list">
+					{{ template "header-category-items" . }}
+				</ul>
+			</div>
 		</nav>
 	</div>
 </header>

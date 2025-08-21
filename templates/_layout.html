@@ -4,9 +4,11 @@
 {{ template "head" .}}
 
 <body>
-	{{ template "header" . }}
+	<div class="layout-wrapper">
+		{{ template "header" . }}
 
-	{{ template "view" . }}
+		{{ template "view" . }}
+	</div>
 </body>
 
 </html>

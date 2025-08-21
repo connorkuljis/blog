@@ -1,0 +1,22 @@
+/* Layout Wrapper Styles */
+.layout-wrapper {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+	.layout-wrapper {
+		padding: 0 15px;
+	}
+}
+
+@media (max-width: 480px) {
+	.layout-wrapper {
+		padding: 0 10px;
+	}
+}

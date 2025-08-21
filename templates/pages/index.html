@@ -4,9 +4,7 @@
 	<div>
 		<!-- article -->
 		<article>
-
 			{{ template "about" . }}
-
 			{{ template "contact" . }}
 
 			<section>
@@ -26,7 +24,6 @@
 				</article>
 				{{- end }}
 
-				{{- /* All posts as scrollable cards using HomePage.Posts */ -}}
 				{{- if .Posts }}
 				<div>
 					<h3>All Posts</h3>
@@ -50,7 +47,7 @@
 								{{- if .Tags }}
 								<p>
 									{{- range $i, $tag := .Tags -}}
-									<a  href="/tag/{{ $tag | slugify }}">{{ $tag }}</a>{{ if lt (add $i
+									<a href="/tag/{{ $tag | slugify }}">{{ $tag }}</a>{{ if lt (add $i
 									1) (len .Tags) }}, {{ end }}
 									{{- end }}
 								</p>
