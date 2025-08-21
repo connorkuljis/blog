@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/BurntSushi/toml"
@@ -131,6 +132,11 @@ func (s *MySite) Build() []site.Page {
 
 	s.NerdStats.PageCount = len(pages)
 
+	// Generate sitemap.xml after building pages
+	if err := s.generateSiteMap(pages); err != nil {
+		log.Printf("failed to generate sitemap: %v", err)
+	}
+
 	return pages
 }
 
@@ -211,7 +217,6 @@ func (s *MySite) buildTSet() error {
 }
 
 func (s *MySite) loadTags(tagRepo *store.TagRepo) error {
-
 	s.TagsMap = make(map[string]*model.Tag)
 	tags, err := tagRepo.GetTags()
 	if err != nil {
@@ -223,6 +228,29 @@ func (s *MySite) loadTags(tagRepo *store.TagRepo) error {
 		s.Tags = append(s.Tags, tag)
 		s.TagsMap[t.Name] = tag
 	}
+	return nil
+}
+
+// generateSiteMap creates a sitemap.xml file in the build directory
+func (s *MySite) generateSiteMap(pages []site.Page) error {
+	var b strings.Builder
+	b.WriteString(`<?xml version="1.0" encoding="UTF-8"?>` + "\n")
+	b.WriteString(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` + "\n")
+
+	for _, page := range pages {
+		url := strings.TrimRight(s.Config.Domain, "/") + "/" + strings.TrimLeft(page.FileName(), "/")
+		url = strings.ReplaceAll(url, "index.html", "")
+		b.WriteString(fmt.Sprintf("  <url>\n    <loc>%s</loc>\n    <lastmod>%s</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n", url, s.CreatedAt.Format("2006-01-02")))
+	}
+
+	b.WriteString("</urlset>\n")
+
+	filename := filepath.Join(s.Config.DirBuild, "sitemap.xml")
+	if err := os.WriteFile(filename, []byte(b.String()), 0644); err != nil {
+		return fmt.Errorf("failed to write sitemap.xml: %w", err)
+	}
+
+	log.Println("created: sitemap.xml")
 	return nil
 }
 

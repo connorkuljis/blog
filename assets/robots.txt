@@ -1,0 +1,5 @@
+User-agent: *
+Disallow:
+
+# Add your sitemap URL below. If you generate a sitemap.xml, update the URL accordingly.
+Sitemap: https://connorkuljis.com/sitemap.xml
