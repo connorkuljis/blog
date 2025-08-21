@@ -5,7 +5,7 @@ DIST_DIR := ./dist
 SITE_CMD := ./cmd/site/main.go
 CMS_CMD := ./cmd/cms
 CMS_BINARY := ./cms
-DEPLOY_HOST := prod@kuljis.xyz:/home/prod/www/kuljis.xyz/dist/
+DEPLOY_HOST := prod@connorkuljis.com:/home/prod/www/connorkuljis.com/dist/
 SERVE_PORT := 3000
 WATCH_DIRS := assets/ templates/ cmd/ internal/
 
