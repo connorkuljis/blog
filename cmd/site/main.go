@@ -23,7 +23,7 @@ var (
 
 func main() {
 	enableDrafts := flag.Bool("d", false, "enable drafts")
-	configFile := flag.String("config", "config.toml", "path to config file")
+	configFile := flag.String("config", "config.jsonc", "path to config file")
 
 	flag.Parse()
 

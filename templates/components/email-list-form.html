@@ -1,0 +1,21 @@
+{{ define "email-list-form" }}
+<form id="signup">
+	<input type="email" name="email" placeholder="Enter your email" required />
+	<button type="submit">Subscribe</button>
+</form>
+
+<script>
+	document.getElementById("signup").addEventListener("submit", async (e) => {
+		e.preventDefault();
+		const email = e.target.email.value;
+
+		const res = await fetch("{{ .Site.Config.EmailList }}", {
+			method: "POST",
+			headers: {"Content-Type": "application/json"},
+			body: JSON.stringify({email})
+		});
+
+		alert(await res.text());
+	});
+</script>
+{{ end }}

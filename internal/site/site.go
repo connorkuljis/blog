@@ -9,11 +9,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/BurntSushi/toml"
+	"encoding/json"
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/connorkuljis/blog/pkg/site"
 	"github.com/jmoiron/sqlx"
+	"github.com/tailscale/hujson"
 	"github.com/yuin/goldmark"
 )
 
@@ -33,16 +34,25 @@ type MySite struct {
 }
 
 type Config struct {
-	Title     string `toml:"title"`
-	Author    string `toml:"author"`
-	Domain    string `toml:"domain"`
-	DirBuild  string `toml:"dir_build"`
-	DirAssets string `toml:"dir_assets"`
+	Title     string `json:"title"`
+	Author    string `json:"author"`
+	Domain    string `json:"domain"`
+	DirBuild  string `json:"dir_build"`
+	DirAssets string `json:"dir_assets"`
+	EmailList string `json:"email_list"`
 }
 
 func LoadConfig(path string) (*Config, error) {
+	b, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	b, err = hujson.Standardize(b)
+	if err != nil {
+		return nil, err
+	}
 	var config Config
-	if _, err := toml.DecodeFile(path, &config); err != nil {
+	if err := json.Unmarshal(b, &config); err != nil {
 		return nil, err
 	}
 	return &config, nil
