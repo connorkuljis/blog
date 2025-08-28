@@ -10,16 +10,13 @@ SERVE_PORT := 3000
 WATCH_DIRS := assets/ templates/ cmd/ internal/
 
 # Targets
-.PHONY: list-commands site-build-release site-build-draft site-debug site-watch site-deploy site-clean cms-build cms-debug goimports serve
+.PHONY: site-build-draft site-build-release site-debug site-watch site-deploy site-clean cms-build cms-debug goimports serve
 
-list-commands:
-	@cat Makefile
+site-build-draft: site-clean
+	@$(GO) run -v $(SITE_CMD) -d
 
 site-build-release: site-clean
 	@$(GO) run -v $(SITE_CMD)
-
-site-build-draft:
-	@$(GO) run -v $(SITE_CMD) -d
 
 site-debug:
 	$(GO) tool dlv debug $(SITE_CMD) -- -d
@@ -48,4 +45,3 @@ goimports:
 
 serve:
 	$(PYTHON) -m http.server -d $(DIST_DIR) $(SERVE_PORT)
-
