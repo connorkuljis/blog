@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"html/template"
 	"io"
 	"log"
 	"os"
@@ -13,8 +12,6 @@ import (
 	"github.com/connorkuljis/blog/internal/site"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/connorkuljis/blog/internal/templates"
-	"github.com/jmoiron/sqlx"
-	"github.com/yuin/goldmark"
 )
 
 var (
@@ -55,7 +52,7 @@ func main() {
 
 	nerdStats := model.NewNerdStats(time.Now())
 
-	mySite := initialiseKuljisSite(*enableDrafts, md, db, t, cfg, nerdStats)
+	mySite := site.NewSite(*cfg, *enableDrafts, time.Now(), t, db, nerdStats, md)
 
 	err = mySite.Init()
 	if err != nil {
@@ -72,24 +69,4 @@ func main() {
 	}
 
 	log.Println(time.Since(start))
-}
-
-func initialiseKuljisSite(
-	enableDrafts bool,
-	md goldmark.Markdown,
-	db *sqlx.DB,
-	t *template.Template,
-	cfg *site.Config,
-	nerdStats *model.NerdStats,
-) *site.MySite {
-
-	return site.NewSite(
-		*cfg,
-		enableDrafts,
-		time.Now(),
-		t,
-		db,
-		nerdStats,
-		md,
-	)
 }
