@@ -1,0 +1,27 @@
+{{ define "view" }}
+<main>
+	<div>
+		<article>
+			<header>
+				<h2>Archive</h2>
+			</header>
+
+			<main>
+				<div>
+					{{- if .Site.Entries }}
+						<ul>
+							{{- range .Site.Entries }}
+							<li>
+								{{ template "entry-preview" . }}
+							</li>
+							{{- end }}
+						</ul>
+					{{- else }}
+						<p>No entries yet.</p>
+					{{- end }}
+				</div>
+			</main>
+		</article>
+	</div>
+</main>
+{{ end }}
