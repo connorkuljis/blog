@@ -51,7 +51,8 @@ func main() {
 				log.Fatal(err)
 			}
 			for _, t := range tags {
-				app.Tags = append(app.Tags, &model.Tag{Tag: t})
+				mTag := model.NewTag(t)
+				app.Tags = append(app.Tags, mTag)
 			}
 
 			categories, err := store.NewCategoryRepo(db).ReadAllCategories()
@@ -630,7 +631,7 @@ func updateTag(ctx context.Context, c *cli.Command) error {
 	name = strings.TrimSpace(name)
 	tag.Name = name
 
-	err = store.NewTagRepo(app.DB).UpdateTag(tag.Tag)
+	err = store.NewTagRepo(app.DB).UpdateTag(tag.ToStoreTag())
 	if err != nil {
 		return err
 	}
