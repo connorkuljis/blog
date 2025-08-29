@@ -35,7 +35,7 @@ func (p EntryPage) Title() string {
 }
 
 func (p EntryPage) FileName() string {
-	return filepath.Join(p.Entry.Permalink, "index.html")
+	return filepath.Join(p.Entry.Permalink(), "index.html")
 }
 
 func (p EntryPage) TemplateName() string {

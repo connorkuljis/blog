@@ -2,9 +2,7 @@ package model
 
 import (
 	"database/sql"
-	"fmt"
 	"html/template"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -20,17 +18,14 @@ type Entry struct {
 	FeaturedImageURL string
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
+	Category         *Category
+	Tags             []*Tag
 
-	Category *Category
-	Tags     []*Tag
-
-	Markdown  template.HTML
-	Permalink string
-	WordCount int
+	Markdown template.HTML
 }
 
 func NewEntry(e *store.Entry, c *Category, t []*Tag) *Entry {
-	entry := Entry{
+	return &Entry{
 		ID:               e.ID,
 		Title:            e.Title,
 		Content:          e.Content.String,
@@ -41,20 +36,8 @@ func NewEntry(e *store.Entry, c *Category, t []*Tag) *Entry {
 		Category:         c,
 		Tags:             t,
 	}
-
-	// permalink
-	timestamp := e.CreatedAt.Format("2006-01-02")
-	title := util.Slugify(e.Title)
-	slug := fmt.Sprintf("%s-%s", timestamp, title)
-	entry.Permalink = filepath.Join(c.Permalink, slug)
-
-	// word count
-	entry.WordCount = len(strings.Split(e.Content.String, " "))
-
-	return &entry
 }
 
-// ToStoreEntry maps this model.Entry to a store.Entry.
 func (m *Entry) ToStoreEntry() *store.Entry {
 	nullable := func(s string) sql.NullString {
 		if s == "" {
@@ -78,4 +61,12 @@ func (m *Entry) ToStoreEntry() *store.Entry {
 		CreatedAt:        m.CreatedAt,
 		UpdatedAt:        m.UpdatedAt,
 	}
+}
+
+func (e *Entry) Permalink() string {
+	return e.Category.Permalink() + "/" + e.CreatedAt.Format("2006-01-02") + "-" + util.Slugify(e.Title)
+}
+
+func (e *Entry) WordCount() int {
+	return len(strings.Split(e.Content, " "))
 }
