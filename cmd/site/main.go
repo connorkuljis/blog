@@ -28,24 +28,24 @@ func main() {
 	if *flagEnableDrafts {
 		cfg.EnableDrafts = *flagEnableDrafts
 	}
-
 	db, err := store.Connect()
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	categoryRepo := store.NewCategoryRepo(db)
 	entryRepo := store.NewEntryRepo(db)
 	tagRepo := store.NewTagRepo(db)
 
-	nerdStats := model.NewNerdStats(time.Now())
-	markdown := markdown.NewMarkdown()
-	renderer := templates.NewRenderer()
+	nerdStats := model.NewNerdStats(start)
+	templateRenderer := templates.NewRenderer()
+	markdownRenderer := markdown.NewRenderer()
 
 	mySite, err := site.NewSite(
 		*cfg,
 		start,
-		renderer,
-		markdown,
+		templateRenderer,
+		markdownRenderer,
 		nerdStats,
 		categoryRepo,
 		entryRepo,

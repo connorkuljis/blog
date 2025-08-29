@@ -23,9 +23,9 @@
 					{{ end }}
 				</div>
 
-				{{ if .Entry.FeaturedImageURL.Valid }}
+				{{ if .Entry.FeaturedImageURL }}
 				<figure>
-					<img src="{{ .Entry.FeaturedImageURL.String }}" />
+					<img src="{{ .Entry.FeaturedImageURL }}" />
 				</figure>
 				{{ end }}
 			</header>
@@ -43,11 +43,11 @@
 
 				<div>
 					{{ if .Prev }}
-						{{ template "entry-preview" .Prev }}
+					{{ template "entry-preview" .Prev }}
 					{{ end }}
 
 					{{ if .Next }}
-						{{ template "entry-preview" .Next }}
+					{{ template "entry-preview" .Next }}
 					{{ end }}
 				</div>
 			</footer>

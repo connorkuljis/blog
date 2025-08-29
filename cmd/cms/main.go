@@ -13,14 +13,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/connorkuljis/blog/internal/markdown"
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/jmoiron/sqlx"
 	"github.com/urfave/cli/v3"
-	"github.com/yuin/goldmark"
-	"github.com/yuin/goldmark/extension"
-	"github.com/yuin/goldmark/parser"
-	"github.com/yuin/goldmark/renderer/html"
 )
 
 type App struct {
@@ -34,24 +31,12 @@ const KeyApp = "app"
 
 var ErrSelectionCancelled = errors.New("selection cancelled by user")
 
-var md = goldmark.New(
-	goldmark.WithExtensions(
-		extension.GFM,
-	),
-	goldmark.WithParserOptions(
-		parser.WithAutoHeadingID(),
-	),
-	goldmark.WithRendererOptions(
-		html.WithHardWraps(),
-		html.WithXHTML(),
-	),
-)
-
 func main() {
 	cmd := &cli.Command{
 		Name:  "cms",
 		Usage: "A portable and simple content management system.",
 		Before: func(ctx context.Context, c *cli.Command) (context.Context, error) {
+			markdownRenderer := markdown.NewRenderer()
 			db, err := store.Connect()
 			if err != nil {
 				log.Fatal(err)
@@ -61,33 +46,42 @@ func main() {
 				DB: db,
 			}
 
-			categories, err := store.NewCategoryRepo(db).ReadAllCategories()
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			for _, c := range categories {
-				entries, err := store.NewEntryRepo(db).ReadAllByCategoryID(c.ID, true)
-				if err != nil {
-					log.Fatal(err)
-				}
-
-				mCategory := model.NewCategory(c)
-				for _, e := range entries {
-					mEntry := model.NewEntry(e, mCategory, md)
-					mCategory.AddEntry(mEntry)
-					app.Entries = append(app.Entries, mEntry)
-				}
-
-				app.Categories = append(app.Categories, mCategory)
-			}
-
 			tags, err := store.NewTagRepo(db).GetTags()
 			if err != nil {
 				log.Fatal(err)
 			}
 			for _, t := range tags {
 				app.Tags = append(app.Tags, &model.Tag{Tag: t})
+			}
+
+			categories, err := store.NewCategoryRepo(db).ReadAllCategories()
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			for _, c := range categories {
+				mCategory := model.NewCategory(c)
+				app.Categories = append(app.Categories, mCategory)
+
+				entries, err := store.NewEntryRepo(db).ReadAllByCategoryID(c.ID, true)
+				if err != nil {
+					log.Fatal(err)
+				}
+				for _, e := range entries {
+					tags, err := store.NewTagRepo(db).GetTagsForEntry(e.ID)
+					if err != nil {
+						log.Fatal(err)
+					}
+					var mTags []*model.Tag
+					for _, t := range tags {
+						mTags = append(mTags, model.NewTag(t))
+					}
+
+					mEntry := model.NewEntry(e, mCategory, mTags)
+					mEntry.Markdown = markdownRenderer.RenderHTML(mEntry.Content)
+					mCategory.AddEntry(mEntry)
+					app.Entries = append(app.Entries, mEntry)
+				}
 			}
 
 			// Sort entries by creation date (newest first)
@@ -274,32 +268,23 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 			}
 			entry.Title = title
 		case 2:
-			description, err := readContentFromEditor(entry.Description.String)
+			description, err := readContentFromEditor(entry.Description)
 			if err != nil {
 				return err
 			}
-			entry.Description.String = description
-			if !entry.Description.Valid && len(description) > 0 {
-				entry.Description.Valid = true
-			}
+			entry.Description = description
 		case 3:
-			content, err := readContentFromEditor(entry.Content.String)
+			content, err := readContentFromEditor(entry.Content)
 			if err != nil {
 				return err
 			}
-			entry.Content.String = content
-			if !entry.Content.Valid && len(content) > 0 {
-				entry.Content.Valid = true
-			}
+			entry.Content = content
 		case 4:
-			featuredImageUrl, err := readContentFromEditor(entry.FeaturedImageURL.String)
+			featuredImageUrl, err := readContentFromEditor(entry.FeaturedImageURL)
 			if err != nil {
 				return err
 			}
-			entry.FeaturedImageURL.String = featuredImageUrl
-			if !entry.FeaturedImageURL.Valid && len(featuredImageUrl) > 0 {
-				entry.FeaturedImageURL.Valid = true
-			}
+			entry.FeaturedImageURL = featuredImageUrl
 		case 5:
 			err := manageTagsForEntry(reader, app, entry)
 			if err != nil {
@@ -310,7 +295,7 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 			continue
 		}
 
-		err = store.NewEntryRepo(app.DB).UpdateEntry(entry.Entry)
+		err = store.NewEntryRepo(app.DB).UpdateEntry(entry)
 		if err != nil {
 			return err
 		}

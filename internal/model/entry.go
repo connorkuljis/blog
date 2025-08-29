@@ -1,40 +1,45 @@
 package model
 
 import (
-	"bytes"
 	"fmt"
 	"html/template"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/connorkuljis/blog/internal/util"
-	"github.com/yuin/goldmark"
 )
 
 type Entry struct {
-	*store.Entry
+	ID               int64
+	Title            string
+	Content          string
+	Description      string
+	FeaturedImageURL string
+	CreatedAt        time.Time
+	UpdatedAt        time.Time
 
-	Category  *Category
-	Tags      []*Tag
+	Category *Category
+	Tags     []*Tag
+
 	Markdown  template.HTML
 	Permalink string
 	WordCount int
 }
 
-func NewEntry(e *store.Entry, c *Category, parser goldmark.Markdown) *Entry {
+func NewEntry(e *store.Entry, c *Category, t []*Tag) *Entry {
 	entry := Entry{
-		Entry:    e,
-		Category: c,
+		ID:               e.ID,
+		Title:            e.Title,
+		Content:          e.Content.String,
+		Description:      e.Description.String,
+		FeaturedImageURL: e.FeaturedImageURL.String,
+		CreatedAt:        e.CreatedAt,
+		UpdatedAt:        e.UpdatedAt,
+		Category:         c,
+		Tags:             t,
 	}
-
-	// markdown
-	var buf bytes.Buffer
-	err := parser.Convert([]byte(e.Content.String), &buf)
-	if err != nil {
-		panic(err)
-	}
-	entry.Markdown = template.HTML(buf.String())
 
 	// permalink
 	timestamp := e.CreatedAt.Format("2006-01-02")

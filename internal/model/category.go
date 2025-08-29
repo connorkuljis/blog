@@ -9,7 +9,9 @@ import (
 )
 
 type Category struct {
-	*store.Category
+	ID          int64
+	Title       string
+	Description string
 
 	Permalink string
 	Entries   []*Entry
@@ -17,9 +19,11 @@ type Category struct {
 
 func NewCategory(c *store.Category) *Category {
 	return &Category{
-		Category:  c,
-		Entries:   []*Entry{},
-		Permalink: "/" + util.Slugify(c.Title),
+		ID:          c.ID,
+		Title:       c.Title,
+		Description: c.Description,
+		Entries:     []*Entry{},
+		Permalink:   "/" + util.Slugify(c.Title),
 	}
 }
 

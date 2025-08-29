@@ -9,19 +9,19 @@ import (
 	"strings"
 	"time"
 
+	"github.com/connorkuljis/blog/internal/markdown"
 	"github.com/connorkuljis/blog/internal/model"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/connorkuljis/blog/internal/templates"
 	"github.com/connorkuljis/blog/pkg/site"
-	"github.com/yuin/goldmark"
 )
 
 type MySite struct {
 	Config    Config
 	CreatedAt time.Time
 
-	Renderer *templates.Renderer
-	Markdown goldmark.Markdown
+	TemplateRenderer *templates.Renderer
+	MarkdownRenderer *markdown.Renderer
 
 	NerdStats *model.NerdStats
 
@@ -40,26 +40,26 @@ func NewSite(
 	config Config,
 	createdAt time.Time,
 	renderer *templates.Renderer,
-	markdown goldmark.Markdown,
+	markdown *markdown.Renderer,
 	nerdStats *model.NerdStats,
 	categoryRepo *store.CategoryRepo,
 	entryRepo *store.EntryRepo,
 	tagRepo *store.TagRepo,
 ) (*MySite, error) {
 	site := &MySite{
-		Config:        config,
-		CreatedAt:     createdAt,
-		Renderer:      renderer,
-		Markdown:      markdown,
-		NerdStats:     nerdStats,
-		CategoryRepo:  categoryRepo,
-		EntryRepo:     entryRepo,
-		TagRepo:       tagRepo,
-		Categories:    make([]*model.Category, 0),
-		Entries:       make([]*model.Entry, 0),
-		RecentEntries: make([]*model.Entry, 0),
-		Tags:          make([]*model.Tag, 0),
-		TagsMap:       make(map[string]*model.Tag),
+		Config:           config,
+		CreatedAt:        createdAt,
+		TemplateRenderer: renderer,
+		MarkdownRenderer: markdown,
+		NerdStats:        nerdStats,
+		CategoryRepo:     categoryRepo,
+		EntryRepo:        entryRepo,
+		TagRepo:          tagRepo,
+		Categories:       make([]*model.Category, 0),
+		Entries:          make([]*model.Entry, 0),
+		RecentEntries:    make([]*model.Entry, 0),
+		Tags:             make([]*model.Tag, 0),
+		TagsMap:          make(map[string]*model.Tag),
 	}
 
 	return site, nil
@@ -88,10 +88,10 @@ func (s *MySite) Init() error {
 		return err
 	}
 
-	for _, tag := range tags {
-		mTag := model.NewTag(tag)
+	for _, t := range tags {
+		mTag := model.NewTag(t)
 		s.Tags = append(s.Tags, mTag)
-		s.TagsMap[tag.Name] = mTag
+		s.TagsMap[t.Name] = mTag
 	}
 
 	log.Println("[INIT]", "loading categories")
@@ -99,29 +99,32 @@ func (s *MySite) Init() error {
 	if err != nil {
 		return err
 	}
-	for _, category := range categories {
-		mCategory := model.NewCategory(category)
+	for _, c := range categories {
+		mCategory := model.NewCategory(c)
 		s.Categories = append(s.Categories, mCategory)
 
 		log.Println("[INIT]", "loading entries for", mCategory.Title)
-		entries, err := s.EntryRepo.ReadAllByCategoryID(category.ID, s.Config.EnableDrafts)
+		entries, err := s.EntryRepo.ReadAllByCategoryID(c.ID, s.Config.EnableDrafts)
 		if err != nil {
 			return err
 		}
 
-		for _, entry := range entries {
-			mEntry := model.NewEntry(entry, mCategory, s.Markdown)
-			s.Entries = append(s.Entries, mEntry)
-			mCategory.AddEntry(mEntry)
-
-			tags, err := s.TagRepo.GetTagsForEntry(mEntry.ID)
+		for _, e := range entries {
+			tags, err := s.TagRepo.GetTagsForEntry(e.ID)
 			if err != nil {
 				return err
 			}
-
+			var mTags []*model.Tag
 			for _, t := range tags {
-				tag := model.NewTag(t)
-				mEntry.Tags = append(mEntry.Tags, tag)
+				mTags = append(mTags, model.NewTag(t))
+			}
+
+			mEntry := model.NewEntry(e, mCategory, mTags)
+			mEntry.Markdown = s.MarkdownRenderer.RenderHTML(mEntry.Content)
+			mCategory.AddEntry(mEntry)
+
+			s.Entries = append(s.Entries, mEntry)
+			for _, t := range mEntry.Tags {
 				s.TagsMap[t.Name].Entries = append(s.TagsMap[t.Name].Entries, mEntry)
 			}
 		}
@@ -202,7 +205,7 @@ func (s *MySite) Render(pages []site.Page) error {
 		}
 		defer f.Close()
 
-		tmpl, ok := s.Renderer.TSet[page.TemplateName()]
+		tmpl, ok := s.TemplateRenderer.TSet[page.TemplateName()]
 		if !ok {
 			return fmt.Errorf("template not found in TSet: %s", page.TemplateName())
 		}
