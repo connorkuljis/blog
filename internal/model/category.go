@@ -21,18 +21,18 @@ func NewCategory(c *store.Category) *Category {
 	}
 }
 
-func (c *Category) ToStoreCategory() *store.Category {
-	return &store.Category{
-		ID:          c.ID,
-		Title:       c.Title,
-		Description: c.Description,
-	}
-}
-
 func (c *Category) Permalink() string {
 	return "/" + util.Slugify(c.Title)
 }
 
 func (c *Category) AddEntry(e ...*Entry) {
 	c.Entries = append(c.Entries, e...)
+}
+
+func (c *Category) ToStoreCategory() *store.Category {
+	return &store.Category{
+		ID:          c.ID,
+		Title:       c.Title,
+		Description: c.Description,
+	}
 }

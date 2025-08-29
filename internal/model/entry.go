@@ -21,7 +21,7 @@ type Entry struct {
 	Category         *Category
 	Tags             []*Tag
 
-	Markdown template.HTML
+	Markdown template.HTML // TODO: move this as receiver method
 }
 
 func NewEntry(e *store.Entry, c *Category, t []*Tag) *Entry {
@@ -36,6 +36,13 @@ func NewEntry(e *store.Entry, c *Category, t []*Tag) *Entry {
 		Category:         c,
 		Tags:             t,
 	}
+}
+func (e *Entry) Permalink() string {
+	return e.Category.Permalink() + "/" + e.CreatedAt.Format("2006-01-02") + "-" + util.Slugify(e.Title)
+}
+
+func (e *Entry) WordCount() int {
+	return len(strings.Split(e.Content, " "))
 }
 
 func (m *Entry) ToStoreEntry() *store.Entry {
@@ -61,12 +68,4 @@ func (m *Entry) ToStoreEntry() *store.Entry {
 		CreatedAt:        m.CreatedAt,
 		UpdatedAt:        m.UpdatedAt,
 	}
-}
-
-func (e *Entry) Permalink() string {
-	return e.Category.Permalink() + "/" + e.CreatedAt.Format("2006-01-02") + "-" + util.Slugify(e.Title)
-}
-
-func (e *Entry) WordCount() int {
-	return len(strings.Split(e.Content, " "))
 }
