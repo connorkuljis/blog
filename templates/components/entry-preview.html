@@ -4,6 +4,7 @@
 .entry-preview__link { display: block; color: inherit; text-decoration: none; }
 .entry-preview:hover { background: #fafafa; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
 .entry-preview__header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.entry-preview__cat { display: inline-block; padding: 0.125rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.5rem; }
 .entry-preview__title { margin: 0; font-size: 1.125rem; line-height: 1.4; }
 .entry-preview__date { color: #6b7280; font-size: 0.9rem; }
 .entry-preview__desc { margin: 0.5rem 0 0.75rem; color: #374151; }
@@ -11,10 +12,16 @@
 .entry-preview__tags a { margin-right: 0.5rem; color: #2563eb; text-decoration: none; }
 .entry-preview__tags a:hover { text-decoration: underline; }
 .entry-preview__cta { margin: 0.25rem 0 0; color: #2563eb; font-weight: 500; }
+/* category color variants */
+.entry-preview.cat-blog { background:#eef2ff; color:#1e3a8a; }       /* Blog */
+.entry-preview.cat-til { background:#ecfeff; color:#155e75; }        /* TIL */
+.entry-preview.cat-projects { background:#f0fdf4; color:#166534; }   /* Projects */
+.entry-preview.cat-journal { background:#fef9c3; color:#854d0e; }    /* Journal */
 </style>
-<article class="entry-preview">
+<article class="entry-preview cat-{{ slugify .Category.Title }}">
 	<a class="entry-preview__link" href="{{ .Permalink }}">
 		<header class="entry-preview__header">
+			<span class="entry-preview__cat">{{ .Category.Title }}</span>
 			<h4 class="entry-preview__title">{{ .Title }}</h4>
 			<time class="entry-preview__date">{{ .CreatedAt.Format "2006-01-02" }}</time>
 		</header>
