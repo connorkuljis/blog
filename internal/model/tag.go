@@ -19,3 +19,14 @@ func NewTag(t *store.Tag) *Tag {
 		Permalink: "/" + filepath.Join("tags", t.Name),
 	}
 }
+
+// ToStoreTag maps this model.Tag to a store.Tag.
+func (t *Tag) ToStoreTag() *store.Tag {
+	if t == nil || t.Tag == nil {
+		return nil
+	}
+	return &store.Tag{
+		ID:   t.ID,
+		Name: t.Name,
+	}
+}

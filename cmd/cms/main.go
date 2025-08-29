@@ -295,7 +295,7 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 			continue
 		}
 
-		err = store.NewEntryRepo(app.DB).UpdateEntry(entry)
+		err = store.NewEntryRepo(app.DB).UpdateEntry(entry.ToStoreEntry())
 		if err != nil {
 			return err
 		}
@@ -440,7 +440,7 @@ func updateCategory(ctx context.Context, c *cli.Command) error {
 			continue
 		}
 
-		err = store.NewCategoryRepo(app.DB).UpdateCategory(selectedCategory.Category)
+		err = store.NewCategoryRepo(app.DB).UpdateCategory(selectedCategory.ToStoreCategory())
 		if err != nil {
 			return err
 		}

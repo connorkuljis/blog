@@ -1,6 +1,7 @@
 package model
 
 import (
+	"database/sql"
 	"fmt"
 	"html/template"
 	"path/filepath"
@@ -51,4 +52,30 @@ func NewEntry(e *store.Entry, c *Category, t []*Tag) *Entry {
 	entry.WordCount = len(strings.Split(e.Content.String, " "))
 
 	return &entry
+}
+
+// ToStoreEntry maps this model.Entry to a store.Entry.
+func (m *Entry) ToStoreEntry() *store.Entry {
+	nullable := func(s string) sql.NullString {
+		if s == "" {
+			return sql.NullString{}
+		}
+		return sql.NullString{String: s, Valid: true}
+	}
+
+	var categoryID int64
+	if m.Category != nil {
+		categoryID = m.Category.ID
+	}
+
+	return &store.Entry{
+		ID:               m.ID,
+		CategoryID:       categoryID,
+		Title:            m.Title,
+		Content:          nullable(m.Content),
+		Description:      nullable(m.Description),
+		FeaturedImageURL: nullable(m.FeaturedImageURL),
+		CreatedAt:        m.CreatedAt,
+		UpdatedAt:        m.UpdatedAt,
+	}
 }

@@ -27,6 +27,18 @@ func NewCategory(c *store.Category) *Category {
 	}
 }
 
+// ToStoreCategory maps this model.Category to a store.Category.
+func (c *Category) ToStoreCategory() *store.Category {
+	if c == nil {
+		return nil
+	}
+	return &store.Category{
+		ID:          c.ID,
+		Title:       c.Title,
+		Description: c.Description,
+	}
+}
+
 func (c *Category) AddEntry(e ...*Entry) {
 	c.Entries = append(c.Entries, e...)
 }
