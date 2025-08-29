@@ -38,7 +38,7 @@ func NewEntry(e *store.Entry, c *Category, t []*Tag) *Entry {
 	}
 }
 func (e *Entry) Permalink() string {
-	return e.Category.Permalink() + "/" + e.CreatedAt.Format("2006-01-02") + "/" + util.Slugify(e.Title)
+	return e.Category.Permalink() + "/" + util.Slugify(e.Title)
 }
 
 func (e *Entry) WordCount() int {
