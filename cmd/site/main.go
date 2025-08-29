@@ -2,9 +2,7 @@ package main
 
 import (
 	"flag"
-	"io"
 	"log"
-	"os"
 	"time"
 
 	"github.com/connorkuljis/blog/internal/markdown"
@@ -15,44 +13,41 @@ import (
 )
 
 var (
-	md = markdown.NewMarkdown()
+	md               = markdown.NewMarkdown()
+	enableDraftsFlag = flag.Bool("d", false, "enable drafts")
+	configFlag       = flag.String("config", "config.jsonc", "path to config file")
 )
 
 func main() {
-	enableDrafts := flag.Bool("d", false, "enable drafts")
-	configFile := flag.String("config", "config.jsonc", "path to config file")
-
 	flag.Parse()
 
-	// Setup file logging
-	os.MkdirAll("logs", 0755)
-	logFile, err := os.OpenFile("logs/site-build.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatal("Failed to open log file:", err)
-	}
-	defer logFile.Close()
+	start := time.Now()
 
-	// Set up multi-writer to log to both stdout and file
-	multiWriter := io.MultiWriter(os.Stdout, logFile)
-	log.SetOutput(multiWriter)
-
-	log.Println("Enable drafts:", *enableDrafts)
-
-	cfg, err := site.LoadConfig(*configFile)
+	var filename string = *configFlag
+	cfg, err := site.LoadConfig(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("Loaded config:", filename)
 
 	db, err := store.Connect()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	t := templates.NewTemplate()
-
 	nerdStats := model.NewNerdStats(time.Now())
 
-	mySite := site.NewSite(*cfg, *enableDrafts, time.Now(), t, db, nerdStats, md)
+	renderer := templates.NewRenderer()
+
+	mySite := site.NewSite(
+		*cfg,
+		*enableDraftsFlag,
+		time.Now(),
+		db,
+		nerdStats,
+		md,
+		renderer,
+	)
 
 	err = mySite.Init()
 	if err != nil {
@@ -60,8 +55,6 @@ func main() {
 	}
 
 	pages := mySite.Build()
-
-	start := time.Now()
 
 	err = mySite.Render(pages)
 	if err != nil {
