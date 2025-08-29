@@ -66,19 +66,23 @@ func NewSite(
 }
 
 func (s *MySite) Init() error {
+	log.Println("[INIT]", s.Config.DirBuild, "removing")
 	if err := os.RemoveAll(s.Config.DirBuild); err != nil {
 		return err
 	}
 
+	log.Println("[INIT]", s.Config.DirBuild, "creating")
 	if err := os.MkdirAll(s.Config.DirBuild, os.ModePerm); err != nil {
 		return err
 	}
 
+	log.Println("[INIT]", s.Config.DirAssets, "->", s.Config.DirBuild)
 	staticAssets := os.DirFS(s.Config.DirAssets)
 	if err := os.CopyFS(s.Config.DirBuild, staticAssets); err != nil {
 		return err
 	}
 
+	log.Println("[INIT]", "loading tags")
 	tags, err := s.TagRepo.GetTags()
 	if err != nil {
 		return err
@@ -90,15 +94,16 @@ func (s *MySite) Init() error {
 		s.TagsMap[tag.Name] = mTag
 	}
 
+	log.Println("[INIT]", "loading categories")
 	categories, err := s.CategoryRepo.ReadAllCategories()
 	if err != nil {
 		return err
 	}
-
 	for _, category := range categories {
 		mCategory := model.NewCategory(category)
 		s.Categories = append(s.Categories, mCategory)
 
+		log.Println("[INIT]", "loading entries for", mCategory.Title)
 		entries, err := s.EntryRepo.ReadAllByCategoryID(category.ID, s.Config.EnableDrafts)
 		if err != nil {
 			return err
@@ -122,10 +127,12 @@ func (s *MySite) Init() error {
 		}
 	}
 
+	log.Println("[INIT]", "sorting entries by date")
 	sort.Slice(s.Entries, func(i, j int) bool {
 		return s.Entries[i].CreatedAt.After(s.Entries[j].CreatedAt)
 	})
 
+	log.Println("[INIT]", "collecting recent entries")
 	s.RecentEntries = s.Entries
 	if len(s.RecentEntries) > 5 {
 		s.RecentEntries = s.Entries[:5]
@@ -137,12 +144,16 @@ func (s *MySite) Init() error {
 func (s *MySite) Build() []site.Page {
 	var pages = []site.Page{}
 
+	log.Println("[BUILD]", "constructing Home page")
 	pages = append(pages, NewHomePage(s))
+	log.Println("[BUILD]", "constructing About page")
 	pages = append(pages, NewAboutPage(s))
 
 	for _, category := range s.Categories {
+		log.Println("[BUILD]", "constructing", category.Title, "page")
 		pages = append(pages, NewCategoryPage(s, category))
 
+		log.Printf("[BUILD] constructing (%d) Entry pages for %s", len(category.Entries), category.Title)
 		for i, entry := range category.Entries {
 			var next *model.Entry
 			var prev *model.Entry
@@ -161,9 +172,11 @@ func (s *MySite) Build() []site.Page {
 		}
 	}
 
+	log.Println("[BUILD]", "constructing Tags page")
 	pages = append(pages, NewTagsPage(s, s.Tags))
 
 	for _, tag := range s.Tags {
+		log.Println("[BUILD]", "constructing Tag page for", tag.Name)
 		pages = append(pages, NewTagPage(s, tag))
 	}
 
@@ -173,6 +186,7 @@ func (s *MySite) Build() []site.Page {
 }
 
 func (s *MySite) Render(pages []site.Page) error {
+	log.Printf("[RENDER] rendering (%d) pages to %s", len(pages), s.Config.DirBuild)
 	for _, page := range pages {
 		filename := filepath.Join(s.Config.DirBuild, page.FileName())
 		dir := filepath.Dir(filename)
@@ -193,6 +207,7 @@ func (s *MySite) Render(pages []site.Page) error {
 			return err
 		}
 	}
+	log.Println("[RENDER] OK")
 	return nil
 }
 
@@ -215,6 +230,6 @@ func (s *MySite) GenerateSiteMap(pages []site.Page) error {
 		return fmt.Errorf("failed to write sitemap.xml: %w", err)
 	}
 
-	log.Println("created: sitemap.xml")
+	log.Println("[SITEMAP] generated", filename)
 	return nil
 }
