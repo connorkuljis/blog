@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -12,61 +13,56 @@ import (
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/connorkuljis/blog/internal/templates"
 	"github.com/connorkuljis/blog/pkg/site"
-	"github.com/jmoiron/sqlx"
 	"github.com/yuin/goldmark"
 )
 
 type MySite struct {
-	EnableDrafts bool
+	Config    Config
+	CreatedAt time.Time
 
-	Config        Config
-	CreatedAt     time.Time
-	Renderer      *templates.Renderer
+	Renderer *templates.Renderer
+	Markdown goldmark.Markdown
+
+	NerdStats *model.NerdStats
+
+	CategoryRepo *store.CategoryRepo
+	EntryRepo    *store.EntryRepo
+	TagRepo      *store.TagRepo
+
 	Categories    []*model.Category
-	CategoriesMap map[string]*model.Category
+	Entries       []*model.Entry
+	RecentEntries []*model.Entry
 	Tags          []*model.Tag
 	TagsMap       map[string]*model.Tag
-	NerdStats     *model.NerdStats
-}
-
-type Config struct {
-	Title     string `json:"title"`
-	Author    string `json:"author"`
-	Domain    string `json:"domain"`
-	DirBuild  string `json:"dir_build"`
-	DirAssets string `json:"dir_assets"`
-	EmailList string `json:"email_list"`
 }
 
 func NewSite(
 	config Config,
-	enableDrafts bool,
 	createdAt time.Time,
-	db *sqlx.DB,
-	nerdStats *model.NerdStats,
-	markdown goldmark.Markdown,
 	renderer *templates.Renderer,
-) *MySite {
+	markdown goldmark.Markdown,
+	nerdStats *model.NerdStats,
+	categoryRepo *store.CategoryRepo,
+	entryRepo *store.EntryRepo,
+	tagRepo *store.TagRepo,
+) (*MySite, error) {
 	site := &MySite{
-		Config:    config,
-		CreatedAt: createdAt,
-		Renderer:  renderer,
-		NerdStats: nerdStats,
+		Config:        config,
+		CreatedAt:     createdAt,
+		Renderer:      renderer,
+		Markdown:      markdown,
+		NerdStats:     nerdStats,
+		CategoryRepo:  categoryRepo,
+		EntryRepo:     entryRepo,
+		TagRepo:       tagRepo,
+		Categories:    make([]*model.Category, 0),
+		Entries:       make([]*model.Entry, 0),
+		RecentEntries: make([]*model.Entry, 0),
+		Tags:          make([]*model.Tag, 0),
+		TagsMap:       make(map[string]*model.Tag),
 	}
 
-	categoryRepo := store.NewCategoryRepo(db)
-	entryRepo := store.NewEntryRepo(db)
-	tagRepo := store.NewTagRepo(db)
-
-	if err := site.loadTags(tagRepo); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := site.loadCategories(categoryRepo, entryRepo, tagRepo, enableDrafts, markdown); err != nil {
-		log.Fatal(err)
-	}
-
-	return site
+	return site, nil
 }
 
 func (s *MySite) Init() error {
@@ -81,6 +77,58 @@ func (s *MySite) Init() error {
 	staticAssets := os.DirFS(s.Config.DirAssets)
 	if err := os.CopyFS(s.Config.DirBuild, staticAssets); err != nil {
 		return err
+	}
+
+	tags, err := s.TagRepo.GetTags()
+	if err != nil {
+		return err
+	}
+
+	for _, tag := range tags {
+		mTag := model.NewTag(tag)
+		s.Tags = append(s.Tags, mTag)
+		s.TagsMap[tag.Name] = mTag
+	}
+
+	categories, err := s.CategoryRepo.ReadAllCategories()
+	if err != nil {
+		return err
+	}
+
+	for _, category := range categories {
+		mCategory := model.NewCategory(category)
+		s.Categories = append(s.Categories, mCategory)
+
+		entries, err := s.EntryRepo.ReadAllByCategoryID(category.ID, s.Config.EnableDrafts)
+		if err != nil {
+			return err
+		}
+
+		for _, entry := range entries {
+			mEntry := model.NewEntry(entry, mCategory, s.Markdown)
+			s.Entries = append(s.Entries, mEntry)
+			mCategory.AddEntry(mEntry)
+
+			tags, err := s.TagRepo.GetTagsForEntry(mEntry.ID)
+			if err != nil {
+				return err
+			}
+
+			for _, t := range tags {
+				tag := model.NewTag(t)
+				mEntry.Tags = append(mEntry.Tags, tag)
+				s.TagsMap[t.Name].Entries = append(s.TagsMap[t.Name].Entries, mEntry)
+			}
+		}
+	}
+
+	sort.Slice(s.Entries, func(i, j int) bool {
+		return s.Entries[i].CreatedAt.After(s.Entries[j].CreatedAt)
+	})
+
+	s.RecentEntries = s.Entries
+	if len(s.RecentEntries) > 5 {
+		s.RecentEntries = s.Entries[:5]
 	}
 
 	return nil
@@ -121,11 +169,6 @@ func (s *MySite) Build() []site.Page {
 
 	s.NerdStats.PageCount = len(pages)
 
-	// Generate sitemap.xml after building pages
-	if err := s.generateSiteMap(pages); err != nil {
-		log.Printf("failed to generate sitemap: %v", err)
-	}
-
 	return pages
 }
 
@@ -153,23 +196,8 @@ func (s *MySite) Render(pages []site.Page) error {
 	return nil
 }
 
-func (s *MySite) loadTags(tagRepo *store.TagRepo) error {
-	s.TagsMap = make(map[string]*model.Tag)
-	tags, err := tagRepo.GetTags()
-	if err != nil {
-		return err
-	}
-
-	for _, t := range tags {
-		tag := model.NewTag(t)
-		s.Tags = append(s.Tags, tag)
-		s.TagsMap[t.Name] = tag
-	}
-	return nil
-}
-
 // generateSiteMap creates a sitemap.xml file in the build directory
-func (s *MySite) generateSiteMap(pages []site.Page) error {
+func (s *MySite) GenerateSiteMap(pages []site.Page) error {
 	var b strings.Builder
 	b.WriteString(`<?xml version="1.0" encoding="UTF-8"?>` + "\n")
 	b.WriteString(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` + "\n")
@@ -188,46 +216,5 @@ func (s *MySite) generateSiteMap(pages []site.Page) error {
 	}
 
 	log.Println("created: sitemap.xml")
-	return nil
-}
-
-func (s *MySite) loadCategories(
-	categoryRepo *store.CategoryRepo,
-	entryRepo *store.EntryRepo,
-	tagRepo *store.TagRepo,
-	enableDrafts bool,
-	markdown goldmark.Markdown,
-) error {
-	categories, err := categoryRepo.ReadAllCategories()
-	if err != nil {
-		return err
-	}
-
-	for _, c := range categories {
-		mCategory := model.NewCategory(c)
-		s.Categories = append(s.Categories, mCategory)
-
-		entries, err := entryRepo.ReadAllByCategoryID(c.ID, enableDrafts)
-		if err != nil {
-			return err
-		}
-
-		for _, e := range entries {
-			mEntry := model.NewEntry(e, mCategory, markdown)
-
-			tags, err := tagRepo.GetTagsForEntry(e.ID)
-			if err != nil {
-				return err
-			}
-
-			for _, t := range tags {
-				tag := model.NewTag(t)
-				mEntry.Tags = append(mEntry.Tags, tag)
-				s.TagsMap[t.Name].Entries = append(s.TagsMap[t.Name].Entries, mEntry)
-			}
-
-			mCategory.AddEntry(mEntry)
-		}
-	}
 	return nil
 }

@@ -13,53 +13,59 @@ import (
 )
 
 var (
-	md               = markdown.NewMarkdown()
-	enableDraftsFlag = flag.Bool("d", false, "enable drafts")
-	configFlag       = flag.String("config", "config.jsonc", "path to config file")
+	flagEnableDrafts   = flag.Bool("d", false, "enable drafts")
+	flagConfigFilename = flag.String("config", "config.jsonc", "path to config file")
 )
 
 func main() {
 	flag.Parse()
-
 	start := time.Now()
 
-	var filename string = *configFlag
-	cfg, err := site.LoadConfig(filename)
+	cfg, err := site.LoadConfig(*flagConfigFilename)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("Loaded config:", filename)
+	if *flagEnableDrafts {
+		cfg.EnableDrafts = *flagEnableDrafts
+	}
 
 	db, err := store.Connect()
 	if err != nil {
 		log.Fatal(err)
 	}
+	categoryRepo := store.NewCategoryRepo(db)
+	entryRepo := store.NewEntryRepo(db)
+	tagRepo := store.NewTagRepo(db)
 
 	nerdStats := model.NewNerdStats(time.Now())
-
+	markdown := markdown.NewMarkdown()
 	renderer := templates.NewRenderer()
 
-	mySite := site.NewSite(
+	mySite, err := site.NewSite(
 		*cfg,
-		*enableDraftsFlag,
-		time.Now(),
-		db,
-		nerdStats,
-		md,
+		start,
 		renderer,
+		markdown,
+		nerdStats,
+		categoryRepo,
+		entryRepo,
+		tagRepo,
 	)
-
+	if err != nil {
+		log.Fatal(err)
+	}
 	err = mySite.Init()
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	pages := mySite.Build()
-
+	err = mySite.GenerateSiteMap(pages)
+	if err != nil {
+		log.Fatal(err)
+	}
 	err = mySite.Render(pages)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	log.Println(time.Since(start))
 }

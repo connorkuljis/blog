@@ -9,12 +9,12 @@
 			{{ template "contact" . }}
 
 			<section>
-				{{- if .RecentPosts }}
+				{{- if .Site.RecentEntries }}
 				<article>
 					<div>
 						<h3>Recent Posts</h3>
 						<ul>
-							{{- range .RecentPosts }}
+							{{- range .Site.RecentEntries }}
 							<li>
 								<a href="{{ .Permalink }}">{{ .Title }}</a>
 								<span>{{ .CreatedAt.Format "2006-01-02" }}</span>
@@ -25,11 +25,11 @@
 				</article>
 				{{- end }}
 
-				{{- if .Posts }}
+				{{- if .Site.Entries }}
 				<div>
 					<h3>All Posts</h3>
 					<div>
-						{{- range .Posts }}
+						{{- range .Site.Entries }}
 						<article>
 							<a href="{{ .Permalink }}">
 								<header>
@@ -48,8 +48,7 @@
 								{{- if .Tags }}
 								<p>
 									{{- range $i, $tag := .Tags -}}
-									<a href="/tag/{{ $tag | slugify }}">{{ $tag }}</a>{{ if lt (add $i
-									1) (len .Tags) }}, {{ end }}
+									<a href="{{ $tag.Permalink }}">{{ $tag }}</a>
 									{{- end }}
 								</p>
 								{{- end }}

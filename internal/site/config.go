@@ -7,6 +7,16 @@ import (
 	"github.com/tailscale/hujson"
 )
 
+type Config struct {
+	Title        string `json:"title"`
+	Author       string `json:"author"`
+	Domain       string `json:"domain"`
+	DirBuild     string `json:"dir_build"`
+	DirAssets    string `json:"dir_assets"`
+	EmailList    string `json:"email_list"`
+	EnableDrafts bool
+}
+
 func LoadConfig(path string) (*Config, error) {
 	b, err := os.ReadFile(path)
 	if err != nil {
