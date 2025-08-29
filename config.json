@@ -1,14 +1,8 @@
 {
-	// Blog title
 	"title": "Connor's Blog",
-	// Domain URL
 	"domain": "https://connorkuljis.com",
-	// Author name
 	"author": "Connor Kuljis",
-	// Build output directory
 	"dir_build": "dist",
-	// Assets directory
 	"dir_assets": "assets",
-	// Email list endpoint
 	"email_list": "https://my-email-list.conkuljis.workers.dev/subscribe"
 }

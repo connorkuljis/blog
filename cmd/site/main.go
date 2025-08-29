@@ -14,7 +14,7 @@ import (
 
 var (
 	flagEnableDrafts   = flag.Bool("d", false, "enable drafts")
-	flagConfigFilename = flag.String("config", "config.jsonc", "path to config file")
+	flagConfigFilename = flag.String("config", "config.json", "path to config file")
 )
 
 func main() {
