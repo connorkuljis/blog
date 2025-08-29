@@ -43,5 +43,14 @@ cms-debug:
 goimports:
 	$(GO) tool goimports -w -l .
 
+migrate-status:
+	. ./migrations/goose.env; $(GO) tool goose status
+
+migrate-up:
+	. ./migrations/goose.env; $(GO) tool goose up
+
+migrate-down:
+	. ./migrations/goose.env; $(GO) tool goose down-to 0
+
 serve:
 	$(PYTHON) -m http.server -d $(DIST_DIR) $(SERVE_PORT)

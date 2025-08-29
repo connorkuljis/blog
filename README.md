@@ -35,7 +35,7 @@ go test ./path/to/pkg -run '^TestName$'
 ```bash
 # Apply SQLite migrations to ./database/content.sqlite3
 # (reads env from migrations/goose.env)
-goose -dir migrations sqlite3 database/content.sqlite3 up
+. ./migrations/goose.env; go tool goose up
 ```
 
 ## Project layout

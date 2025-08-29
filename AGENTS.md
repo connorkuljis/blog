@@ -25,7 +25,7 @@ Code style
 - Formatting: run goimports; keep 120 col soft limit.
 
 Migrations/content
-- DB migrations via goose (tool in go.mod). Env: `migrations/goose.env`. Apply: `goose -dir migrations sqlite3 database/content.sqlite3 up`.
+- DB migrations via goose (tool in go.mod). Env: `migrations/goose.env`. Apply: `. ./migrations/goose.env; go tool goose up`.
 
 Notes
 - No Cursor/Copilot rules present. If added later (`.cursor/rules/` or `.github/copilot-instructions.md`), mirror here.
