@@ -1,6 +1,8 @@
 package model
 
 import (
+	"path/filepath"
+
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/connorkuljis/blog/internal/util"
 )
@@ -22,7 +24,7 @@ func NewCategory(c *store.Category) *Category {
 }
 
 func (c *Category) Permalink() string {
-	return "/" + util.Slugify(c.Title)
+	return "/" + filepath.Join("categories", util.Slugify(c.Title))
 }
 
 func (c *Category) AddEntry(e ...*Entry) {

@@ -23,7 +23,7 @@ func (p *TagPage) Title() string {
 }
 
 func (p *TagPage) FileName() string {
-	return filepath.Join(p.Tag.Permalink, "index.html")
+	return filepath.Join(p.Tag.Permalink(), "index.html")
 }
 
 func (p *TagPage) TemplateName() string {
