@@ -43,17 +43,11 @@
 
 				<div>
 					{{ if .Prev }}
-					<a href="{{ .Prev.Permalink }}">
-						<span>Previous</span>
-						<p>{{ .Prev.Title }}</p>
-					</a>
+						{{ template "entry-preview" .Prev }}
 					{{ end }}
 
 					{{ if .Next }}
-					<a href="{{ .Next.Permalink }}">
-						<span>Next</span>
-						<p>{{ .Next.Title }}</p>
-					</a>
+						{{ template "entry-preview" .Next }}
 					{{ end }}
 				</div>
 			</footer>

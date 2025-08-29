@@ -15,15 +15,7 @@
 				<ul>
 					{{ range $i, $e := .Category.Entries }}
 					<li>
-						<article>
-							<time>{{ $e.CreatedAt.Format
-								"January 02, 2006" }}</time>
-							<h3>
-								<a href="{{ $e.Permalink }}">
-									{{ $e.Title }}
-								</a>
-							</h3>
-						</article>
+						{{ template "entry-preview" $e }}
 					</li>
 					{{ end }}
 				</ul>

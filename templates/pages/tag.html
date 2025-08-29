@@ -16,7 +16,9 @@
 				<div>
 					<ul>
 						{{ range .Tag.Entries }}
-						<li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+						<li>
+							{{ template "entry-preview" . }}
+						</li>
 						{{ end }}
 					</ul>
 				</div>

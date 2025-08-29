@@ -180,6 +180,9 @@ func (s *MySite) Build() []site.Page {
 		pages = append(pages, NewTagPage(s, tag))
 	}
 
+	log.Println("[BUILD]", "constructing Archive page")
+	pages = append(pages, NewArchivePage(s))
+
 	s.NerdStats.PageCount = len(pages)
 
 	return pages

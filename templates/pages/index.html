@@ -13,53 +13,22 @@
 				<article>
 					<div>
 						<h3>Recent Posts</h3>
-						<ul>
-							{{- range .Site.RecentEntries }}
-							<li>
-								<a href="{{ .Permalink }}">{{ .Title }}</a>
-								<span>{{ .CreatedAt.Format "2006-01-02" }}</span>
-							</li>
-							{{- end }}
-						</ul>
+					<ul>
+						{{- range .Site.RecentEntries }}
+						<li>
+							{{ template "entry-preview" . }}
+						</li>
+						{{- end }}
+					</ul>
 					</div>
 				</article>
 				{{- end }}
 
-				{{- if .Site.Entries }}
 				<div>
-					<h3>All Posts</h3>
-					<div>
-						{{- range .Site.Entries }}
-						<article>
-							<a href="{{ .Permalink }}">
-								<header>
-									<h4>{{ .Title }}</h4>
-									<time>{{ .CreatedAt.Format "2006-01-02" }}</time>
-								</header>
-
-								{{- if .Description.Valid }}
-								<p>{{ .Description.String }}</p>
-								{{- else if .Content.Valid }}
-								<p>{{ truncate .Content.String 200 }}</p>
-								{{- else }}
-								<p></p>
-								{{- end }}
-
-								{{- if .Tags }}
-								<p>
-									{{- range $i, $tag := .Tags -}}
-									<a href="{{ $tag.Permalink }}">{{ $tag }}</a>
-									{{- end }}
-								</p>
-								{{- end }}
-
-								<p>Read more →</p>
-							</a>
-						</article>
-						{{- end }}
-					</div>
+					<p>
+						<a href="/archive/">View full archive →</a>
+					</p>
 				</div>
-				{{- end }}
 			</section>
 		</article>
 	</div>
