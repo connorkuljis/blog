@@ -12,7 +12,8 @@ type Config struct {
 	DirBuild     string `json:"dir_build"`
 	DirAssets    string `json:"dir_assets"`
 	EmailList    string `json:"email_list"`
-	EnableDrafts bool
+	EnableDrafts bool   `json:"enable_drafts"`
+	SqliteURI    string `json:"sqlite_uri"`
 }
 
 func LoadConfig(path string) (*Config, error) {

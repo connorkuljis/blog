@@ -4,5 +4,6 @@
 	"author": "Connor Kuljis",
 	"dir_build": "dist",
 	"dir_assets": "assets",
-	"email_list": "https://my-email-list.conkuljis.workers.dev/subscribe"
+	"email_list": "https://my-email-list.conkuljis.workers.dev/subscribe",
+	"sqlite_uri": "file:content.sqlite3?_foreign_keys=true"
 }

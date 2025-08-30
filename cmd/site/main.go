@@ -28,7 +28,7 @@ func main() {
 	if *flagEnableDrafts {
 		cfg.EnableDrafts = *flagEnableDrafts
 	}
-	db, err := store.Connect()
+	db, err := store.Connect(cfg.SqliteURI)
 	if err != nil {
 		log.Fatal(err)
 	}

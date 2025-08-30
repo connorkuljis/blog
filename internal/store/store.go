@@ -5,11 +5,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const (
-	conn = "file:database/content.sqlite3?_foreign_keys=true"
-)
-
-func Connect() (*sqlx.DB, error) {
+func Connect(conn string) (*sqlx.DB, error) {
 	db, err := sqlx.Open("sqlite3", conn)
 	if err != nil {
 		return nil, err
