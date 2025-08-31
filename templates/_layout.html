@@ -4,17 +4,16 @@
 
 {{ template "head" .}}
 
-<body id="root" class="layout">
-	{{ template "header" . }}
+<body id="root" class="shell">
+	<div class="layout">
+		{{ template "header" . }}
 
-	<main class="main">
-		<article class="article">
-			<header>
-				<h1> {{ .Title }} </h1>
-			</header>
+		<main class="main">
+			<h1> {{ .Title }} </h1>
+
 			{{ template "view" . }}
-		</article>
-	</main>
+		</main>
+	</div>
 </body>
 
 </html>

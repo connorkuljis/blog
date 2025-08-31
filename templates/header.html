@@ -1,4 +1,5 @@
 {{ define "header" }}
+{{- $pageTitle := .Title }}
 <header class="header">
 	<!-- wrapper -->
 	<div class="wrapper">
@@ -15,7 +16,9 @@
 				<ul role="list">
 					<li><a href="/about">About</a></li>
 					{{- range .Site.Categories }}
-					<li><a href="{{ .Permalink }}">{{ .Title }}</a></li>
+					<li>
+						<a href="{{ .Permalink }}">{{ .Title }}</a>
+					</li>
 					{{- end }}
 				</ul>
 			</div>

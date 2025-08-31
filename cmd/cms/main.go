@@ -15,6 +15,7 @@ import (
 
 	"github.com/connorkuljis/blog/internal/markdown"
 	"github.com/connorkuljis/blog/internal/model"
+	"github.com/connorkuljis/blog/internal/site"
 	"github.com/connorkuljis/blog/internal/store"
 	"github.com/jmoiron/sqlx"
 	"github.com/urfave/cli/v3"
@@ -36,11 +37,16 @@ func main() {
 		Name:  "cms",
 		Usage: "A portable and simple content management system.",
 		Before: func(ctx context.Context, c *cli.Command) (context.Context, error) {
-			markdownRenderer := markdown.NewRenderer()
-			db, err := store.Connect()
+
+			cfg, err := site.LoadConfig("config.json")
 			if err != nil {
 				log.Fatal(err)
 			}
+			db, err := store.Connect(cfg.SqliteURI)
+			if err != nil {
+				log.Fatal(err)
+			}
+			markdownRenderer := markdown.NewRenderer()
 
 			app := &App{
 				DB: db,

@@ -17,5 +17,5 @@ func (p HomePage) FileName() string {
 }
 
 func (p HomePage) TemplateName() string {
-	return "index.html"
+	return "home.html"
 }
