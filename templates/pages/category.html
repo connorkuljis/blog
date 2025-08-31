@@ -1,26 +1,12 @@
 {{ define "view" }}
-<main>
-	<!-- wrapper -->
-	<div>
-		<!-- article -->
-		<article>
-			<!-- article-header -->
-			<header>
-				<h2>{{ .Category.Title }}</h2>
-				<h3>{{ .Category.Description }}</h3>
-			</header>
-
-			<!-- article-main -->
-			<main>
-				<ul>
-					{{ range $i, $e := .Category.Entries }}
-					<li>
-						{{ template "entry-preview" $e }}
-					</li>
-					{{ end }}
-				</ul>
-				</section>
-		</article>
-	</div>
-</main>
+<!-- article-main -->
+<section>
+	<ul>
+		{{ range $i, $e := .Category.Entries }}
+		<li>
+			{{ template "entry-preview" $e }}
+		</li>
+		{{ end }}
+	</ul>
+</section>
 {{ end }}

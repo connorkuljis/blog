@@ -1,57 +1,35 @@
 {{ define "view" }}
-<main>
-	<div>
-		<article>
-			<header>
-				<div>
-					<a href="{{ .Entry.Category.Permalink }}">
-						{{ .Entry.Category.Title }}
-					</a>
-				</div>
-
-				<div>
-					<time>{{ .Entry.CreatedAt.Format "January 02, 2006"}}</time>
-				</div>
-
-				<h2>
-					{{ .Entry.Title }}
-				</h2>
-
-				<div>
-					{{ if .Site.Config.Author }}
-					by <a href="/about">{{ .Site.Config.Author }}</a>
-					{{ end }}
-				</div>
-
-				{{ if .Entry.FeaturedImageURL }}
-				<figure>
-					<img src="{{ .Entry.FeaturedImageURL }}" />
-				</figure>
-				{{ end }}
-			</header>
-
-			<main>
-				{{ .Entry.Markdown }}
-			</main>
-
-			<footer>
-				<div>
-					{{ range .Entry.Tags }}
-					<a href="{{ .Permalink }}">{{ .Name }}</a>
-					{{ end }}
-				</div>
-
-				<div>
-					{{ if .Prev }}
-					{{ template "entry-preview" .Prev }}
-					{{ end }}
-
-					{{ if .Next }}
-					{{ template "entry-preview" .Next }}
-					{{ end }}
-				</div>
-			</footer>
-		</article>
-	</div>
+<main class="markdown">
+	{{ .Entry.Markdown }}
 </main>
+
+<footer>
+	<div>
+		<p>
+			<time>{{ .Entry.CreatedAt.Format "January 02, 2006"}}</time>
+		</p>
+
+		<p>
+			{{ if .Site.Config.Author }}
+			by <a href="/about">{{ .Site.Config.Author }}</a>
+			{{ end }}
+		</p>
+	</div>
+
+	<div>
+		{{ range .Entry.Tags }}
+		<a href="{{ .Permalink }}">{{ .Name }}</a>
+		{{ end }}
+	</div>
+
+	<div>
+		{{ if .Prev }}
+		{{ template "entry-preview" .Prev }}
+		{{ end }}
+
+		{{ if .Next }}
+		{{ template "entry-preview" .Next }}
+		{{ end }}
+	</div>
+</footer>
 {{ end }}

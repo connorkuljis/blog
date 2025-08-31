@@ -1,15 +1,13 @@
 {{ define "view" }}
-<main>
-	<!-- wrapper -->
-	<div>
-		<!-- article -->
-		<article>
-			{{ template "about" . }}
+<section>
+	{{ template "about" . }}
+</section>
 
-			{{ template "education" . }}
+<section>
+	{{ template "education" . }}
+</section>
 
-			{{ template "contact" . }}
-		</article>
-	</div>
-</main>
+<section>
+	{{ template "contact" . }}
+</section>
 {{ end }}

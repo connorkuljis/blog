@@ -1,6 +1,6 @@
 {
-	"title": "Connor's Blog",
-	"domain": "https://connorkuljis.com",
+	"title": "Connor's Software Blog",
+	"domain": "connorkuljis.com",
 	"author": "Connor Kuljis",
 	"dir_build": "dist",
 	"dir_assets": "assets",

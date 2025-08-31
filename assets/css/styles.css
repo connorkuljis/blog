@@ -1,22 +1,120 @@
-/* Layout Wrapper Styles */
-.layout-wrapper {
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 0 20px;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
+@import "reset.css";
+
+/* PSP-2000 "Ice Silver" palette */
+:root {
+	/* text */
+	--clr-text-0: hsl(210 20% 8%);
+	/* primary text (very dark slate) */
+	--clr-text-1: hsl(210 14% 20%);
+	/* secondary */
+	--clr-text-2: hsl(210 12% 44%);
+	/* muted */
+
+	/* backgrounds (light to darker) */
+	--clr-bg-0: hsl(210 20% 97%);
+	/* app background */
+	--clr-bg-1: hsl(210 18% 93%);
+	/* subdued surface */
+	--clr-bg-2: hsl(210 16% 86%);
+	/* elevated surface */
+	--clr-bg-3: hsl(210 14% 78%);
+	/* highest elevation / panels */
+
+	/* borders / separators */
+	--clr-border-0: hsl(210 12% 80%);
+	--clr-border-1: hsl(210 11% 72%);
+	--clr-border-2: hsl(210 10% 64%);
+
+	/* “ice” blue accents (power LED vibe) */
+	--clr-accent-0: hsl(210 95% 55%);
+	/* main accent */
+	--clr-accent-1: hsl(207 94% 64%);
+	/* hover / lighter */
+	--clr-accent-2: hsl(213 74% 40%);
+	/* pressed / darker */
+
+	/* metallic neutrals for strokes/fills */
+	--clr-metal-0: hsl(210 15% 96%);
+	/* highlight */
+	--clr-metal-1: hsl(210 12% 88%);
+	--clr-metal-2: hsl(210 10% 74%);
+	--clr-metal-3: hsl(210 9% 58%);
+	/* shadow edge */
+
+	/* extras */
+	--clr-ring: var(--clr-accent-0);
+	--shadow-0: 0 1px 2px hsl(210 30% 10% / 0.06);
+	--shadow-1: 0 6px 16px hsl(210 30% 10% / 0.10);
+	--radius: 16px;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-	.layout-wrapper {
-		padding: 0 15px;
+/* Dark scheme */
+[data-theme="dark"] {
+	--clr-text-0: hsl(210 15% 92%);
+	--clr-text-1: hsl(210 10% 78%);
+	--clr-text-2: hsl(210 9% 60%);
+
+	--clr-bg-0: hsl(210 14% 8%);
+	--clr-bg-1: hsl(210 14% 10%);
+	--clr-bg-2: hsl(210 14% 14%);
+	--clr-bg-3: hsl(210 12% 18%);
+
+	--clr-border-0: hsl(210 10% 22%);
+	--clr-border-1: hsl(210 10% 28%);
+	--clr-border-2: hsl(210 9% 36%);
+
+	--clr-accent-0: hsl(210 95% 62%);
+	--clr-accent-1: hsl(207 94% 70%);
+	--clr-accent-2: hsl(213 74% 52%);
+
+	--clr-metal-0: hsl(210 8% 24%);
+	--clr-metal-1: hsl(210 8% 30%);
+	--clr-metal-2: hsl(210 8% 40%);
+	--clr-metal-3: hsl(210 8% 52%);
+
+	--clr-ring: var(--clr-accent-0);
+	--shadow-0: 0 1px 2px hsl(210 50% 2% / 0.5);
+	--shadow-1: 0 10px 24px hsl(210 50% 2% / 0.5);
+}
+
+/* Example usage */
+body {
+	max-inline-size: 600px;
+	margin-inline: auto;
+	padding-inline: 2dvw;
+	min-height: 100dvh;
+	color: var(--clr-text-0);
+	background: linear-gradient(180deg, var(--clr-bg-0), var(--clr-bg-1));
+}
+
+.header {
+	padding-top: 3rem;
+
+	& .nav {
+		display: flex;
+		justify-content: space-between;
+		gap: 2rem;
+		flex-wrap: wrap;
+
+		& ul {
+			display: flex;
+			gap: 0.5rem;
+		}
 	}
 }
 
-@media (max-width: 480px) {
-	.layout-wrapper {
-		padding: 0 10px;
+.main .article {
+	margin-top: 5rem;
+
+	& h1 {
+		font-size: 3rem;
+	}
+
+	& p {
+		margin-top: 0.4rem;
+	}
+
+	& section {
+		margin-top: 1.5rem;
 	}
 }
