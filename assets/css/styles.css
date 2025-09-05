@@ -157,6 +157,7 @@
 	}
 
 	& pre:has(code) {
+		max-inline-size: 120ch;
 		margin-top: 1rem;
 		overflow-x: scroll;
 		white-space: pre;
@@ -176,5 +177,59 @@
 
 	& .read-more {
 		margin-top: min(3dvw, 3rem);
+	}
+
+	& .toc {
+		margin-top: 1.5rem;
+		background: var(--clr-bg-1);
+		border: 1px solid var(--clr-border-0);
+		border-radius: var(--radius);
+
+		& summary {
+			padding: 1rem;
+			font-size: 1.2rem;
+			color: var(--clr-text-1);
+			cursor: pointer;
+			list-style: none;
+
+			&::-webkit-details-marker {
+				display: none;
+			}
+
+			&::before {
+				content: "▶";
+				display: inline-block;
+				margin-right: 0.5rem;
+				transition: transform 0.2s;
+			}
+		}
+
+		&[open] summary::before {
+			transform: rotate(90deg);
+		}
+
+		& nav {
+			padding: 0 1rem 1rem 1rem;
+
+			& ul {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+
+			& li {
+				list-style: none;
+			}
+
+			& a {
+				color: var(--clr-accent-0);
+				text-decoration: none;
+				transition: color 0.2s;
+
+				&:hover {
+					color: var(--clr-accent-1);
+				}
+			}
+		}
 	}
 }
