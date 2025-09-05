@@ -5,6 +5,7 @@ import (
 	"html/template"
 
 	"github.com/yuin/goldmark"
+	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/renderer/html"
@@ -15,10 +16,15 @@ type Renderer struct {
 }
 
 func NewRenderer() *Renderer {
+	highlighter := highlighting.NewHighlighting(
+		highlighting.WithStyle("solarized-dark"),
+	)
+
 	return &Renderer{
 		Markdown: goldmark.New(
 			goldmark.WithExtensions(
 				extension.GFM,
+				highlighter,
 			),
 			goldmark.WithParserOptions(
 				parser.WithAutoHeadingID(),
