@@ -1,8 +1,9 @@
-<footer id="kuljis-footer">
+{{ define "footer" }}
+<footer class="footer">
 	<div>
 		<p>
-			2024 - {{ .Site.CreatedAt.Format "2006" }}
 			<a href="{{ .Site.Config.Domain }}">{{ .Site.Config.Title }}</a>
 		</p>
 	</div>
 </footer>
+{{ end }}

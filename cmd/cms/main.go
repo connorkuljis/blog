@@ -222,6 +222,7 @@ func createEntry(ctx context.Context, c *cli.Command) error {
 		Title:      title,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
+		IsDraft:    0,
 	}
 
 	err = store.NewEntryRepo(app.DB).CreateEntry(entry)
@@ -252,8 +253,10 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 		fmt.Println("3. Content")
 		fmt.Println("4. Featured Image Url")
 		fmt.Println("5. Manage Tags")
+		fmt.Println("6. Is Draft")
+		fmt.Println("7. Category")
 
-		fmt.Printf("Enter the number (%d-%d) or 'q' to quit: ", 1, 5)
+		fmt.Printf("Enter the number (%d-%d) or 'q' to quit: ", 1, 7)
 		choice, err := reader.ReadString('\n')
 		if err != nil {
 			return err
@@ -297,8 +300,30 @@ func updateEntry(ctx context.Context, c *cli.Command) error {
 			if err != nil {
 				return err
 			}
+		case 6:
+			fmt.Printf("Is this entry a draft? (y/n): ")
+			choice, err := reader.ReadString('\n')
+			if err != nil {
+				return err
+			}
+			choice = strings.TrimSpace(strings.ToLower(choice))
+			switch choice {
+			case "y", "yes":
+				entry.IsDraft = true
+			case "n", "no":
+				entry.IsDraft = false
+			default:
+				fmt.Println("Invalid input, please enter y or n")
+				continue
+			}
+		case 7:
+			selectedCategory, err := selectCategory(reader, app.Categories)
+			if err != nil {
+				return err
+			}
+			entry.Category = selectedCategory
 		default:
-			fmt.Println("Bad input, must be between 1 and 5: got:", choice)
+			fmt.Println("Bad input, must be between 1 and 7: got:", choice)
 			continue
 		}
 

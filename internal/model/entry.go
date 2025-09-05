@@ -18,6 +18,7 @@ type Entry struct {
 	FeaturedImageURL string
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
+	IsDraft          bool
 	Category         *Category
 	Tags             []*Tag
 
@@ -33,6 +34,7 @@ func NewEntry(e *store.Entry, c *Category, t []*Tag) *Entry {
 		FeaturedImageURL: e.FeaturedImageURL.String,
 		CreatedAt:        e.CreatedAt,
 		UpdatedAt:        e.UpdatedAt,
+		IsDraft:          e.IsDraft == 1,
 		Category:         c,
 		Tags:             t,
 	}
@@ -53,6 +55,13 @@ func (m *Entry) ToStoreEntry() *store.Entry {
 		return sql.NullString{String: s, Valid: true}
 	}
 
+	boolToInt := func(b bool) int {
+		if b {
+			return 1
+		}
+		return 0
+	}
+
 	var categoryID int64
 	if m.Category != nil {
 		categoryID = m.Category.ID
@@ -67,5 +76,6 @@ func (m *Entry) ToStoreEntry() *store.Entry {
 		FeaturedImageURL: nullable(m.FeaturedImageURL),
 		CreatedAt:        m.CreatedAt,
 		UpdatedAt:        m.UpdatedAt,
+		IsDraft:          boolToInt(m.IsDraft),
 	}
 }

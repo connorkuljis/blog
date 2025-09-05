@@ -14,6 +14,10 @@ type Config struct {
 	EmailList    string `json:"email_list"`
 	EnableDrafts bool   `json:"enable_drafts"`
 	SqliteURI    string `json:"sqlite_uri"`
+	Socials      []struct {
+		Name string `json:"name"`
+		URL  string `json:"url"`
+	} `json:"socials"`
 }
 
 func LoadConfig(path string) (*Config, error) {

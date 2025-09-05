@@ -5,5 +5,16 @@
 	"dir_build": "dist",
 	"dir_assets": "assets",
 	"email_list": "https://my-email-list.conkuljis.workers.dev/subscribe",
-	"sqlite_uri": "file:content.sqlite3?_foreign_keys=true"
+	"enable_drafts": false,
+	"sqlite_uri": "file:content.sqlite3?_foreign_keys=true",
+	"socials": [
+		{
+			"name": "Github",
+			"url": "https://github.com/connorkuljis"
+		},
+		{
+			"name": "Linkedin",
+			"url": "https://linkedin.com/in/connor-kuljis"
+		}
+	]
 }

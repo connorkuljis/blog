@@ -1,8 +1,15 @@
 {{ define "contact" }}
-<section id="kuljis-contact">
-	<p>My social links:</p>
-	<div>
-		{{- template "socials" . }}
-	</div>
-</section>
+<div class="contact">
+	{{- if .Site.Config.Socials }}
+	{{- template "socials-list" . }}
+	{{- end }}
+</div>
+{{ end }}
+
+{{ define "socials-list" }}
+<ul class="socials-list">
+	{{- range .Site.Config.Socials }}
+	<li><a href="{{ .URL }}">{{ .Name }}</a></li>
+	{{- end }}
+</ul>
 {{ end }}

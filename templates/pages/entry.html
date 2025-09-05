@@ -1,28 +1,23 @@
 {{ define "view" }}
+<p>
+	<time>
+		{{ .Entry.CreatedAt.Format "January 02, 2006"}}
+	</time>
+</p>
+
 <main class="markdown">
 	{{ .Entry.Markdown }}
 </main>
 
 <footer>
 	<div>
-		<p>
-			<time>{{ .Entry.CreatedAt.Format "January 02, 2006"}}</time>
-		</p>
-
-		<p>
-			{{ if .Site.Config.Author }}
-			by <a href="/about">{{ .Site.Config.Author }}</a>
-			{{ end }}
-		</p>
-	</div>
-
-	<div>
 		{{ range .Entry.Tags }}
 		<a href="{{ .Permalink }}">{{ .Name }}</a>
 		{{ end }}
 	</div>
 
-	<div>
+	<div class="read-more">
+		<h3>Read More</h3>
 		{{ if .Prev }}
 		{{ template "entry-preview" .Prev }}
 		{{ end }}
