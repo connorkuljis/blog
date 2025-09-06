@@ -1,9 +1,24 @@
 {{ define "footer" }}
 <footer class="footer">
-	<div>
+	<div class="wrapper">
 		<p>
 			<a href="{{ .Site.Config.Domain }}">{{ .Site.Config.Title }}</a>
 		</p>
+		<details open>
+			<summary>Page Details</summary>
+			<table>
+				<tbody>
+					<tr>
+						<td>{{ .TemplateName }}
+						<td>
+					</tr>
+					<tr>
+						<td>{{ .FileName }}
+						<td>
+					</tr>
+				</tbody>
+			</table>
+		</details>
 	</div>
 </footer>
 {{ end }}

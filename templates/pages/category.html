@@ -1,12 +1,11 @@
 {{ define "view" }}
-<!-- article-main -->
 <section>
 	<ul>
-		{{ range $i, $e := .Category.Entries }}
+		{{- range .Category.Entries }}
 		<li>
-			{{ template "entry-preview" $e }}
+			{{- template "entry-preview" . }}
 		</li>
-		{{ end }}
+		{{- end }}
 	</ul>
 </section>
 {{ end }}

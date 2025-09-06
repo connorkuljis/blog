@@ -1,34 +1,32 @@
 {{ define "view" }}
-<p>
-	<time>
-		{{ .Entry.CreatedAt.Format "January 02, 2006"}}
-	</time>
-</p>
+<div class="entry">
+	<p><time>{{ .Entry.CreatedAt.Format "January 02, 2006"}}</time></p>
 
-<table-of-contents></table-of-contents>
+	<table-of-contents></table-of-contents>
 
-<main class="markdown">
-	{{ .Entry.Markdown }}
-</main>
+	<main class="markdown">
+		{{ .Entry.Markdown }}
+	</main>
 
-<footer>
-	<div>
-		{{ range .Entry.Tags }}
-		<a href="{{ .Permalink }}">{{ .Name }}</a>
-		{{ end }}
-	</div>
+	<footer class="entry-footer">
+		<div>
+			{{ range .Entry.Tags }}
+			<a href="{{ .Permalink }}">{{ .Name }}</a>
+			{{ end }}
+		</div>
 
-	<div class="read-more">
-		<h3>Read More</h3>
-		{{ if .Prev }}
-		{{ template "entry-preview" .Prev }}
-		{{ end }}
+		<div class="read-more">
+			<h3>Read More</h3>
+			{{ if .Prev }}
+			{{ template "entry-preview" .Prev }}
+			{{ end }}
 
-		{{ if .Next }}
-		{{ template "entry-preview" .Next }}
-		{{ end }}
-	</div>
-</footer>
+			{{ if .Next }}
+			{{ template "entry-preview" .Next }}
+			{{ end }}
+		</div>
+	</footer>
 
+</div>
 <script src="/js/table-of-contents.js"></script>
 {{ end }}

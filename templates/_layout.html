@@ -2,18 +2,39 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<!-- head -->
 {{ template "head" .}}
 
-<body id="_layout" class="root">
+<!-- root -->
+
+<body class="root">
+	<!-- layout -->
 	<div class="layout">
+
+		<!-- header -->
 		{{ template "header" . }}
 
+		<!-- main -->
 		<main class="main">
-			<h1> {{ .Title }} </h1>
+			<!-- wrapper -->
+			<div class="wrapper">
+				<!-- article -->
+				<article class="article">
 
-			{{ template "view" . }}
+					<!-- header -->
+					<header class="header">
+						<h1>{{ .Title }}</h1>
+					</header>
+
+					<!-- view -->
+					<div class="view">
+						{{ template "view" . }}
+					</div>
+				</article>
+			</div>
 		</main>
 
+		<!-- footer -->
 		{{ template "footer" . }}
 	</div>
 </body>
