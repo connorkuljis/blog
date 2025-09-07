@@ -34,6 +34,8 @@
 	&>nav {
 		display: flex;
 		justify-content: space-between;
+		gap: 1rem;
+		flex-wrap: wrap;
 
 		&>ul {
 			display: flex;
@@ -53,9 +55,11 @@
 }
 
 .view-wrapper>article {
+	--viewport-padding: 3dvw;
 	display: grid;
-	grid-template-columns: 1fr min(42rem, 100%) 1fr;
-	padding-inline: 1rem;
+	grid-template-columns:
+		1fr min(42rem, calc(100% - var(--viewport-padding) * 2)) 1fr;
+	gap: 0 var(--viewport-padding);
 
 	&>header,
 	&>main,
