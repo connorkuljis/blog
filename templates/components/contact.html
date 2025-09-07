@@ -1,13 +1,17 @@
 {{ define "contact" }}
-<div class="contact">
+<section class="contact">
+	<h3>Contact</h3>
+
 	{{- if .Site.Config.Socials }}
-	{{- template "socials-list" . }}
+	<div>
+		{{- template "socials-list" . }}
+	</div>
 	{{- end }}
-</div>
+</section>
 {{ end }}
 
 {{ define "socials-list" }}
-<ul class="socials-list">
+<ul role="list" class="socials-list">
 	{{- range .Site.Config.Socials }}
 	<li><a href="{{ .URL }}">{{ .Name }}</a></li>
 	{{- end }}

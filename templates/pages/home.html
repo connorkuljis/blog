@@ -1,32 +1,37 @@
 {{ define "view" }}
-<section>
-	{{- template "email-list-form" . }}
-</section>
+<article>
+	<header>
+		<h1>{{ .Title }}<h1>
+	</header>
 
-<section>
-	{{- template "about" . }}
-</section>
+	<main>
+		{{- template "email-list-form" . }}
 
-<section>
-	{{- template "contact" . }}
-</section>
+		{{- template "about" . }}
 
-<section>
-	{{- if .Site.RecentEntries }}
-	<h3>Recent Posts</h3>
-	<ul>
-		{{- range .Site.RecentEntries }}
-		<li>
-			{{- template "entry-preview" . }}
-		</li>
-		{{- end }}
-	</ul>
-	{{- end }}
+		{{- template "contact" . }}
+	</main>
+	<footer>
+		<section>
+			{{- if .Site.RecentEntries }}
+			<h3>Recent Posts</h3>
+			<div>
+				<ul>
+					{{- range .Site.RecentEntries }}
+					<li>
+						{{- template "entry-preview" . }}
+					</li>
+					{{- end }}
+				</ul>
+				{{- end }}
+			</div>
 
-	<div>
-		<p>
-			<a href="/archive/">View full archive →</a>
-		</p>
-	</div>
-</section>
+			<div>
+				<p>
+					<a href="/archive/">View full archive →</a>
+				</p>
+			</div>
+		</section>
+	</footer>
+</article>
 {{ end }}

@@ -1,15 +1,19 @@
 {{ define "view" }}
-<div>
-	{{- if .Site.Entries }}
-	<ul>
-		{{- range .Site.Entries }}
-		<li>
-			{{ template "entry-preview" . }}
-		</li>
-		{{- end }}
-	</ul>
-	{{- else }}
-	<p>No entries yet.</p>
-	{{- end }}
-</div>
+<article>
+	<main>
+		<div>
+			{{- if .Site.Entries }}
+			<ul>
+				{{- range .Site.Entries }}
+				<li>
+					{{ template "entry-preview" . }}
+				</li>
+				{{- end }}
+			</ul>
+			{{- else }}
+			<p>No entries yet.</p>
+			{{- end }}
+		</div>
+	</main>
+</article>
 {{ end }}

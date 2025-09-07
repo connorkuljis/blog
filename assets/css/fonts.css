@@ -1,0 +1,33 @@
+@layer fonts {
+	@font-face {
+		font-family: "B612";
+		src: url("/fonts/B612-Regular.woff2") format("woff2");
+	}
+
+	@font-face {
+		font-family: "Opus One";
+		src: url("/fonts/OpusOneVF.woff2");
+	}
+
+	@font-face {
+		font-family: "Stamp";
+		src: url("/fonts/StampRSPKThree-Regular.otf");
+	}
+
+	body {
+		font-family: "B612";
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-family: "Stamp";
+	}
+
+	code {
+		font-family: "Opus One";
+	}
+}

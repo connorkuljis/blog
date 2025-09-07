@@ -2,18 +2,19 @@
 
 <head>
 	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 	<title>{{ .Site.Config.Title }} | {{ .Title }}</title>
 
 	<link rel="icon" href="/images/icon.png" />
-	<link rel="stylesheet" href="/css/styles.css" />
+	<link rel="stylesheet" href="/css/styles.css?v={{ .Site.CreatedAt.Format `150405`}}" />
 
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 	<script>
 		/*this is an immediately invoked function to prevent Firefox FOUC, this must be here*/
 		(_ => {
 			let FF_FOUC_FIX;
 		})();
 	</script>
+	<script src="/js/table-of-contents.js"></script>
 </head>
 {{ end }}

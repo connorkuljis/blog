@@ -1,11 +1,19 @@
 {{ define "view" }}
-<section>
-	<ul>
-		{{- range .Category.Entries }}
-		<li>
-			{{- template "entry-preview" . }}
-		</li>
-		{{- end }}
-	</ul>
-</section>
+<article>
+	<header>
+		<h1>{{ .Title }}</h1>
+	</header>
+
+	<main>
+		<section>
+			<ul>
+				{{- range .Category.Entries }}
+				<li>
+					{{- template "entry-preview" . }}
+				</li>
+				{{- end }}
+			</ul>
+		</section>
+	</main>
+</article>
 {{ end }}

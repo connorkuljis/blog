@@ -1,13 +1,21 @@
 {{ define "view" }}
-<section>
-	{{ template "about" . }}
-</section>
+<article>
+	<header>
+		<h1>{{ .Title }}</h1>
+	</header>
 
-<section>
-	{{ template "education" . }}
-</section>
+	<main>
+		<section>
+			{{ template "about" . }}
+		</section>
 
-<section>
-	{{ template "contact" . }}
-</section>
+		<section>
+			{{ template "education" . }}
+		</section>
+
+		<section>
+			{{ template "contact" . }}
+		</section>
+	</main>
+</article>
 {{ end }}

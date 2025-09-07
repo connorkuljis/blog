@@ -1,20 +1,21 @@
 {{ define "view" }}
-<!-- article-header -->
-<header>
-	<h2>{{ .Tag.Name }}</h2>
-	<h3>Entries tagged with "{{ .Tag.Name }}"</h3>
-	<p>({{ len .Tag.Entries }}) entries</p>
-</header>
+<article>
+	<header>
+		<h2>{{ .Tag.Name }}</h2>
+		<h3>Entries tagged with "{{ .Tag.Name }}"</h3>
+		<p>({{ len .Tag.Entries }}) entries</p>
+	</header>
 
-<main>
-	<div>
-		<ul>
-			{{ range .Tag.Entries }}
-			<li>
-				{{ template "entry-preview" . }}
-			</li>
-			{{ end }}
-		</ul>
-	</div>
-</main>
+	<main>
+		<div>
+			<ul>
+				{{ range .Tag.Entries }}
+				<li>
+					{{ template "entry-preview" . }}
+				</li>
+				{{ end }}
+			</ul>
+		</div>
+	</main>
+</article>
 {{ end }}

@@ -1,7 +1,5 @@
 {{ define "entry-preview" }}
-<article class="entry-preview">
-	<a class="link" href="{{ .Permalink }}">
-		<h3>{{ .Title }}</h3>
-	</a>
-</article>
+<a class="entry-preview" href="{{ .Permalink }}">
+	{{ .Title }}
+</a>
 {{ end }}

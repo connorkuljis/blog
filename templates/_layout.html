@@ -8,30 +8,14 @@
 <!-- root -->
 
 <body class="root">
-	<!-- layout -->
-	<div class="layout">
-
+	<!-- grid -->
+	<div class="grid-wrapper">
 		<!-- header -->
 		{{ template "header" . }}
 
-		<!-- main -->
-		<main class="main">
-			<!-- wrapper -->
-			<div class="wrapper">
-				<!-- article -->
-				<article class="article">
-
-					<!-- header -->
-					<header class="header">
-						<h1>{{ .Title }}</h1>
-					</header>
-
-					<!-- view -->
-					<div class="view">
-						{{ template "view" . }}
-					</div>
-				</article>
-			</div>
+		<!-- view -->
+		<main class="view-wrapper">
+			{{ template "view" . }}
 		</main>
 
 		<!-- footer -->

@@ -1,15 +1,17 @@
 {{ define "view" }}
-<header>
-	<h2>Tags</h2>
-</header>
+<article>
+	<header>
+		<h2>Tags</h2>
+	</header>
 
-<main>
-	<ul>
-		{{ range .Tags }}
-		<li>
-			<a href="{{ .Permalink }}">{{ .Name }}</a>
-		</li>
-		{{ end }}
-	</ul>
-</main>
+	<main>
+		<ul>
+			{{ range .Tags }}
+			<li>
+				<a href="{{ .Permalink }}">{{ .Name }}</a>
+			</li>
+			{{ end }}
+		</ul>
+	</main>
+</article>
 {{ end }}

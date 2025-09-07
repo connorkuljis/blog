@@ -1,8 +1,16 @@
 {{ define "view" }}
-<div class="entry">
-	<p><time>{{ .Entry.CreatedAt.Format "January 02, 2006"}}</time></p>
+<article>
+	<header>
+		<h1>{{ .Title }}</h1>
 
-	<table-of-contents></table-of-contents>
+		<h2><time>{{ .Entry.CreatedAt.Format "January 2, 2006"}}</time></h2>
+
+		{{ if .Entry.FeaturedImageURL }}
+		<figure class="full-bleed">
+			<img src="{{ .Entry.FeaturedImageURL }}" />
+		</figure>
+		{{ end }}
+	</header>
 
 	<main class="markdown">
 		{{ .Entry.Markdown }}
@@ -26,7 +34,5 @@
 			{{ end }}
 		</div>
 	</footer>
-
-</div>
-<script src="/js/table-of-contents.js"></script>
+</article>
 {{ end }}

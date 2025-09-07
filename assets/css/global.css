@@ -1,0 +1,59 @@
+/* /css/global.css */
+
+@layer global {
+	a {
+		color: currentColor;
+		text-decoration: none;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		text-wrap: pretty;
+	}
+
+	img {
+		max-inline-size: 100%;
+	}
+
+	pre {
+		display: block;
+		max-inline-size: 100%;
+		overflow-x: auto;
+		white-space: pre-wrap;
+		word-wrap: break-word;
+		padding: 1rem;
+	}
+
+	pre code {
+		max-inline-size: 80ch;
+		display: block;
+		word-wrap: break-word;
+		white-space: pre-wrap;
+	}
+
+	main>*+* {
+		margin-block-start: 1rem;
+	}
+
+	p>*+* {
+		margin-block-start: 0.5rem;
+	}
+
+	section:not(:first-child) {
+		margin-block-start: 3rem;
+	}
+
+	section>*+* {
+		margin-block-start: 1.125rem;
+	}
+
+	[role="list"] {
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+	}
+}

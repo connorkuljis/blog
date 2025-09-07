@@ -1,28 +1,23 @@
 {{ define "header" }}
-{{- $pageTitle := .Title }}
 <header class="header">
-	<!-- wrapper -->
-	<div class="wrapper">
-		<!-- nav -->
-		<nav class="nav">
-			<div>
-				<ul role="list">
-					<li>
-						<a href="/"> {{ .Site.Config.Domain }} </a>
-					</li>
-				</ul>
-			</div>
-			<div>
-				<ul role="list">
-					<li><a href="/about">About</a></li>
-					{{- range .Site.Categories }}
-					<li>
-						<a href="{{ .Permalink }}">{{ .Title }}</a>
-					</li>
-					{{- end }}
-				</ul>
-			</div>
-		</nav>
-	</div>
+	<!-- nav -->
+	<nav class="nav">
+		<!-- site-list -->
+		<ul role="list">
+			<li>
+				<a href="/"> {{ .Site.Config.Domain }} </a>
+			</li>
+		</ul>
+
+		<!-- categories-list -->
+		<ul role="list">
+			<li><a href="/about">About</a></li>
+			{{- range .Site.Categories }}
+			<li>
+				<a href="{{ .Permalink }}">{{ .Title }}</a>
+			</li>
+			{{- end }}
+		</ul>
+	</nav>
 </header>
 {{ end }}
