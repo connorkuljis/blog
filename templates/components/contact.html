@@ -4,16 +4,12 @@
 
 	{{- if .Site.Config.Socials }}
 	<div>
-		{{- template "socials-list" . }}
+		<ul role="list" class="socials-list">
+			{{- range .Site.Config.Socials }}
+			<li><a href="{{ .URL }}">{{ .Name }}</a></li>
+			{{- end }}
+		</ul>
 	</div>
 	{{- end }}
 </section>
-{{ end }}
-
-{{ define "socials-list" }}
-<ul role="list" class="socials-list">
-	{{- range .Site.Config.Socials }}
-	<li><a href="{{ .URL }}">{{ .Name }}</a></li>
-	{{- end }}
-</ul>
 {{ end }}

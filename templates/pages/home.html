@@ -16,7 +16,7 @@
 			{{- if .Site.RecentEntries }}
 			<h3>Recent Posts</h3>
 			<div>
-				<ul>
+				<ul role="list">
 					{{- range .Site.RecentEntries }}
 					<li>
 						{{- template "entry-preview" . }}

@@ -1,15 +1,12 @@
 {{ define "header" }}
 <header class="header">
-	<!-- nav -->
-	<nav class="nav">
-		<!-- site-list -->
+	<nav>
 		<ul role="list">
 			<li>
 				<a href="/"> {{ .Site.Config.Domain }} </a>
 			</li>
 		</ul>
 
-		<!-- categories-list -->
 		<ul role="list">
 			<li><a href="/about">About</a></li>
 			{{- range .Site.Categories }}

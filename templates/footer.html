@@ -1,9 +1,11 @@
 {{- define "footer" }}
 <footer class="footer">
-	<ul>
-		<li>
-			<a href="https://{{ .Site.Config.Domain }}">{{ .Site.Config.Title }}</a>
-		</li>
-	</ul>
+	<nav>
+		<ul role="list">
+			<li>
+				<a href="https://{{ .Site.Config.Domain }}">{{ .Site.Config.Title }}</a>
+			</li>
+		</ul>
+	</nav>
 </footer>
 {{- end }}

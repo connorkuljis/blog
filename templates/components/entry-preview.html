@@ -1,5 +1,6 @@
 {{ define "entry-preview" }}
 <a class="entry-preview" href="{{ .Permalink }}">
-	{{ .Title }}
+	<time>{{ .CreatedAt.Format "2006-01-02" }}</time>
+	<div>{{ .Title }}</div>
 </a>
 {{ end }}
