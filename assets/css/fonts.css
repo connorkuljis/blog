@@ -1,21 +1,27 @@
 @layer fonts {
-	@font-face {
-		font-family: "B612";
-		src: url("/fonts/B612-Regular.woff2") format("woff2");
-	}
-
-	@font-face {
-		font-family: "Opus One";
-		src: url("/fonts/OpusOneVF.woff2");
-	}
-
-	@font-face {
-		font-family: "Stamp";
-		src: url("/fonts/StampRSPKThree-Regular.otf");
+	/* Google Fonts loaded via head.html */
+	
+	:root {
+		--font-body: "Inter", system-ui, -apple-system, sans-serif;
+		--font-heading: "Source Serif 4", Georgia, "Times New Roman", serif;
+		--font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
+		
+		--font-size-xs: 0.75rem;
+		--font-size-sm: 0.875rem;
+		--font-size-base: 1rem;
+		--font-size-lg: 1.125rem;
+		--font-size-xl: 1.25rem;
+		--font-size-2xl: 1.5rem;
+		--font-size-3xl: 1.875rem;
+		--font-size-4xl: 2.25rem;
 	}
 
 	body {
-		font-family: "B612";
+		font-family: var(--font-body);
+		font-size: var(--font-size-base);
+		line-height: 1.6;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
 	}
 
 	h1,
@@ -24,10 +30,20 @@
 	h4,
 	h5,
 	h6 {
-		font-family: "Stamp";
+		font-family: var(--font-heading);
+		font-weight: 600;
+		line-height: 1.2;
+		letter-spacing: -0.02em;
+	}
+
+	code,
+	kbd,
+	samp,
+	pre {
+		font-family: var(--font-mono);
 	}
 
 	code {
-		font-family: "Opus One";
+		font-size: 0.9em;
 	}
 }
