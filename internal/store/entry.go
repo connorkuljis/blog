@@ -8,7 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Entry struct {
+	type Entry struct {
 	ID               int64          `db:"id"`
 	CategoryID       int64          `db:"category_id"`
 	Title            string         `db:"title"`

@@ -2,7 +2,7 @@
 
 @layer global {
 	:root {
-		/* Colors */
+		/* Light theme colors (default) */
 		--color-bg: #fafafa;
 		--color-bg-elevated: #ffffff;
 		--color-text: #1a1a1a;
@@ -35,13 +35,49 @@
 		--border-radius-sm: 0.25rem;
 	}
 
+	/* Dark theme */
+	[data-theme="dark"] {
+		--color-bg: #0a0a0a;
+		--color-bg-elevated: #171717;
+		--color-text: #e5e5e5;
+		--color-text-muted: #a3a3a3;
+		--color-text-light: #737373;
+		--color-accent: #3b82f6;
+		--color-accent-hover: #60a5fa;
+		--color-border: #262626;
+		--color-border-light: #333333;
+		--color-code-bg: #1f1f1f;
+		--color-code-text: #e5e5e5;
+		--color-selection: #1e40af;
+	}
+
+	/* System preference dark mode */
+	@media (prefers-color-scheme: dark) {
+		:root:not([data-theme="light"]) {
+			--color-bg: #0a0a0a;
+			--color-bg-elevated: #171717;
+			--color-text: #e5e5e5;
+			--color-text-muted: #a3a3a3;
+			--color-text-light: #737373;
+			--color-accent: #3b82f6;
+			--color-accent-hover: #60a5fa;
+			--color-border: #262626;
+			--color-border-light: #333333;
+			--color-code-bg: #1f1f1f;
+			--color-code-text: #e5e5e5;
+			--color-selection: #1e40af;
+		}
+	}
+
 	*::selection {
 		background-color: var(--color-selection);
 	}
 
+	/* Smooth transitions for theme changes */
 	body {
 		background-color: var(--color-bg);
 		color: var(--color-text);
+		transition: background-color 0.3s ease, color 0.3s ease;
 	}
 
 	a {
@@ -70,6 +106,7 @@
 	h6 {
 		text-wrap: pretty;
 		color: var(--color-text);
+		transition: color 0.3s ease;
 	}
 
 	img {
@@ -86,6 +123,7 @@
 		font-size: 0.875em;
 		font-weight: 500;
 		word-wrap: break-word;
+		transition: background-color 0.3s ease, color 0.3s ease;
 	}
 
 	/* Code blocks */
@@ -98,6 +136,7 @@
 		border-radius: var(--border-radius);
 		margin-block: var(--space-6);
 		line-height: 1.5;
+		transition: background-color 0.3s ease;
 	}
 
 	pre code {
@@ -137,6 +176,7 @@
 		border: none;
 		border-block-start: 1px solid var(--color-border);
 		margin-block: var(--space-8);
+		transition: border-color 0.3s ease;
 	}
 
 	blockquote {
@@ -145,6 +185,7 @@
 		margin-inline-start: 0;
 		color: var(--color-text-muted);
 		font-style: italic;
+		transition: border-color 0.3s ease, color 0.3s ease;
 	}
 
 	table {
@@ -159,11 +200,13 @@
 		padding: var(--space-3) var(--space-4);
 		text-align: start;
 		border-block-end: 1px solid var(--color-border);
+		transition: border-color 0.3s ease;
 	}
 
 	th {
 		font-weight: 600;
 		color: var(--color-text);
 		border-block-end-width: 2px;
+		transition: color 0.3s ease;
 	}
 }

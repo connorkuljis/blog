@@ -389,3 +389,35 @@
 		margin-inline: 0;
 	}
 }
+
+/* Theme Toggle Button */
+.theme-toggle {
+	background: var(--color-code-bg);
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius);
+	padding: var(--space-1) var(--space-2);
+	cursor: pointer;
+	font-size: var(--font-size-base);
+	line-height: 1;
+	transition: all 0.15s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.5rem;
+	min-height: 2.5rem;
+}
+
+.theme-toggle:hover {
+	background: var(--color-border);
+	border-color: var(--color-text-muted);
+}
+
+.theme-toggle:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
+}
+
+.theme-icon {
+	display: inline-block;
+	font-size: 1.125rem;
+}
